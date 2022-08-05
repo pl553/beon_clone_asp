@@ -1,0 +1,9 @@
+@model Board
+
+<div asp-validation-summary="All"></div>
+
+<form asp-action="Create" method="post">
+  <h3>Name</h3>
+  <input asp-for="Name" />
+  <input type="submit" value="Create" />
+</form>

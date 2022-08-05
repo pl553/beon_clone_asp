@@ -1,0 +1,8 @@
+@model BoardsListViewModel
+
+@foreach (var b in Model?.Boards ?? Enumerable.Empty<Board>())
+{
+  @b.Name <br>
+}
+<br>
+<a asp-action="Create">New Board</a>
