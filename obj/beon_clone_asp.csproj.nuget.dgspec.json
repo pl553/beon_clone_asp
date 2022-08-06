@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/h/aspnet/beon_clone_asp/beon_clone_asp.csproj": {}
+    "/home/h/beon_clone_asp/beon_clone_asp.csproj": {}
   },
   "projects": {
-    "/home/h/aspnet/beon_clone_asp/beon_clone_asp.csproj": {
+    "/home/h/beon_clone_asp/beon_clone_asp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/h/aspnet/beon_clone_asp/beon_clone_asp.csproj",
+        "projectUniqueName": "/home/h/beon_clone_asp/beon_clone_asp.csproj",
         "projectName": "beon_clone_asp",
-        "projectPath": "/home/h/aspnet/beon_clone_asp/beon_clone_asp.csproj",
+        "projectPath": "/home/h/beon_clone_asp/beon_clone_asp.csproj",
         "packagesPath": "/home/h/.nuget/packages/",
-        "outputPath": "/home/h/aspnet/beon_clone_asp/obj/",
+        "outputPath": "/home/h/beon_clone_asp/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/h/.nuget/NuGet/NuGet.Config"

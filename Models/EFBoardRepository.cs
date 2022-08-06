@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace Beon.Models {
   public class EFBoardRepository : IBoardRepository {
     private BeonDbContext context;

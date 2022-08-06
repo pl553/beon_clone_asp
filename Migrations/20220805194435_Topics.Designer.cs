@@ -3,6 +3,7 @@ using System;
 using Beon.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace beon_clone_asp.Migrations
 {
     [DbContext(typeof(BeonDbContext))]
-    partial class BeonDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220805194435_Topics")]
+    partial class Topics
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
@@ -51,16 +53,14 @@ namespace beon_clone_asp.Migrations
 
                     b.HasIndex("BoardId");
 
-                    b.ToTable("Topics");
+                    b.ToTable("Topic");
                 });
 
             modelBuilder.Entity("Beon.Models.Topic", b =>
                 {
-                    b.HasOne("Beon.Models.Board", "Board")
+                    b.HasOne("Beon.Models.Board", null)
                         .WithMany("Topics")
                         .HasForeignKey("BoardId");
-
-                    b.Navigation("Board");
                 });
 
             modelBuilder.Entity("Beon.Models.Board", b =>

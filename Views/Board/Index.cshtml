@@ -2,7 +2,7 @@
 
 @foreach (var b in Model?.Boards ?? Enumerable.Empty<Board>())
 {
-  @b.Name <br>
+  <a asp-controller="Board" asp-action="Show" asp-route-boardId="@b.BoardId">@b.Name</a><br>
 }
 <br>
 <a asp-action="Create">New Board</a>

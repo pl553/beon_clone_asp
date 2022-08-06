@@ -7,7 +7,7 @@
       "type": "process",
       "args": [
         "build",
-        "${workspaceFolder}/MvcMovie.csproj",
+        "${workspaceFolder}/beon_clone_asp.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
@@ -19,7 +19,7 @@
       "type": "process",
       "args": [
         "publish",
-        "${workspaceFolder}/MvcMovie.csproj",
+        "${workspaceFolder}/beon_clone_asp.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
@@ -33,7 +33,7 @@
         "watch",
         "run",
         "--project",
-        "${workspaceFolder}/MvcMovie.csproj"
+        "${workspaceFolder}/beon_clone_asp.csproj"
       ],
       "problemMatcher": "$msCompile"
     }

@@ -1,0 +1,10 @@
+@model BoardShowViewModel
+
+<h1>@Model.Board.Name</h1>
+
+@foreach (var t in Model?.Board.Topics ?? Enumerable.Empty<Topic>()) {
+  @t.Title
+  <br>  
+}
+
+<partial name="_TopicFormPartial" model="@Model?.newTopicForm"></partial>

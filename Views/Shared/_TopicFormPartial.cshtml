@@ -1,0 +1,8 @@
+@model TopicFormViewModel
+
+<form asp-controller="Topic" asp-action="Create" method="post">
+  Title: <br>
+  <input asp-for="Topic.Title" />
+  <input type="hidden" asp-for="boardId" />
+  <input type="submit" value="Create" />
+</form>

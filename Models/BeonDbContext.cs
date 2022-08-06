@@ -6,5 +6,6 @@ namespace Beon.Models {
     : base(options) { }
 
     public DbSet<Board> Boards => Set<Board>();
+    public DbSet<Topic> Topics => Set<Topic>();
   }
 }

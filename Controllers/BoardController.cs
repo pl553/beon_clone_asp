@@ -1,14 +1,19 @@
 using Microsoft.AspNetCore.Mvc;
 using Beon.Models;
 using Beon.Models.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace Beon.Controllers
 {
   public class BoardController : Controller
   {
+    private readonly ILogger _logger;
     private IBoardRepository repository;
-    public BoardController(IBoardRepository repo) {
+    private ITopicRepository topicRepository;
+    public BoardController(IBoardRepository repo, ITopicRepository topicRepo, ILogger<BoardController> logger) {
       repository = repo;
+      topicRepository = topicRepo;
+      _logger = logger;
     }
     public IActionResult Index() => View(new BoardsListViewModel { Boards = repository.Boards });
 
@@ -22,6 +27,17 @@ namespace Beon.Controllers
       }
       else {
         return View();
+      }
+    }
+
+    public IActionResult Show(int boardId) {
+      Board? b = repository.Boards.Where(b => b.BoardId == boardId).Include(b => b.Topics).FirstOrDefault();
+      if (b == null) {
+        return RedirectToAction(nameof(Index));
+      }
+      else {
+        //_logger.LogCritical($"board id {boardId}");
+        return View(new BoardShowViewModel(b));
       }
     }
   }

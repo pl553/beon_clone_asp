@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ycGgTdKtXn6/dABJnlDPQdSUMy9dx+ZdYREegQAXD3Bh7T7SITeDQBF8mhDD5YP+mO+wtRrZ1BepAd8bF6+vzw==",
+  "dgSpecHash": "ldGYLj2NOWyGjiBuDInTZ/BUBnnv/cCyyLvwIo3vZw6D07vLVf0N4iGoK0FRRfcIGnOYL/mGY3syfrydTBKLnQ==",
   "success": true,
-  "projectFilePath": "/home/h/aspnet/beon_clone_asp/beon_clone_asp.csproj",
+  "projectFilePath": "/home/h/beon_clone_asp/beon_clone_asp.csproj",
   "expectedPackageFiles": [
     "/home/h/.nuget/packages/humanizer.core/2.8.26/humanizer.core.2.8.26.nupkg.sha512",
     "/home/h/.nuget/packages/microsoft.csharp/4.5.0/microsoft.csharp.4.5.0.nupkg.sha512",
