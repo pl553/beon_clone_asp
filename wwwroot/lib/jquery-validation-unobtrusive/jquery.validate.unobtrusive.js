@@ -67,6 +67,8 @@
     }
 
     function onErrors(event, validator) {  // 'this' is the form element
+        console.log($(this));
+        $(this).on('submit', e => { e.stopPropagation(); e.preventDefault(); }, false);
         var container = $(this).find("[data-valmsg-summary=true]"),
             list = container.find("ul");
 
@@ -78,6 +80,7 @@
                 $("<li />").html(this.message).appendTo(list);
             });
         }
+        
     }
 
     function onSuccess(error) {  // 'this' is the form element

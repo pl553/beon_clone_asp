@@ -5,5 +5,8 @@
 <form asp-action="Create" method="post">
   <h3>Name</h3>
   <input asp-for="Name" />
+  <br>
+  <span asp-validation-for="Name"></span>
+  <br>
   <input type="submit" value="Create" />
 </form>
