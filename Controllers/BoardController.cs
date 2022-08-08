@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Beon.Models;
 using Beon.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Beon.Controllers
 {
@@ -17,9 +18,11 @@ namespace Beon.Controllers
     }
     public IActionResult Index() => View(new BoardsListViewModel { Boards = repository.Boards });
 
+    [Authorize(Roles = "Admin")]
     public IActionResult Create() => View(new Board());
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public IActionResult Create(Board board) {
       if (ModelState.IsValid) {
         repository.SaveBoard(board);
