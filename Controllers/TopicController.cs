@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Beon.Models;
 using Beon.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Beon.Controllers
 {
@@ -19,6 +20,7 @@ namespace Beon.Controllers
     }
 
     [HttpPost]
+    [Authorize]
     public IActionResult Create(TopicFormViewModel topicForm) {
       Board? b = boardRepository.Boards.FirstOrDefault(b => b.BoardId == topicForm.boardId);
       //_logger.LogCritical($"board id {topicForm.boardId} {topicForm.Topic.Title}");

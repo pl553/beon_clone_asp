@@ -1,7 +1,12 @@
 @model TopicFormViewModel
 
-<div asp-validation-summary="All"></div>
+@using Microsoft.AspNetCore.Identity
+@using Beon.Infrastructure
 
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@if (SignInManager.IsSignedIn(User)) { 
 <form asp-controller="Topic" asp-action="Create" method="post">
   Title: <br>
   <input asp-for="Topic.Title" /><br>
@@ -9,3 +14,7 @@
   <input type="hidden" asp-for="boardId" />
   <input type="submit" value="Create" />
 </form>
+}
+else {
+  <p>Log in to create topics</p>
+}

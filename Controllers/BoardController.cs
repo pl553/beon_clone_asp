@@ -16,6 +16,8 @@ namespace Beon.Controllers
       topicRepository = topicRepo;
       _logger = logger;
     }
+    
+    [Route("")]
     public IActionResult Index() => View(new BoardsListViewModel { Boards = repository.Boards });
 
     [Authorize(Roles = "Admin")]
@@ -34,6 +36,7 @@ namespace Beon.Controllers
       }
     }
 
+    [Route("Board/{boardId}")]
     public IActionResult Show(int boardId) {
       Board? b = repository.Boards.Where(b => b.BoardId == boardId).Include(b => b.Topics).FirstOrDefault();
       if (b == null) {

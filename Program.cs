@@ -56,8 +56,9 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Board}/{action=Index}/{boardId?}");
 
-app.MapControllerRoute("ShowBoard", "Board/{boardId:int}", new { Controller = "Board", action = "Show"});
+/*app.MapControllerRoute("ShowBoard", "Board/{boardId:int}", new { Controller = "Board", action = "Show"});
 app.MapControllerRoute("cr8topic", "Topic/Create", new { Controller = "Topic", action = "Create" });
+*/
 
 app.MapDefaultControllerRoute();
 app.UseAuthentication();
