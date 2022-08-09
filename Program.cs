@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Beon.Models;
 using Microsoft.AspNetCore.Identity;
 using beon_clone_asp.Areas.Identity.Data;
+using Beon.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("beon_clone_aspIdentityDbContextConnection") ?? throw new InvalidOperationException("Connection string 'beon_clone_aspIdentityDbContextConnection' not found.");
@@ -43,6 +44,8 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 builder.Services.AddScoped<IBoardRepository, EFBoardRepository>();
 builder.Services.AddScoped<ITopicRepository, EFTopicRepository>();
+builder.Services.AddScoped<IEmailSender, AuthMessageSender>();
+builder.Services.AddScoped<ISmsSender, AuthMessageSender>();
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();

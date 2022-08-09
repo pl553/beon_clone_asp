@@ -16313,13 +16313,58 @@
       "FileKind": "mvc"
     },
     {
+      "FilePath": "/home/h/beon_clone_asp/Views/Account/UseRecoveryCode.cshtml",
+      "TargetPath": "Views\\Account\\UseRecoveryCode.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "/home/h/beon_clone_asp/Views/Account/Lockout.cshtml",
+      "TargetPath": "Views\\Account\\Lockout.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "/home/h/beon_clone_asp/Views/Manage/DisplayRecoveryCodes.cshtml",
+      "TargetPath": "Views\\Manage\\DisplayRecoveryCodes.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "/home/h/beon_clone_asp/Views/Account/ConfirmEmail.cshtml",
+      "TargetPath": "Views\\Account\\ConfirmEmail.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "/home/h/beon_clone_asp/Areas/Identity/Pages/Account/Register.cshtml",
       "TargetPath": "Areas\\Identity\\Pages\\Account\\Register.cshtml",
       "FileKind": "mvc"
     },
     {
+      "FilePath": "/home/h/beon_clone_asp/Views/Manage/VerifyPhoneNumber.cshtml",
+      "TargetPath": "Views\\Manage\\VerifyPhoneNumber.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "/home/h/beon_clone_asp/Views/Account/Register.cshtml",
+      "TargetPath": "Views\\Account\\Register.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "/home/h/beon_clone_asp/Views/Shared/_LoginPartial.cshtml",
       "TargetPath": "Views\\Shared\\_LoginPartial.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "/home/h/beon_clone_asp/Views/Account/ExternalLoginConfirmation.cshtml",
+      "TargetPath": "Views\\Account\\ExternalLoginConfirmation.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "/home/h/beon_clone_asp/Views/Account/VerifyAuthenticatorCode.cshtml",
+      "TargetPath": "Views\\Account\\VerifyAuthenticatorCode.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "/home/h/beon_clone_asp/Views/Account/ExternalLoginFailure.cshtml",
+      "TargetPath": "Views\\Account\\ExternalLoginFailure.cshtml",
       "FileKind": "mvc"
     },
     {
@@ -16333,8 +16378,28 @@
       "FileKind": "mvc"
     },
     {
+      "FilePath": "/home/h/beon_clone_asp/Views/Manage/Index.cshtml",
+      "TargetPath": "Views\\Manage\\Index.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "/home/h/beon_clone_asp/Views/Account/SendCode.cshtml",
+      "TargetPath": "Views\\Account\\SendCode.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "/home/h/beon_clone_asp/Views/Manage/AddPhoneNumber.cshtml",
+      "TargetPath": "Views\\Manage\\AddPhoneNumber.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "/home/h/beon_clone_asp/Views/Shared/_TopicFormPartial.cshtml",
       "TargetPath": "Views\\Shared\\_TopicFormPartial.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "/home/h/beon_clone_asp/Views/Account/ResetPasswordConfirmation.cshtml",
+      "TargetPath": "Views\\Account\\ResetPasswordConfirmation.cshtml",
       "FileKind": "mvc"
     },
     {
@@ -16348,6 +16413,16 @@
       "FileKind": "mvc"
     },
     {
+      "FilePath": "/home/h/beon_clone_asp/Views/Account/ForgotPassword.cshtml",
+      "TargetPath": "Views\\Account\\ForgotPassword.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "/home/h/beon_clone_asp/Views/Account/ResetPassword.cshtml",
+      "TargetPath": "Views\\Account\\ResetPassword.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "/home/h/beon_clone_asp/Views/Home/Index.cshtml",
       "TargetPath": "Views\\Home\\Index.cshtml",
       "FileKind": "mvc"
@@ -16355,6 +16430,11 @@
     {
       "FilePath": "/home/h/beon_clone_asp/Areas/Identity/Pages/Account/Login.cshtml",
       "TargetPath": "Areas\\Identity\\Pages\\Account\\Login.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "/home/h/beon_clone_asp/Views/Account/ForgotPasswordConfirmation.cshtml",
+      "TargetPath": "Views\\Account\\ForgotPasswordConfirmation.cshtml",
       "FileKind": "mvc"
     },
     {
@@ -16388,6 +16468,16 @@
       "FileKind": "mvc"
     },
     {
+      "FilePath": "/home/h/beon_clone_asp/Views/Manage/ManageLogins.cshtml",
+      "TargetPath": "Views\\Manage\\ManageLogins.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "/home/h/beon_clone_asp/Views/Manage/ChangePassword.cshtml",
+      "TargetPath": "Views\\Manage\\ChangePassword.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "/home/h/beon_clone_asp/Areas/Identity/Pages/Account/Logout.cshtml",
       "TargetPath": "Areas\\Identity\\Pages\\Account\\Logout.cshtml",
       "FileKind": "mvc"
@@ -16398,6 +16488,11 @@
       "FileKind": "mvc"
     },
     {
+      "FilePath": "/home/h/beon_clone_asp/Views/Account/VerifyCode.cshtml",
+      "TargetPath": "Views\\Account\\VerifyCode.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "/home/h/beon_clone_asp/Areas/Identity/Pages/_ViewImports.cshtml",
       "TargetPath": "Areas\\Identity\\Pages\\_ViewImports.cshtml",
       "FileKind": "mvc"
@@ -16405,6 +16500,11 @@
     {
       "FilePath": "/home/h/beon_clone_asp/Views/Home/Privacy.cshtml",
       "TargetPath": "Views\\Home\\Privacy.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "/home/h/beon_clone_asp/Views/Manage/SetPassword.cshtml",
+      "TargetPath": "Views\\Manage\\SetPassword.cshtml",
       "FileKind": "mvc"
     },
     {
@@ -16425,6 +16525,11 @@
     {
       "FilePath": "/home/h/beon_clone_asp/Views/_ViewImports.cshtml",
       "TargetPath": "Views\\_ViewImports.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "/home/h/beon_clone_asp/Views/Account/Login.cshtml",
+      "TargetPath": "Views\\Account\\Login.cshtml",
       "FileKind": "mvc"
     }
   ],
