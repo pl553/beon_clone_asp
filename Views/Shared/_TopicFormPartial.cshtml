@@ -3,8 +3,8 @@
 @using Microsoft.AspNetCore.Identity
 @using Beon.Infrastructure
 
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<BeonUser> SignInManager
+@inject UserManager<BeonUser> UserManager
 
 @if (SignInManager.IsSignedIn(User)) { 
 <form asp-controller="Topic" asp-action="Create" method="post">

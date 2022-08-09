@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Beon.Models;
 
 namespace beon_clone_asp.Areas.Identity.Data;
 
-public class beon_clone_aspIdentityDbContext : IdentityDbContext<IdentityUser>
+public class beon_clone_aspIdentityDbContext : IdentityDbContext<BeonUser>
 {
     public beon_clone_aspIdentityDbContext(DbContextOptions<beon_clone_aspIdentityDbContext> options)
         : base(options)

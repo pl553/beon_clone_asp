@@ -16,7 +16,7 @@ namespace Beon.Controllers
       topicRepository = topicRepo;
       _logger = logger;
     }
-    
+
     [Route("")]
     public IActionResult Index() => View(new BoardsListViewModel { Boards = repository.Boards });
 
@@ -36,11 +36,11 @@ namespace Beon.Controllers
       }
     }
 
-    [Route("Board/{boardId}")]
+    [Route("Board/{boardId:int}")]
     public IActionResult Show(int boardId) {
       Board? b = repository.Boards.Where(b => b.BoardId == boardId).Include(b => b.Topics).FirstOrDefault();
       if (b == null) {
-        return RedirectToAction(nameof(Index));
+        return View("Error");
       }
       else {
         //_logger.LogCritical($"board id {boardId}");

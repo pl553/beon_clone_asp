@@ -18,7 +18,7 @@ builder.Services.AddDbContext<beon_clone_aspIdentityDbContext>(opts => {
   builder.Configuration["ConnectionStrings:beon_clone_aspIdentityDbContextConnection"]);
 });
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<BeonUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<beon_clone_aspIdentityDbContext>();
 

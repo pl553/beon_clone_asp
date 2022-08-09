@@ -3,8 +3,8 @@
 @using Microsoft.AspNetCore.Identity
 @using Beon.Infrastructure
 
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<BeonUser> SignInManager
+@inject UserManager<BeonUser> UserManager
 
 @foreach (var b in Model?.Boards ?? Enumerable.Empty<Board>())
 {

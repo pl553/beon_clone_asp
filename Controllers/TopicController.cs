@@ -31,7 +31,8 @@ namespace Beon.Controllers
       }
       else {
         //return View("Show", new { boardId = topicForm.boardId });
-        return RedirectToAction("Show", "Board", new { boardId = topicForm.boardId });
+        return View("Error");
+        //return RedirectToAction("Show", "Board", new { boardId = topicForm.boardId });
       }
     }
   }

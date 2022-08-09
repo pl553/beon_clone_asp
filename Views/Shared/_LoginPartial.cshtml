@@ -1,14 +1,15 @@
 @using Microsoft.AspNetCore.Identity
 @using Beon.Infrastructure
+@using Beon.Models
 
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<BeonUser> SignInManager
+@inject UserManager<BeonUser> UserManager
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
-        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)! You are 
+        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @((await UserManager.GetUserAsync(User)).DisplayName)! You are 
         @if (await UserManager.IsAdmin(User))
         {
             <b>an admin</b>

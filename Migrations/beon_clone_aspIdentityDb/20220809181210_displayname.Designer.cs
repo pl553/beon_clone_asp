@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using beon_clone_asp.Areas.Identity.Data;
 
@@ -10,9 +11,10 @@ using beon_clone_asp.Areas.Identity.Data;
 namespace beon_clone_asp.Migrations.beon_clone_aspIdentityDb
 {
     [DbContext(typeof(beon_clone_aspIdentityDbContext))]
-    partial class beon_clone_aspIdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220809181210_displayname")]
+    partial class displayname
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.7");
