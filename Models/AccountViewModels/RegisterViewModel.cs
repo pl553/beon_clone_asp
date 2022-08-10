@@ -17,8 +17,9 @@ namespace Beon.Models.AccountViewModels
         public string UserName { get; set; }
 
         [Required]
-        [MaxLength(Beon.Settings.Password.MaxLength)]
-        [MinLength(Beon.Settings.Password.MinLength)]
+        [StringLength(Beon.Settings.Password.MaxLength,
+            ErrorMessage = "The {0} must be at least {2} characters long.",
+            MinimumLength = Beon.Settings.Password.MinLength)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }

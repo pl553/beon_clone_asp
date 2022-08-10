@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Beon.Models;
 using Beon.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace Beon.Controllers
 {
@@ -21,18 +22,29 @@ namespace Beon.Controllers
 
     [HttpPost]
     [Authorize]
-    public IActionResult Create(TopicFormViewModel topicForm) {
-      Board? b = boardRepository.Boards.FirstOrDefault(b => b.BoardId == topicForm.boardId);
-      //_logger.LogCritical($"board id {topicForm.boardId} {topicForm.Topic.Title}");
-      if (ModelState.IsValid && b != null && topicForm.Topic != null) {
-        topicForm.Topic.Board = b;
-        repository.SaveTopic(topicForm.Topic);
-        return RedirectToAction("Show", "Board", new { boardId = topicForm.boardId });
+    public IActionResult Create(TopicCreateViewModel form) {
+      Board? b = boardRepository.Boards.FirstOrDefault(b => b.BoardId == form.boardId);
+      //_logger.LogCritical($"board id {form.boardId} {form.Topic.Title}");
+      if (ModelState.IsValid && b != default(Board) && form.Topic != null) {
+        form.Topic.Board = b;
+        repository.SaveTopic(form.Topic);
+        return RedirectToAction("Show", "Board", new { boardId = form.boardId });
       }
       else {
-        //return View("Show", new { boardId = topicForm.boardId });
+        //return View("Show", new { boardId = model.boardId });
         return View("Error");
-        //return RedirectToAction("Show", "Board", new { boardId = topicForm.boardId });
+        //return RedirectToAction("Show", "Board", new { boardId = model.boardId });
+      }
+    }
+
+    [Route("Topic/{topicId:int}")]
+    public IActionResult Show(int topicId) {
+      Topic? t = repository.Topics.Where(t => t.TopicId == topicId).Include(t => t.Posts).FirstOrDefault();
+      if (t == default(Topic)) {
+        return View("Error");
+      }
+      else {
+        return View(new TopicShowViewModel(t));
       }
     }
   }

@@ -43,6 +43,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 builder.Services.AddScoped<IBoardRepository, EFBoardRepository>();
 builder.Services.AddScoped<ITopicRepository, EFTopicRepository>();
+builder.Services.AddScoped<IPostRepository, EFPostRepository>();
 builder.Services.AddScoped<IEmailSender, AuthMessageSender>();
 builder.Services.AddScoped<ISmsSender, AuthMessageSender>();
 

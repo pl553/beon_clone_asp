@@ -131,12 +131,24 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19Mb2dpblBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/h/beon_clone_asp/Views/Shared/_TopicFormPartial.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19Ub3BpY0Zvcm1QYXJ0aWFsLmNzaHRtbA==
+[/home/h/beon_clone_asp/Views/Shared/_PostCreatePartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19Qb3N0Q3JlYXRlUGFydGlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/h/beon_clone_asp/Views/Shared/_PostShowPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19Qb3N0U2hvd1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/h/beon_clone_asp/Views/Shared/_TopicCreatePartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19Ub3BpY0NyZWF0ZVBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [/home/h/beon_clone_asp/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/h/beon_clone_asp/Views/Topic/Show.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVG9waWMvU2hvdy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [/home/h/beon_clone_asp/Views/_ViewImports.cshtml]

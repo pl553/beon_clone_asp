@@ -11,5 +11,6 @@ namespace Beon.Models {
     [MaxLength(30)]
     public string? Title { get; set; }
 
+    public ICollection<Post> Posts { get; set; } = new List<Post>();
   }
 }

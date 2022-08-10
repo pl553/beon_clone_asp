@@ -14,7 +14,9 @@ namespace Beon.Models.ManageViewModels
         public string OldPassword { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [StringLength(Beon.Settings.Password.MaxLength,
+            ErrorMessage = "The {0} must be at least {2} characters long.",
+            MinimumLength = Beon.Settings.Password.MinLength)]
         [DataType(DataType.Password)]
         [Display(Name = "New password")]
         public string NewPassword { get; set; }

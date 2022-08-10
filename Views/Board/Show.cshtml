@@ -3,8 +3,9 @@
 <h1>@Model.Board.Name</h1>
 
 @foreach (var t in Model?.Board.Topics ?? Enumerable.Empty<Topic>()) {
-  @t.Title
-  <br>  
+  <p>
+    <a asp-controller="Topic" asp-action="Show" asp-route-topicId="@t.TopicId">@t.Title</a>
+  </p>
 }
 
-<partial name="_TopicFormPartial" model="@Model?.newTopicForm"></partial>
+<partial name="_TopicCreatePartial" model="@Model?.newTopicForm"></partial>

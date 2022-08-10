@@ -1,0 +1,20 @@
+@model PostCreateViewModel
+
+@using Microsoft.AspNetCore.Identity
+@using Beon.Infrastructure
+
+@inject SignInManager<BeonUser> SignInManager
+@inject UserManager<BeonUser> UserManager
+
+@if (SignInManager.IsSignedIn(User)) { 
+<form asp-controller="Post" asp-action="Create" method="post">
+  Create a post:<br>
+  <input asp-for="Post.Body" /><br>
+  <span asp-validation-for="Post.Body"></span><br>
+  <input type="hidden" asp-for="TopicId" />
+  <input type="submit" value="Create" />
+</form>
+}
+else {
+  <p>Log in to create Posts</p>
+}
