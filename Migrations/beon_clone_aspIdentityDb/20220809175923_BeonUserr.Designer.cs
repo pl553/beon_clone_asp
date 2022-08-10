@@ -10,7 +10,7 @@ using beon_clone_asp.Areas.Identity.Data;
 
 namespace beon_clone_asp.Migrations.beon_clone_aspIdentityDb
 {
-    [DbContext(typeof(beon_clone_aspIdentityDbContext))]
+    [DbContext(typeof(IdentityDbContext))]
     [Migration("20220809175923_BeonUserr")]
     partial class BeonUserr
     {

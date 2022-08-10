@@ -9,8 +9,8 @@ using beon_clone_asp.Areas.Identity.Data;
 
 namespace beon_clone_asp.Migrations.beon_clone_aspIdentityDb
 {
-    [DbContext(typeof(beon_clone_aspIdentityDbContext))]
-    partial class beon_clone_aspIdentityDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(IdentityDbContext))]
+    partial class IdentityDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

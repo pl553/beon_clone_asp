@@ -5,9 +5,9 @@ using Beon.Models;
 
 namespace beon_clone_asp.Areas.Identity.Data;
 
-public class beon_clone_aspIdentityDbContext : IdentityDbContext<BeonUser>
+public class IdentityDbContext : IdentityDbContext<BeonUser>
 {
-    public beon_clone_aspIdentityDbContext(DbContextOptions<beon_clone_aspIdentityDbContext> options)
+    public IdentityDbContext(DbContextOptions<IdentityDbContext> options)
         : base(options)
     {
     }

@@ -5,7 +5,7 @@ using beon_clone_asp.Areas.Identity.Data;
 using Beon.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("beon_clone_aspIdentityDbContextConnection") ?? throw new InvalidOperationException("Connection string 'beon_clone_aspIdentityDbContextConnection' not found.");
+var connectionString = builder.Configuration.GetConnectionString("IdentityDbContextConnection") ?? throw new InvalidOperationException("Connection string 'IdentityDbContextConnection' not found.");
 
 builder.Services.AddControllersWithViews();
 
@@ -14,14 +14,14 @@ builder.Services.AddDbContext<BeonDbContext>(opts => {
   builder.Configuration["ConnectionStrings:BeonConnection"]);
 });
 
-builder.Services.AddDbContext<beon_clone_aspIdentityDbContext>(opts => {
+builder.Services.AddDbContext<IdentityDbContext>(opts => {
   opts.UseSqlite(
-  builder.Configuration["ConnectionStrings:beon_clone_aspIdentityDbContextConnection"]);
+  builder.Configuration["ConnectionStrings:IdentityDbContextConnection"]);
 });
 
 builder.Services.AddDefaultIdentity<BeonUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<beon_clone_aspIdentityDbContext>();
+    .AddEntityFrameworkStores<IdentityDbContext>();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
