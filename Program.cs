@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Beon.Models;
 using Microsoft.AspNetCore.Identity;
-using beon_clone_asp.Areas.Identity.Data;
 using Beon.Services;
 
 var builder = WebApplication.CreateBuilder(args);
