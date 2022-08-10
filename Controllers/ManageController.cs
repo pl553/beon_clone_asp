@@ -41,6 +41,7 @@ namespace Beons.Controllers
         {
             ViewData["StatusMessage"] =
                 message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
+                : message == ManageMessageId.ChangeDisplayNameSuccess ? "Your display name has been changed."
                 : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
                 : message == ManageMessageId.SetTwoFactorSuccess ? "Your two-factor authentication provider has been set."
                 : message == ManageMessageId.Error ? "An error has occurred."
@@ -222,6 +223,11 @@ namespace Beons.Controllers
             return RedirectToAction(nameof(Index), new { Message = ManageMessageId.Error });
         }
 
+        [HttpGet]
+        public IActionResult ChangeDisplayName()
+        {
+            return View();
+        }
         //
         // GET: /Manage/ChangePassword
         [HttpGet]
@@ -230,6 +236,28 @@ namespace Beons.Controllers
             return View();
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeDisplayName(ChangeDisplayNameViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user = await GetCurrentUserAsync();
+            if (user != null)
+            {
+                user.DisplayName = model.DisplayName;
+                var result = await _userManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction(nameof(Index), new { Message = ManageMessageId.ChangeDisplayNameSuccess });
+                }
+                AddErrors(result);
+                return View(model);
+            }
+            return RedirectToAction(nameof(Index), new { Message = ManageMessageId.Error });
+        }
         //
         // POST: /Manage/ChangePassword
         [HttpPost]
@@ -364,6 +392,7 @@ namespace Beons.Controllers
             ChangePasswordSuccess,
             SetTwoFactorSuccess,
             SetPasswordSuccess,
+            ChangeDisplayNameSuccess,
             RemoveLoginSuccess,
             RemovePhoneSuccess,
             Error

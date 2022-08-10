@@ -151,6 +151,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWFuYWdlL0FkZFBob25lTnVtYmVyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[/home/h/beon_clone_asp/Views/Manage/ChangeDisplayName.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWFuYWdlL0NoYW5nZURpc3BsYXlOYW1lLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [/home/h/beon_clone_asp/Views/Manage/ChangePassword.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWFuYWdlL0NoYW5nZVBhc3N3b3JkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
