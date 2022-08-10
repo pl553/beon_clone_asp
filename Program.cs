@@ -66,7 +66,7 @@ app.MapControllerRoute("cr8topic", "Topic/Create", new { Controller = "Topic", a
 app.MapDefaultControllerRoute();
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapRazorPages();
+//app.MapRazorPages();
 
 CreateAdmin.Create(app);
 
