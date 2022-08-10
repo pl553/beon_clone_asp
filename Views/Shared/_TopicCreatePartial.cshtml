@@ -12,6 +12,8 @@
   <input asp-for="Topic.Title" /><br>
   <span asp-validation-for="Topic.Title"></span><br>
   <input type="hidden" asp-for="boardId" />
+  Post: <br>
+  <partial name="_PostInputsPartial" for="Op"></partial>
   <input type="submit" value="Create" />
 </form>
 }

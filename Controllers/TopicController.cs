@@ -10,10 +10,12 @@ namespace Beon.Controllers
   {
     private ITopicRepository repository;
     private IBoardRepository boardRepository;
+    private IPostRepository postRepository;
     private readonly ILogger _logger;
-    public TopicController(ITopicRepository repo, IBoardRepository boardRepo, ILogger<TopicController> logger) {
+    public TopicController(ITopicRepository repo, IBoardRepository boardRepo, IPostRepository postRepo, ILogger<TopicController> logger) {
       repository = repo;
       boardRepository = boardRepo;
+      postRepository = postRepo;
       _logger = logger;
     }
     public IActionResult Index() {
@@ -28,6 +30,8 @@ namespace Beon.Controllers
       if (ModelState.IsValid && b != default(Board) && form.Topic != null) {
         form.Topic.Board = b;
         repository.SaveTopic(form.Topic);
+        form.Op.Topic = form.Topic;
+        postRepository.SavePost(form.Op);
         return RedirectToAction("Show", "Board", new { boardId = form.boardId });
       }
       else {

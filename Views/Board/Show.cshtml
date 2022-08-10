@@ -6,6 +6,12 @@
   <p>
     <a asp-controller="Topic" asp-action="Show" asp-route-topicId="@t.TopicId">@t.Title</a>
   </p>
+  <p>
+    @if (t.Posts.FirstOrDefault() != default(Post))
+    {
+      <partial name="_PostShowPartial" model="@t.Posts.FirstOrDefault()"></partial>
+    }
+  </p>
 }
 
 <partial name="_TopicCreatePartial" model="@Model?.newTopicForm"></partial>

@@ -9,8 +9,7 @@
 @if (SignInManager.IsSignedIn(User)) { 
 <form asp-controller="Post" asp-action="Create" method="post">
   Create a post:<br>
-  <input asp-for="Post.Body" /><br>
-  <span asp-validation-for="Post.Body"></span><br>
+  <partial name="_PostInputsPartial" for="Post">
   <input type="hidden" asp-for="TopicId" />
   <input type="submit" value="Create" />
 </form>

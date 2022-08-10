@@ -16378,6 +16378,11 @@
       "FileKind": "mvc"
     },
     {
+      "FilePath": "/home/h/beon_clone_asp/Views/Shared/_PostInputsPartial.cshtml",
+      "TargetPath": "Views\\Shared\\_PostInputsPartial.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "/home/h/beon_clone_asp/Views/Manage/Index.cshtml",
       "TargetPath": "Views\\Manage\\Index.cshtml",
       "FileKind": "mvc"
