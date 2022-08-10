@@ -9,8 +9,11 @@ namespace Beon.Models.ManageViewModels
     public class ChangeDisplayNameViewModel
     {
         [Required]
-        [StringLength(64, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 1)]
+        [MaxLength(Beon.Settings.DisplayName.MaxLength)]
+        [MinLength(Beon.Settings.DisplayName.MinLength)]
+        [RegularExpression(Beon.Settings.DisplayName.Regex)]
         [Display(Name = "Display name")]
+        [DataType(DataType.Text)]
         public string DisplayName { get; set; }
     }
 }

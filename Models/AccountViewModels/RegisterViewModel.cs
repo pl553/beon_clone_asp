@@ -9,12 +9,16 @@ namespace Beon.Models.AccountViewModels
     public class RegisterViewModel
     {
         [Required]
-        [StringLength(32, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 1)]
+        [MaxLength(Beon.Settings.UserName.MaxLength)]
+        [MinLength(Beon.Settings.UserName.MinLength)]
+        [DataType(DataType.Text)]
+        [RegularExpression(Beon.Settings.UserName.Regex)]
         [Display(Name = "Username")]
         public string UserName { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [MaxLength(Beon.Settings.Password.MaxLength)]
+        [MinLength(Beon.Settings.Password.MinLength)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
