@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "nW2xX+L8ERM2sISDt//QoM18TPGxIZV8cv5bprSTa44=",
+  "Hash": "pdjE4Yg9vf8cy3X48bJahHnROP4VMC9pDhf7Tly11Tw=",
   "Source": "beon_clone_asp",
   "BasePath": "_content/beon_clone_asp",
   "Mode": "Default",
@@ -1103,6 +1103,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/favicon.ico"
+    },
+    {
+      "Identity": "/home/h/beon_clone_asp/wwwroot/i/logo.png",
+      "SourceId": "beon_clone_asp",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/h/beon_clone_asp/wwwroot/",
+      "BasePath": "_content/beon_clone_asp",
+      "RelativePath": "i/logo.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/i/logo.png"
     },
     {
       "Identity": "/home/h/beon_clone_asp/wwwroot/js/site.js",

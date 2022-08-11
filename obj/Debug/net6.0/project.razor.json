@@ -16453,6 +16453,11 @@
       "FileKind": "mvc"
     },
     {
+      "FilePath": "/home/h/beon_clone_asp/Views/Shared/_HeaderPartial.cshtml",
+      "TargetPath": "Views\\Shared\\_HeaderPartial.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "/home/h/beon_clone_asp/Views/_ViewStart.cshtml",
       "TargetPath": "Views\\_ViewStart.cshtml",
       "FileKind": "mvc"

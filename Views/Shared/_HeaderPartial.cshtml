@@ -1,0 +1,62 @@
+@using Microsoft.AspNetCore.Identity
+@using Beon.Infrastructure
+@using Beon.Models
+
+@inject SignInManager<BeonUser> SignInManager
+@inject UserManager<BeonUser> UserManager
+
+<div id="header">
+  <div id="header-logo">
+    <a id="logo" asp-controller="Board" asp-action="Index">
+      <img src="/i/logo.png">
+    </a>
+    <br>
+    <span class="m4">Hello,
+      @if (SignInManager.IsSignedIn(User))
+      {
+        <span>
+          @((await UserManager.GetUserAsync(User)).DisplayName)
+        </span>
+      }
+      else {
+        <span>Guest</span>
+      }
+    </span>
+  </div>
+  <div id="header-links">
+    <div class="header-links-spacer"></div>
+    <div class="header-links-container">
+      @if (SignInManager.IsSignedIn(User))
+      {
+        <span>
+          <span class="m3">•</span>
+          <a asp-controller="Manage" asp-action="Index">
+            Account settings
+          </a>
+        </span>
+        <span>
+          <span class="m3">•</span>
+          <a href="" onclick="event.preventDefault(); $('#logoff-form').submit()">
+            Log out
+          </a>
+          <form id="logoff-form" asp-controller="Account" asp-action="LogOff"></form>
+        </span>
+      }
+      else
+      {
+        <span>
+          <span class="m3">•</span>
+          <a asp-controller="Account" asp-action="Register" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
+            Register
+          </a>
+        </span>
+        <span>
+          <span class="m3">•</span>
+          <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
+            Login
+          </a>
+        </span>
+      }
+    </div>
+  </div>
+</div>
