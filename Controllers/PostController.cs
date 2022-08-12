@@ -26,6 +26,7 @@ namespace Beon.Controllers
       //_logger.LogCritical($"Topic id {model.TopicId} {model.Post.Title}");
       if (ModelState.IsValid && b != default(Topic) && model.Post != null) {
         model.Post.Topic = b;
+        model.Post.TimeStamp = DateTime.UtcNow;
         repository.SavePost(model.Post);
         return RedirectToAction("Show", "Topic", new { TopicId = model.TopicId });
       }

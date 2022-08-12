@@ -14,5 +14,8 @@ namespace Beon.Models
     [Required]
     [DataType(DataType.Text)]
     public string? Body { get; set; }
+
+    [BindNever]
+    public DateTime TimeStamp { get; set; }
   }
 }
