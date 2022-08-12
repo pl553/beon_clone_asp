@@ -1,0 +1,61 @@
+@model LoginViewModel
+
+<div class="login-form-wrapper">
+    <form asp-controller="Account" asp-action="Login" method="post">
+        <input type="hidden" asp-for="ReturnUrl" value="@Model.ReturnUrl" />
+        <div class="login-form-grid">
+            <div></div>
+            <div>
+                <br>
+                <a class="m4" asp-controller="Account" asp-action="Register" asp-route-returnurl="@Model.ReturnUrl">Register</a>   
+            </div>
+
+            <!--
+            <div></div>
+            <span asp-validation-for="UserName" class="text-danger m4"></span>
+
+            <div></div>
+            <span asp-validation-for="Password" class="text-danger m4"></span>
+            -->
+
+            <div></div>
+            <div asp-validation-summary="All" class="custom-summary text-danger m4"></div>
+
+            <div class="m3 login-input-label-wrapper" >
+                <label asp-for="UserName" style="margin-left: auto;"></label><span>:</span>
+            </div>
+            <div>
+                <input asp-for="UserName" class="login-input" />
+            </div>
+            <div class="m3 login-input-label-wrapper">
+                <label asp-for="Password" style="margin-left: auto;"></label><span>:</span>
+            </div>
+            <div>
+                <input asp-for="Password" class="login-input" />
+            </div>
+            <div></div>
+            <label class="m3" asp-for="RememberMe">
+                <input asp-for="RememberMe" />
+                @Html.DisplayNameFor(m => m.RememberMe)
+            </label>
+            <div></div>
+            <div>
+                <button type="submit">Log in</button>
+                @if (Model.ShowCloseButton)
+                {
+                  <button type="button" onclick="$('#login-header').css('display', 'none');">Close</button>
+                }
+                <br>
+                <br>
+            </div>
+            <div></div>
+            <div class="m4">
+                <a asp-controller="Account" asp-action="ForgotPassword">Forgot your password?</a>
+                <br>
+                <br>
+                <br>
+                <br>
+            </div>
+        </div>
+    </form>
+</div>

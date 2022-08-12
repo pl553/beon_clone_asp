@@ -1,3 +1,40 @@
+/* Global */
+
+body {
+  margin: 0.5%;
+}
+
+/* 0.75*0.75 */
+.m4 {
+  font-size: 56.25%;
+}
+
+.m3 {
+  font-size: 75%;
+}
+
+h2, h3, p, div, span {
+  font-family: Tahoma,Verdana,Arial,Geneva,Helvetica,sans-serif;
+}
+
+.text-danger {
+  color: #ff0000;
+} 
+
+.custom-summary {
+  height: 80%;
+}
+
+.custom-summary ul li {
+  list-style-type: none;
+}
+
+.custom-summary ul {
+  padding: 0;
+}
+
+/* Header */
+
 #header {
   display: flex;
   height: 75px;
@@ -19,6 +56,12 @@
   border-radius: 10px 0 0 10px;
   background: #F7F7F7;
   flex: 1;
+}
+
+#login-header {
+  position: absolute;
+  top: 10px;
+  width: 100%;
 }
 
 .header-links-spacer {
@@ -49,19 +92,38 @@
   height: 57px;
 }
 
-body {
-  margin: 0.5%;
+/* Login */
+.login-form-wrapper {
+  width: 295px;
+  background-color: #FFFFFF;
+  border-spacing: 5px;
+  border: 1px solid #dddddd;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  margin: 0 auto;
 }
 
-/* 0.75*0.75 */
-.m4 {
-  font-size: 56.25%;
+.login-form-grid {
+  margin: 5px;
+  display: grid;
+  gap: 5px;
+  grid-template-columns: repeat(2, auto);
 }
 
-.m3 {
-  font-size: 75%;
+.login-input {
+  font-size: 20px;
+  width: calc(100% - 9px);
 }
 
-h2, h3, p, div, span {
-  font-family: Tahoma,Verdana,Arial,Geneva,Helvetica,sans-serif;
+.login-input-label-wrapper {
+  display: flex;
+  text-align: right;
+  align-items: center;
+}
+
+/* Crumbs */
+
+.hrline {
+  border: 0;
+  border-top: 1px solid #dddddd;
 }

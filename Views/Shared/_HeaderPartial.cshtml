@@ -46,17 +46,24 @@
       {
         <span>
           <span class="m3">•</span>
-          <a asp-controller="Account" asp-action="Register" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
-            Register
+          <a href="" onclick="event.preventDefault(); $('#login-header').css('display', '');">Login...</a>
+          <!--
+          <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
+            Login...
           </a>
+          -->
         </span>
         <span>
           <span class="m3">•</span>
-          <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
-            Login
+          <a asp-controller="Account" asp-action="Register" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
+            Register
           </a>
         </span>
       }
     </div>
   </div>
+</div>
+
+<div id="login-header" style="display: none;">
+  <partial name="_LoginFormPartial" model="@new LoginViewModel { ShowCloseButton = true, ReturnUrl = ViewContext.HttpContext.Request.PathAndQuery() }"></partial>
 </div>
