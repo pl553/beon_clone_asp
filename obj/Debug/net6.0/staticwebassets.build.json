@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "pdjE4Yg9vf8cy3X48bJahHnROP4VMC9pDhf7Tly11Tw=",
+  "Hash": "WsPED6ymPnXU2l9mZepZoRm1F8faa58Dyf9bJ8CI5TU=",
   "Source": "beon_clone_asp",
   "BasePath": "_content/beon_clone_asp",
   "Mode": "Default",
@@ -1103,6 +1103,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/favicon.ico"
+    },
+    {
+      "Identity": "/home/h/beon_clone_asp/wwwroot/i/alert_error.gif",
+      "SourceId": "beon_clone_asp",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/h/beon_clone_asp/wwwroot/",
+      "BasePath": "_content/beon_clone_asp",
+      "RelativePath": "i/alert_error.gif",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/i/alert_error.gif"
     },
     {
       "Identity": "/home/h/beon_clone_asp/wwwroot/i/logo.png",
