@@ -3,7 +3,8 @@
     ViewData["Title"] = "Register";
 }
 
-<form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
+<form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post"
+    class="form-horizontal" role="form">
     <br>
     <b class="m3">Required fields:</b>
     <br>
@@ -12,25 +13,31 @@
     <span class="m4">(1-32 chars: A-Z 0-9 with - inbetween. For ex.: epic-gam3r-420)</span>
     <br>
     <input asp-for="UserName" />
-    <b><span asp-validation-for="UserName" class="m3 text-danger"></span></b>
+    <b><span data-valmsg-for="UserName" data-valmsg-replace="true" class="m3 text-danger">
+        <img class="alert-error-img" src="/i/alert_error.gif"></img>
+    </span></b>
     <br>
     <br>
     <label asp-for="Password" class="m3"></label>
     <span class="m4">(6-128 chars)</span>
     <br>
     <input asp-for="Password" />
-    <b><span asp-validation-for="Password" class="m3 text-danger"></span></b>
+    <b><span data-valmsg-for="Password" data-valmsg-replace="true" class="m3 text-danger">
+        <img class="alert-error-img" src="/i/alert_error.gif"></img>
+    </span></b>
     <br>
     <br>
     <label asp-for="ConfirmPassword" class="m3"></label>
     <br>
     <input asp-for="ConfirmPassword" class="form-control" />
-    <b><span asp-validation-for="ConfirmPassword" class="m3 text-danger"></span></b>
+    <b><span data-valmsg-for="ConfirmPassword" data-valmsg-replace="true" class="m3 text-danger">
+        <img class="alert-error-img" src="/i/alert_error.gif"></img>
+    </span></b>
     <br>
     <br>
     <button type="submit" class="btn btn-default">Register</button>
 </form>
 
 @section Scripts {
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+@{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

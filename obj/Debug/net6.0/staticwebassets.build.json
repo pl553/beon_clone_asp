@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "WsPED6ymPnXU2l9mZepZoRm1F8faa58Dyf9bJ8CI5TU=",
+  "Hash": "bTzvQMgV2N9gbVchffMAm7M9G1bb8BTklcJqsWFVtAk=",
   "Source": "beon_clone_asp",
   "BasePath": "_content/beon_clone_asp",
   "Mode": "Default",
@@ -1919,6 +1919,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/lib/bootstrap/LICENSE"
+    },
+    {
+      "Identity": "/home/h/beon_clone_asp/wwwroot/lib/jquery-validate-hooks/jquery.validate.hooks.js",
+      "SourceId": "beon_clone_asp",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/h/beon_clone_asp/wwwroot/",
+      "BasePath": "_content/beon_clone_asp",
+      "RelativePath": "lib/jquery-validate-hooks/jquery.validate.hooks.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/lib/jquery-validate-hooks/jquery.validate.hooks.js"
     },
     {
       "Identity": "/home/h/beon_clone_asp/wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js",
