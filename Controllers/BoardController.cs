@@ -38,7 +38,7 @@ namespace Beon.Controllers
 
     [Route("Board/{boardId:int}")]
     public IActionResult Show(int boardId) {
-      Board? b = repository.Boards.Where(b => b.BoardId == boardId).Include(b => b.Topics).ThenInclude(t => t.Posts).FirstOrDefault();
+      Board? b = repository.Boards.Where(b => b.BoardId == boardId).Include(b => b.Topics).ThenInclude(t => t.Posts).ThenInclude(p => p.Poster).FirstOrDefault();
       if (b == null) {
         return View("Error");
       }

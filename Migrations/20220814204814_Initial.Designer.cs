@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace beon_clone_asp.Migrations.beon_clone_aspIdentityDb
+namespace beon_clone_asp.Migrations
 {
-    [DbContext(typeof(IdentityDbContext))]
-    [Migration("20220809175923_BeonUserr")]
-    partial class BeonUserr
+    [DbContext(typeof(BeonDbContext))]
+    [Migration("20220814204814_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,11 +27,12 @@ namespace beon_clone_asp.Migrations.beon_clone_aspIdentityDb
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("BeonUserId")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
@@ -76,8 +77,6 @@ namespace beon_clone_asp.Migrations.beon_clone_aspIdentityDb
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BeonUserId");
-
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -86,6 +85,71 @@ namespace beon_clone_asp.Migrations.beon_clone_aspIdentityDb
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("Beon.Models.Board", b =>
+                {
+                    b.Property<int>("BoardId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("BoardId");
+
+                    b.ToTable("Boards");
+                });
+
+            modelBuilder.Entity("Beon.Models.Post", b =>
+                {
+                    b.Property<int>("PostId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PosterId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("TopicId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("PostId");
+
+                    b.HasIndex("PosterId");
+
+                    b.HasIndex("TopicId");
+
+                    b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("Beon.Models.Topic", b =>
+                {
+                    b.Property<int>("TopicId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("BoardId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("TopicId");
+
+                    b.HasIndex("BoardId");
+
+                    b.ToTable("Topics");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -220,11 +284,28 @@ namespace beon_clone_asp.Migrations.beon_clone_aspIdentityDb
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Beon.Models.BeonUser", b =>
+            modelBuilder.Entity("Beon.Models.Post", b =>
                 {
-                    b.HasOne("Beon.Models.BeonUser", null)
-                        .WithMany("Friends")
-                        .HasForeignKey("BeonUserId");
+                    b.HasOne("Beon.Models.BeonUser", "Poster")
+                        .WithMany()
+                        .HasForeignKey("PosterId");
+
+                    b.HasOne("Beon.Models.Topic", "Topic")
+                        .WithMany("Posts")
+                        .HasForeignKey("TopicId");
+
+                    b.Navigation("Poster");
+
+                    b.Navigation("Topic");
+                });
+
+            modelBuilder.Entity("Beon.Models.Topic", b =>
+                {
+                    b.HasOne("Beon.Models.Board", "Board")
+                        .WithMany("Topics")
+                        .HasForeignKey("BoardId");
+
+                    b.Navigation("Board");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -278,9 +359,14 @@ namespace beon_clone_asp.Migrations.beon_clone_aspIdentityDb
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Beon.Models.BeonUser", b =>
+            modelBuilder.Entity("Beon.Models.Board", b =>
                 {
-                    b.Navigation("Friends");
+                    b.Navigation("Topics");
+                });
+
+            modelBuilder.Entity("Beon.Models.Topic", b =>
+                {
+                    b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
         }

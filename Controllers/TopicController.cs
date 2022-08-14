@@ -3,19 +3,27 @@ using Beon.Models;
 using Beon.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace Beon.Controllers
 {
   public class TopicController : Controller
   {
+    private readonly UserManager<BeonUser> _userManager;
     private ITopicRepository repository;
     private IBoardRepository boardRepository;
     private IPostRepository postRepository;
     private readonly ILogger _logger;
-    public TopicController(ITopicRepository repo, IBoardRepository boardRepo, IPostRepository postRepo, ILogger<TopicController> logger) {
+    public TopicController(
+      ITopicRepository repo,
+      IBoardRepository boardRepo,
+      IPostRepository postRepo,
+      UserManager<BeonUser> userManager,
+      ILogger<TopicController> logger) {
       repository = repo;
       boardRepository = boardRepo;
       postRepository = postRepo;
+      _userManager = userManager;
       _logger = logger;
     }
     public IActionResult Index() {
@@ -24,13 +32,15 @@ namespace Beon.Controllers
 
     [HttpPost]
     [Authorize]
-    public IActionResult Create(TopicCreateViewModel form) {
+    public async Task<IActionResult> Create(TopicCreateViewModel form) {
       Board? b = boardRepository.Boards.FirstOrDefault(b => b.BoardId == form.boardId);
       //_logger.LogCritical($"board id {form.boardId} {form.Topic.Title}");
       if (ModelState.IsValid && b != default(Board) && form.Topic != null) {
         form.Topic.Board = b;
         repository.SaveTopic(form.Topic);
         form.Op.Topic = form.Topic;
+        form.Op.Poster = await _userManager.GetUserAsync(User);
+        form.Op.TimeStamp = DateTime.UtcNow;
         postRepository.SavePost(form.Op);
         return RedirectToAction("Show", "Board", new { boardId = form.boardId });
       }
@@ -43,7 +53,7 @@ namespace Beon.Controllers
 
     [Route("Topic/{topicId:int}")]
     public IActionResult Show(int topicId) {
-      Topic? t = repository.Topics.Where(t => t.TopicId == topicId).Include(t => t.Posts).FirstOrDefault();
+      Topic? t = repository.Topics.Where(t => t.TopicId == topicId).Include(t => t.Posts).ThenInclude(p => p.Poster).FirstOrDefault();
       if (t == default(Topic)) {
         return View("Error");
       }

@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+/*using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,4 +19,4 @@ namespace Beon.Models
             // Add your customizations after calling base.OnModelCreating(builder);
         }
     }
-    }
+    }*/

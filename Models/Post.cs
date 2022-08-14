@@ -17,5 +17,8 @@ namespace Beon.Models
 
     [BindNever]
     public DateTime TimeStamp { get; set; }
+
+    [BindNever]
+    public BeonUser? Poster { get; set; }
   }
 }

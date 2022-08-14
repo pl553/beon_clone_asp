@@ -1,9 +1,8 @@
 @model Post
 
 <div>
-  <p>
-    <span>Date: </span>@Model.TimeStamp
-  </p>
+  <span>Poster: </span>@Model.Poster?.DisplayName <span>Date: </span>@Model.TimeStamp
+
   <p>
     @Model.Body
   </p>

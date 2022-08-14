@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-  
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
 namespace Beon.Models {
-  public class BeonDbContext : DbContext {
+  public class BeonDbContext : IdentityDbContext<BeonUser> {
     public BeonDbContext(DbContextOptions<BeonDbContext> options)
     : base(options) { }
 
