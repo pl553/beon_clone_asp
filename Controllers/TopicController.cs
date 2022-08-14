@@ -4,6 +4,7 @@ using Beon.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Beon.Infrastructure;
 
 namespace Beon.Controllers
 {
@@ -32,7 +33,7 @@ namespace Beon.Controllers
 
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> Create(TopicCreateViewModel form) {
+    public async Task<IActionResult> Create(TopicCreateViewModel form, string? returnUrl) {
       Board? b = boardRepository.Boards.FirstOrDefault(b => b.BoardId == form.boardId);
       //_logger.LogCritical($"board id {form.boardId} {form.Topic.Title}");
       if (ModelState.IsValid && b != default(Board) && form.Topic != null) {
@@ -42,7 +43,14 @@ namespace Beon.Controllers
         form.Op.Poster = await _userManager.GetUserAsync(User);
         form.Op.TimeStamp = DateTime.UtcNow;
         postRepository.SavePost(form.Op);
-        return RedirectToAction("Show", "Board", new { boardId = form.boardId });
+        if (returnUrl == null)
+        {
+          return RedirectToAction("Show", "Board", new { boardId = form.boardId });
+        }
+        else
+        {
+          return this.RedirectToLocal(returnUrl);
+        }
       }
       else {
         //return View("Show", new { boardId = model.boardId });

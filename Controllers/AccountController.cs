@@ -66,7 +66,7 @@ namespace Beon.Controllers
                 if (result.Succeeded)
                 {
                     _logger.LogInformation(1, "User logged in.");
-                    return RedirectToLocal(model.ReturnUrl);
+                    return this.RedirectToLocal(model.ReturnUrl);
                 }
                 /*if (result.RequiresTwoFactor)
                 {
@@ -123,7 +123,7 @@ namespace Beon.Controllers
                     _diaryRepository.SaveDiary(diary);
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation(3, "User created a new account with password.");
-                    return RedirectToLocal(returnUrl);
+                    return this.RedirectToLocal(returnUrl);
                 }
                 AddErrors(result);
             }
@@ -181,7 +181,7 @@ namespace Beon.Controllers
                 await _signInManager.UpdateExternalAuthenticationTokensAsync(info);
 
                 _logger.LogInformation(5, "User logged in with {Name} provider.", info.LoginProvider);
-                return RedirectToLocal(returnUrl);
+                return this.RedirectToLocal(returnUrl);
             }
             if (result.RequiresTwoFactor)
             {
@@ -229,7 +229,7 @@ namespace Beon.Controllers
                         // Update any authentication tokens as well
                         await _signInManager.UpdateExternalAuthenticationTokensAsync(info);
 
-                        return RedirectToLocal(returnUrl);
+                        return this.RedirectToLocal(returnUrl);
                     }
                 }
                 AddErrors(result);
@@ -440,7 +440,7 @@ namespace Beon.Controllers
             var result = await _signInManager.TwoFactorSignInAsync(model.Provider, model.Code, model.RememberMe, model.RememberBrowser);
             if (result.Succeeded)
             {
-                return RedirectToLocal(model.ReturnUrl);
+                return this.RedirectToLocal(model.ReturnUrl);
             }
             if (result.IsLockedOut)
             {
@@ -487,7 +487,7 @@ namespace Beon.Controllers
             var result = await _signInManager.TwoFactorAuthenticatorSignInAsync(model.Code, model.RememberMe, model.RememberBrowser);
             if (result.Succeeded)
             {
-                return RedirectToLocal(model.ReturnUrl);
+                return this.RedirectToLocal(model.ReturnUrl);
             }
             if (result.IsLockedOut)
             {
@@ -531,7 +531,7 @@ namespace Beon.Controllers
             var result = await _signInManager.TwoFactorRecoveryCodeSignInAsync(model.Code);
             if (result.Succeeded)
             {
-                return RedirectToLocal(model.ReturnUrl);
+                return this.RedirectToLocal(model.ReturnUrl);
             }
             else
             {
@@ -569,7 +569,7 @@ namespace Beon.Controllers
             return _userManager.GetUserAsync(HttpContext.User);
         }
 
-        private IActionResult RedirectToLocal(string returnUrl)
+        /*private IActionResult this.RedirectToLocal(string returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))
             {
@@ -579,7 +579,7 @@ namespace Beon.Controllers
             {
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }
-        }
+        }*/
 
         #endregion
     }
