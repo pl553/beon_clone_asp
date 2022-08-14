@@ -3,15 +3,12 @@
 <h1>@Model.Board.Name</h1>
 
 @foreach (var t in Model?.Board.Topics ?? Enumerable.Empty<Topic>()) {
-  <p>
-    <a asp-controller="Topic" asp-action="Show" asp-route-topicId="@t.TopicId">@t.Title</a>
-  </p>
-  <p>
-    @if (t.Posts.FirstOrDefault() != default(Post))
-    {
-      <partial name="_PostShowPartial" model="@t.Posts.FirstOrDefault()"></partial>
-    }
-  </p>
+  <a class="topic-title" asp-controller="Topic" asp-action="Show" asp-route-topicId="@t.TopicId">@t.Title</a>
+  @if (t.Posts.FirstOrDefault() != default(Post))
+  {
+    <partial name="_PostShowPartial" model="@t.Posts.FirstOrDefault()"></partial>
+  }
+  <br>
 }
 
 <partial name="_TopicCreatePartial" model="@Model?.newTopicForm"></partial>

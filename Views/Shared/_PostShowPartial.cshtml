@@ -1,9 +1,7 @@
 @model Post
 
-<div>
-  <span>Poster: </span>@Model.Poster?.DisplayName <span>Date: </span>@Model.TimeStamp
+<partial name="_UserProfileLinkPartial" model="@Model.Poster"></partial>&nbsp;<span class="m7">@Model.TimeStamp.ToString("HH:mm:ss")</span>
 
-  <p>
-    @Model.Body
-  </p>
-</div>
+<p>
+  @Model.Body
+</p>

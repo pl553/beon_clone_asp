@@ -5,6 +5,13 @@ body {
   background-color: #ffffff;
 }
 
+.m7 {
+  /* 0.75*0.75 */
+  font-size: 56.25%;
+  color: #666666;
+  white-space: nowrap;
+}
+
 /* 0.75*0.75 */
 .m4 {
   font-size: 56.25%;
@@ -44,6 +51,23 @@ h2, h3, p, div, span {
 
 .field-validation-error .alert-error-img {
   display: inline;
+}
+
+.user, .user_processed {
+  background: url('/i/smiles/user.png') no-repeat scroll 3px 0px;
+  padding-left: 18px;
+  /* 1.1 * 0.75 */
+  font-size: 82.5%;
+}
+
+.topic-title {
+  /* 1.6 * 0.75 */
+  font-size: 120%;
+  margin-left: 3px;
+}
+
+A {
+  color: #0048AB;
 }
 
 /* Header */

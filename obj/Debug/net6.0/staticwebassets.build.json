@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "bTzvQMgV2N9gbVchffMAm7M9G1bb8BTklcJqsWFVtAk=",
+  "Hash": "b3hVztvb4k6BboSiM9e9cclb2yamYqAo8hB2Qaevkok=",
   "Source": "beon_clone_asp",
   "BasePath": "_content/beon_clone_asp",
   "Mode": "Default",
@@ -1137,6 +1137,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/i/logo.png"
+    },
+    {
+      "Identity": "/home/h/beon_clone_asp/wwwroot/i/smiles/user.png",
+      "SourceId": "beon_clone_asp",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/h/beon_clone_asp/wwwroot/",
+      "BasePath": "_content/beon_clone_asp",
+      "RelativePath": "i/smiles/user.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/i/smiles/user.png"
     },
     {
       "Identity": "/home/h/beon_clone_asp/wwwroot/js/site.js",

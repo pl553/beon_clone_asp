@@ -15,6 +15,7 @@ namespace Beon.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        private readonly BeonDbContext _context;
         private readonly UserManager<BeonUser> _userManager;
         private readonly SignInManager<BeonUser> _signInManager;
         private readonly IEmailSender _emailSender;
@@ -26,12 +27,14 @@ namespace Beon.Controllers
             SignInManager<BeonUser> signInManager,
             IEmailSender emailSender,
             ISmsSender smsSender,
+            BeonDbContext context,
             ILoggerFactory loggerFactory)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _smsSender = smsSender;
+            _context = context;
             _logger = loggerFactory.CreateLogger<AccountController>();
         }
 
@@ -530,7 +533,20 @@ namespace Beon.Controllers
             }
         }
 
-
+        [AllowAnonymous]
+        [Route("/users/{userName:required}/")]
+        public IActionResult ShowInfo(string userName)
+        {
+            BeonUser? user = _context.Users.Where(u => u.UserName.Equals(userName)).FirstOrDefault();
+            if (user == default(BeonUser))
+            {
+                return RedirectToAction("Index", "Board");
+            }
+            else
+            {
+                return View(user);
+            }
+        }
         #region Helpers
 
         private void AddErrors(IdentityResult result)

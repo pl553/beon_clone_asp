@@ -16318,6 +16318,11 @@
       "FileKind": "mvc"
     },
     {
+      "FilePath": "/home/h/beon_clone_asp/Views/Account/ShowInfo.cshtml",
+      "TargetPath": "Views\\Account\\ShowInfo.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "/home/h/beon_clone_asp/Views/Account/ForgotPasswordConfirmation.cshtml",
       "TargetPath": "Views\\Account\\ForgotPasswordConfirmation.cshtml",
       "FileKind": "mvc"
@@ -16465,6 +16470,11 @@
     {
       "FilePath": "/home/h/beon_clone_asp/Views/Manage/SetPassword.cshtml",
       "TargetPath": "Views\\Manage\\SetPassword.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "/home/h/beon_clone_asp/Views/Shared/_UserProfileLinkPartial.cshtml",
+      "TargetPath": "Views\\Shared\\_UserProfileLinkPartial.cshtml",
       "FileKind": "mvc"
     },
     {
