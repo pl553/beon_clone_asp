@@ -1,14 +1,3 @@
 @model BoardShowViewModel
 
-<h1>@Model.Board.Name</h1>
-
-@foreach (var t in Model?.Board.Topics ?? Enumerable.Empty<Topic>()) {
-  <a class="topic-title" asp-controller="Topic" asp-action="Show" asp-route-topicId="@t.TopicId">@t.Title</a>
-  @if (t.Posts.FirstOrDefault() != default(Post))
-  {
-    <partial name="_PostShowPartial" model="@t.Posts.FirstOrDefault()"></partial>
-  }
-  <br>
-}
-
-<partial name="_TopicCreatePartial" model="@Model?.newTopicForm"></partial>
+<partial name="_BoardShowPartial" model="@Model"></partial>

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Beon.Models;
 using Beon.Models.AccountViewModels;
 using Beon.Services;
+using Beon.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,11 +16,12 @@ namespace Beon.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        private readonly BeonDbContext _context;
         private readonly UserManager<BeonUser> _userManager;
         private readonly SignInManager<BeonUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
+        private readonly IDiaryRepository _diaryRepository;
+        private readonly IBoardRepository _boardRepository;
         private readonly ILogger _logger;
 
         public AccountController(
@@ -27,14 +29,16 @@ namespace Beon.Controllers
             SignInManager<BeonUser> signInManager,
             IEmailSender emailSender,
             ISmsSender smsSender,
-            BeonDbContext context,
+            IDiaryRepository diaryRepository,
+            IBoardRepository boardRepository,
             ILoggerFactory loggerFactory)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _smsSender = smsSender;
-            _context = context;
+            _diaryRepository = diaryRepository;
+            _boardRepository = boardRepository;
             _logger = loggerFactory.CreateLogger<AccountController>();
         }
 
@@ -114,6 +118,9 @@ namespace Beon.Controllers
                     //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
                     //await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
                     //    "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
+                    var diaryBoard = new Board { Name = $"DiaryBoard{user.Id}"};
+                    var diary = new Diary { Board = diaryBoard, Owner = user };
+                    _diaryRepository.SaveDiary(diary);
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation(3, "User created a new account with password.");
                     return RedirectToLocal(returnUrl);
@@ -537,7 +544,7 @@ namespace Beon.Controllers
         [Route("/users/{userName:required}/")]
         public IActionResult ShowInfo(string userName)
         {
-            BeonUser? user = _context.Users.Where(u => u.UserName.Equals(userName)).FirstOrDefault();
+            BeonUser? user = _userManager.GetByUserName(userName);
             if (user == default(BeonUser))
             {
                 return RedirectToAction("Index", "Board");

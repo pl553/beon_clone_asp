@@ -12,5 +12,9 @@ namespace Beon.Infrastructure
       var roles = await manager.GetRolesAsync(await manager.GetUserAsync(principal));
       return roles.Contains("Admin");
     }
+
+    public static BeonUser? GetByUserName(this UserManager<BeonUser> manager, string userName) {
+       return manager.Users.Where(u => u.UserName.Equals(userName)).FirstOrDefault();
+    }
   }
 }

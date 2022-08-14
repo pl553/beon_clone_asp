@@ -1,3 +1,5 @@
 @model BeonUser
 
 Name <partial name="_UserProfileLinkPartial" model="@Model"></partial>
+<br>
+Diary <a asp-controller="Diary" asp-action="Show" asp-route-userName="@Model.UserName">diary</a>

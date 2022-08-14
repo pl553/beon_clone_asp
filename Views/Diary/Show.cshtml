@@ -1,0 +1,6 @@
+@model Diary
+
+@if (Model.Board != null)
+{
+  <partial name="_BoardShowPartial" model="@new BoardShowViewModel(Model.Board)"></partial>
+}
