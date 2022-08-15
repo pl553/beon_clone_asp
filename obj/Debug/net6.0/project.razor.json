@@ -16373,6 +16373,11 @@
       "FileKind": "mvc"
     },
     {
+      "FilePath": "/home/h/beon_clone_asp/Views/DiaryTopic/Show.cshtml",
+      "TargetPath": "Views\\DiaryTopic\\Show.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "/home/h/beon_clone_asp/Views/Account/Lockout.cshtml",
       "TargetPath": "Views\\Account\\Lockout.cshtml",
       "FileKind": "mvc"

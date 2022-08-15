@@ -19,10 +19,9 @@ namespace Beon.Models {
           .HasForeignKey<Diary>(d => d.OwnerId)
           .IsRequired();
 
-        builder.Entity<Diary>()
-          .HasOne(d => d.Board)
-          .WithOne()
-          .HasForeignKey<Board>(d => d.BoardId)
+        builder.Entity<Board>()
+          .HasOne<Diary>()
+          .WithOne(d => d.Board)
           .IsRequired();
     }
 

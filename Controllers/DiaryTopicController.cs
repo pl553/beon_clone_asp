@@ -1,4 +1,4 @@
-/*using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Beon.Models;
 using Beon.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -58,23 +58,32 @@ namespace Beon.Controllers
 
     [Route("/diary/{userName:required}/{topicId:int}")]
     public IActionResult Show(string userName, int topicId) {
-      Board? diaryBoard = _userManager.Users
+      BeonUser? user = _userManager.Users
         .Where(u => u.UserName.Equals(userName))
         .Include(u => u.Diary)
-        .ThenInclude(d => d.Board)
-        .ThenInclude(b => b.Topics)
-
+        .FirstOrDefault();
+      
       if (user == null || user.Diary == null)
       {
         return this.RedirectToLocal("");
       }
-      Topic? t = repository.Topics.Where(t => t.TopicId == topicId).Include(t => t.Posts).ThenInclude(p => p.Poster).FirstOrDefault();
+      Topic? t = repository.Topics
+        .Include(t => t.Board)
+        .Where(t => t.Board.OwnerName.Equals(userName))
+        .Skip(topicId-1)
+        .Include(t => t.Posts)
+        .ThenInclude(p => p.Poster)
+        .FirstOrDefault();
+
       if (t == default(Topic)) {
         return View("Error");
       }
       else {
+        ViewBag.IsDiaryPage = true;
+        ViewBag.DiaryTitle = user.DisplayName;
+        ViewBag.DiarySubtitle = user.DisplayName;
         return View(new TopicShowViewModel(t));
       }
     }
   }
-}*/
+}
