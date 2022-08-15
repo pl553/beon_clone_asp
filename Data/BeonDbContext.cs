@@ -16,7 +16,14 @@ namespace Beon.Models {
         builder.Entity<BeonUser>()
           .HasOne(u => u.Diary)
           .WithOne(d => d.Owner)
-          .HasForeignKey<Diary>(d => d.OwnerId);
+          .HasForeignKey<Diary>(d => d.OwnerId)
+          .IsRequired();
+
+        builder.Entity<Diary>()
+          .HasOne(d => d.Board)
+          .WithOne()
+          .HasForeignKey<Board>(d => d.BoardId)
+          .IsRequired();
     }
 
     public DbSet<Board> Boards => Set<Board>();

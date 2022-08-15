@@ -118,7 +118,8 @@ namespace Beon.Controllers
                     //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
                     //await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
                     //    "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
-                    var diaryBoard = new Board { Name = $"DiaryBoard{user.Id}"};
+                    var diaryBoard = new Board { Name = $"DiaryBoard{user.Id}", Type = BoardType.Diary, OwnerName = model.UserName };
+                    _boardRepository.SaveBoard(diaryBoard);
                     var diary = new Diary { Board = diaryBoard, Owner = user };
                     _diaryRepository.SaveDiary(diary);
                     await _signInManager.SignInAsync(user, isPersistent: false);

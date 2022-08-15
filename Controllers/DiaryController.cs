@@ -25,6 +25,7 @@ namespace Beon.Controllers
         .ThenInclude(d => d.Board)
         .ThenInclude(b => b.Topics)
         .ThenInclude(t => t.Posts)
+        .ThenInclude(p => p.Poster)
         .FirstOrDefaultAsync();
 
       if (owner == null || owner.Diary == null)
@@ -32,6 +33,9 @@ namespace Beon.Controllers
         return RedirectToAction("Index", "Board");
       }
 
+      ViewBag.IsDiaryPage = true;
+      ViewBag.DiaryTitle = owner.DisplayName;
+      ViewBag.DiarySubtitle = owner.DisplayName;
       return View(owner.Diary);
     }
   }

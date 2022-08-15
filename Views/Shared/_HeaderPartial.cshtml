@@ -6,10 +6,17 @@
 @inject UserManager<BeonUser> UserManager
 
 <div id="header">
-  <div id="header-logo">
-    <a id="logo" asp-controller="Board" asp-action="Index">
-      <img src="/i/logo.png">
-    </a>
+  <div id="@(ViewBag.IsDiaryPage != true ? "header-logo" : "header-diary")">
+    @if (ViewBag.IsDiaryPage != true) {
+      <a id="logo" asp-controller="Board" asp-action="Index">
+        <img src="/i/logo.png">
+      </a>
+    }
+    else {
+      <span class="blog-title">@ViewBag.DiaryTitle</span>
+      <br>
+      <span class="blog-subtitle">@ViewBag.DiarySubtitle</span>
+    }
     <br>
     <span class="m4">Hello,
       @if (SignInManager.IsSignedIn(User))

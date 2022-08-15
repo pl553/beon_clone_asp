@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+/*using Microsoft.AspNetCore.Mvc;
 using Beon.Models;
 using Beon.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -8,14 +8,14 @@ using Beon.Infrastructure;
 
 namespace Beon.Controllers
 {
-  public class TopicController : Controller
+  public class DiaryTopicController : Controller
   {
     private readonly UserManager<BeonUser> _userManager;
     private ITopicRepository repository;
     private IBoardRepository boardRepository;
     private IPostRepository postRepository;
     private readonly ILogger _logger;
-    public TopicController(
+    public DiaryTopicController(
       ITopicRepository repo,
       IBoardRepository boardRepo,
       IPostRepository postRepo,
@@ -26,9 +26,6 @@ namespace Beon.Controllers
       postRepository = postRepo;
       _userManager = userManager;
       _logger = logger;
-    }
-    public IActionResult Index() {
-      return View();
     }
 
     [HttpPost]
@@ -59,8 +56,18 @@ namespace Beon.Controllers
       }
     }
 
-    [Route("Topic/{topicId:int}")]
-    public IActionResult Show(int topicId) {
+    [Route("/diary/{userName:required}/{topicId:int}")]
+    public IActionResult Show(string userName, int topicId) {
+      Board? diaryBoard = _userManager.Users
+        .Where(u => u.UserName.Equals(userName))
+        .Include(u => u.Diary)
+        .ThenInclude(d => d.Board)
+        .ThenInclude(b => b.Topics)
+
+      if (user == null || user.Diary == null)
+      {
+        return this.RedirectToLocal("");
+      }
       Topic? t = repository.Topics.Where(t => t.TopicId == topicId).Include(t => t.Posts).ThenInclude(p => p.Poster).FirstOrDefault();
       if (t == default(Topic)) {
         return View("Error");
@@ -70,4 +77,4 @@ namespace Beon.Controllers
       }
     }
   }
-}
+}*/

@@ -66,6 +66,17 @@ h2, h3, p, div, span {
   margin-left: 3px;
 }
 
+.blog-title {
+  /* 1.5 * 0.75 */
+  font-size: 112.5%;
+  color: #666666;
+}
+
+.blog-subtitle {
+  font-size: 75%;
+  color: #666666;
+}
+
 A {
   color: #0048AB;
 }
@@ -81,6 +92,14 @@ A {
   display: flex;
   flex-direction: column;
   width: 190px;
+  justify-content: center; /* align vertical */
+  align-items: center; /* align horizontal */
+}
+
+#header-diary {
+  display: flex;
+  flex-direction: column;
+  width: 295px;
   justify-content: center; /* align vertical */
   align-items: center; /* align horizontal */
 }

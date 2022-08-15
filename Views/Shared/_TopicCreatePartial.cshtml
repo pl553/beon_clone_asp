@@ -7,7 +7,7 @@
 @inject UserManager<BeonUser> UserManager
 
 @if (SignInManager.IsSignedIn(User)) { 
-<form asp-controller="Topic" asp-action="Create" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()" method="post">
+<form asp-controller="Topic" asp-action="Create" method="post">
   Title: <br>
   <input asp-for="Topic.Title" /><br>
   <span asp-validation-for="Topic.Title"></span><br>

@@ -370,4 +370,4 @@
 /home/h/beon_clone_asp/obj/Debug/net6.0/beon_clone_asp.MvcApplicationPartsAssemblyInfo.cs
 /home/h/beon_clone_asp/bin/Debug/net6.0/Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 /home/h/beon_clone_asp/bin/Debug/net6.0/Microsoft.Extensions.Caching.Memory.dll
-/home/h/beon_clone_asp/obj/Debug/net6.0/refint/beon_clone_asp.dll
+/home/h/beon_clone_asp/bin/Debug/net6.0/ref/beon_clone_asp.dll
