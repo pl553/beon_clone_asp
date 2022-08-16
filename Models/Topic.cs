@@ -6,6 +6,8 @@ namespace Beon.Models {
     [BindNever]
     public int TopicId { get; set; }
     [BindNever]
+    public int BoardId { get; set; }
+    [BindNever]
     public Board? Board { get; set; }
     [Required(ErrorMessage = "Please enter a title")]
     [MaxLength(30)]

@@ -6,7 +6,7 @@ namespace Beon.Models.ViewModels
 
     public TopicShowViewModel(Topic _Topic) {
       Topic = _Topic;
-      NewPost = new PostCreateViewModel { TopicId = _Topic.TopicId };
+      NewPost = new PostCreateViewModel { TopicId = _Topic.TopicId, BoardType = _Topic.Board!.Type, BoardOwnerName = _Topic.Board!.OwnerName };
     }
   }
 }

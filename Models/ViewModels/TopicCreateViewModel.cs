@@ -5,6 +5,10 @@ namespace Beon.Models.ViewModels {
   public class TopicCreateViewModel {
     public Topic Topic { get; set; } = new Topic();
     public Post Op { get; set; } = new Post();
-    public int boardId { get; set; }
+
+    [BindNever]
+    public BoardType BoardType { get; set; }
+    [BindNever]
+    public string BoardOwnerName { get; set; } = String.Empty;
   }
 }

@@ -2,13 +2,25 @@
 
 <h1>@Model.Board.Name</h1>
 
+@{
+  int i = 1;
+}
+
 @foreach (var t in Model?.Board.Topics ?? Enumerable.Empty<Topic>()) {
-  <a class="topic-title" asp-controller="Topic" asp-action="Show" asp-route-topicId="@t.TopicId">@t.Title</a>
+  @if (Model?.Board.Type == BoardType.Diary) {
+    <a class="topic-title" asp-controller="DiaryTopic" asp-action="Show" asp-route-userName="@Model.Board.OwnerName" asp-route-topicId="@i">
+      @t.Title
+    </a>
+  }
+  else {
+    <a class="topic-title" asp-controller="Topic" asp-action="Show" asp-route-topicId="@t.TopicId">@t.Title</a> 
+  }
   @if (t.Posts.FirstOrDefault() != default(Post))
   {
     <partial name="_PostShowPartial" model="@t.Posts.FirstOrDefault()"></partial>
   }
   <br>
+  i++;
 }
 
 <partial name="_TopicCreatePartial" model="@Model?.newTopicForm"></partial>

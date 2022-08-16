@@ -20,7 +20,7 @@ namespace Beon.Controllers
       IBoardRepository boardRepo,
       IPostRepository postRepo,
       UserManager<BeonUser> userManager,
-      ILogger<TopicController> logger) {
+      ILogger<DiaryTopicController> logger) {
       repository = repo;
       boardRepository = boardRepo;
       postRepository = postRepo;
@@ -30,10 +30,19 @@ namespace Beon.Controllers
 
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> Create(TopicCreateViewModel form) {
-      Board? b = boardRepository.Boards.FirstOrDefault(b => b.BoardId == form.boardId);
+    [Route("/diary/{userName:required}/CreateTopic")]
+    public async Task<IActionResult> Create(string userName, TopicCreateViewModel form) {
+      Board? b = boardRepository.Boards
+        .Where(b => b.OwnerName == userName)
+        .Where(b => b.Type == BoardType.Diary)
+        .FirstOrDefault();
+      
       //_logger.LogCritical($"board id {form.boardId} {form.Topic.Title}");
       if (ModelState.IsValid && b != default(Board) && form.Topic != null) {
+        int topicCount = repository.Topics
+          .Where(t => t.BoardId == b.BoardId)
+          .Count();
+
         form.Topic.Board = b;
         repository.SaveTopic(form.Topic);
         form.Op.Topic = form.Topic;
@@ -42,7 +51,7 @@ namespace Beon.Controllers
         postRepository.SavePost(form.Op);
         if (b.Type == BoardType.Diary)
         {
-          return RedirectToAction("Show", "Diary", new { userName = b.OwnerName });
+          return RedirectToAction("Show", "DiaryTopic", new { userName = b.OwnerName, topicId = topicCount+1});
         }
         else
         {
@@ -69,7 +78,8 @@ namespace Beon.Controllers
       }
       Topic? t = repository.Topics
         .Include(t => t.Board)
-        .Where(t => t.Board.OwnerName.Equals(userName))
+        .Where(t => t.Board!.OwnerName.Equals(userName))
+        .Where(t => t.Board!.Type.Equals(BoardType.Diary))
         .Skip(topicId-1)
         .Include(t => t.Posts)
         .ThenInclude(p => p.Poster)

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
 
 namespace Beon.Models {
   public enum BoardType
@@ -9,6 +10,7 @@ namespace Beon.Models {
     PublicForum
   }
 
+  [Index(nameof(OwnerName))]
   public class Board {
     [BindNever]
     public int BoardId { get; set; }

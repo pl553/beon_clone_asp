@@ -6,7 +6,7 @@ namespace Beon.Models.ViewModels
 
     public BoardShowViewModel(Board board) {
       Board = board;
-      newTopicForm = new TopicCreateViewModel { boardId = board.BoardId };
+      newTopicForm = new TopicCreateViewModel { BoardType = board.Type, BoardOwnerName = board.OwnerName };
     }
   }
 }
