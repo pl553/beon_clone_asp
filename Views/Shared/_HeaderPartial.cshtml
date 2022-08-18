@@ -8,7 +8,7 @@
 <div id="header">
   <div id="@(ViewBag.IsDiaryPage != true ? "header-logo" : "header-diary")">
     @if (ViewBag.IsDiaryPage != true) {
-      <a id="logo" asp-controller="Board" asp-action="Index">
+      <a id="logo" asp-controller="Home" asp-action="Index">
         <img src="/i/logo.png">
       </a>
     }
