@@ -58,7 +58,7 @@
         error.data("unobtrusiveContainer", container);
 
         if (replace) {
-            container.children("#" + escapeAttributeValue(inputElement[0].name) + "-error").remove();
+            container.children("#" + inputElement[0].name.replace(/\./g, '_') + "-error").remove();
             error.removeClass("input-validation-error").appendTo(container);
         }
         else {
