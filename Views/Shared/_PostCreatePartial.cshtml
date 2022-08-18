@@ -7,21 +7,18 @@
 @inject UserManager<BeonUser> UserManager
 
 @{
-  //l8r add conditions based on boardtype
-  var controller = "DiaryPost";
-  var action = "Create";
-  var routeParams = new Dictionary<string,string>
-  {
+  string controller = "DiaryPost";
+  string action = "Create";
+  var routeParams = new Dictionary<string,string> {
     { "userName", Model.BoardOwnerName },
-    { "topicId", Model.TopicId.ToString() }
+    { "topicOrd", Model.TopicOrd.ToString() }  
   };
 }
 
 @if (SignInManager.IsSignedIn(User)) { 
-<form asp-controller="@controller" asp-action="@action" asp-all-route-data="routeParams" method="post">
+<form asp-controller="@controller" asp-action="@action" asp-all-route-data="@routeParams" method="post">
   Create a post:<br>
-  <partial name="_PostInputsPartial" for="Post">
-  <input type="hidden" asp-for="TopicId" />
+  <partial name="_PostInputsPartial" model="@new PostFormModel()"></partial>
   <input type="submit" value="Create" />
 </form>
 }

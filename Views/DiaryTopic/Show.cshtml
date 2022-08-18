@@ -1,9 +1,10 @@
-@model TopicShowViewModel
+@model TopicShowViewModel //l8r DiaryTopicShowViewModel n move this to a partial
 
-@foreach (var p in Model?.Topic.Posts ?? Enumerable.Empty<Post>()) 
+<h2 class="topic-title">@Model.Title</h2>
+@foreach (var p in Model.Posts) 
 {
-  <p><b>Post:</b></p>
   <partial name="_PostShowPartial" model="@p"></partial>
+  <br>
 }
 
-<partial name="_PostCreatePartial" model="@Model?.NewPost"></partial>
+<partial name="_PostCreatePartial" model="@new PostCreateViewModel(Model.BoardType, Model.BoardOwnerName, Model.TopicOrd)"></partial>

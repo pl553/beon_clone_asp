@@ -5,20 +5,12 @@ namespace Beon.Models
 {
   public class Post
   {
-    [BindNever]
     public int PostId { get; set; }
-
-    [BindNever]
+    public int? TopicId { get; set; }
     public Topic? Topic { get; set; }
-
-    [Required]
     [DataType(DataType.Text)]
-    public string? Body { get; set; }
-
-    [BindNever]
+    public string Body { get; set; } = String.Empty;
     public DateTime TimeStamp { get; set; }
-
-    [BindNever]
     public BeonUser? Poster { get; set; }
   }
 }

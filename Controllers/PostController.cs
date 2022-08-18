@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+/*using Microsoft.AspNetCore.Mvc;
 using Beon.Models;
 using Beon.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -45,4 +45,4 @@ namespace Beon.Controllers
       }
     }
   }
-}
+}*/

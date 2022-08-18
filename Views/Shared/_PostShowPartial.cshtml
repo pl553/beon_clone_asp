@@ -1,6 +1,7 @@
-@model Post
+@model PostShowViewModel
 
-<partial name="_UserProfileLinkPartial" model="@Model.Poster"></partial>&nbsp;<span class="m7">@Model.TimeStamp.ToString("HH:mm:ss")</span>
+<partial name="_UserProfileLinkPartial" model="@new UserProfileLinkViewModel(Model.Poster.UserName, Model.Poster.DisplayName)"></partial>
+&nbsp;<span class="m7">@Model.TimeStamp.ToString("HH:mm:ss")</span>
 
 <p>
   @Model.Body

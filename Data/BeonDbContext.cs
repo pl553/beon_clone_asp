@@ -23,6 +23,11 @@ namespace Beon.Models {
           .HasOne<Diary>()
           .WithOne(d => d.Board)
           .IsRequired();
+
+        builder.Entity<Board>()
+          .HasOne<PublicForum>()
+          .WithOne(f => f.Board)
+          .IsRequired();
     }
 
     public DbSet<Board> Boards => Set<Board>();

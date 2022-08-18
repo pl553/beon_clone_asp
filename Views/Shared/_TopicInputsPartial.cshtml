@@ -1,0 +1,7 @@
+@model TopicFormModel
+
+Title: <br>
+<input asp-for="Title" /><br>
+<span asp-validation-for="Title"></span><br>
+Post: <br>
+<partial name="_PostInputsPartial" for="Op"></partial>

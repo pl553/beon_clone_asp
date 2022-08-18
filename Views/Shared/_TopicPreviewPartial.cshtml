@@ -1,0 +1,15 @@
+@model TopicPreviewViewModel
+
+@{
+  var controller = "DiaryTopic";
+  var action = "Show";
+  var routeParams = new Dictionary<string,string> {
+      { "userName", Model.BoardOwnerName },
+      { "topicOrd", Model.TopicOrd.ToString() }
+    };
+}
+
+<a class="topic-title" asp-controller="@controller" asp-action="@action" asp-all-route-data="@routeParams">
+  @Model.Title
+</a>
+<partial name="_PostShowPartial" model="@Model.Op"></partial>

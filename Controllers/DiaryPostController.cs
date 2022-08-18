@@ -10,16 +10,19 @@ namespace Beon.Controllers
 {
   public class DiaryPostController : Controller
   {
+    private IBoardRepository _boardRepository;
     private IPostRepository repository;
     private ITopicRepository _topicRepository;
     private readonly UserManager<BeonUser> _userManager;    
     private readonly ILogger _logger;
     public DiaryPostController(
+      IBoardRepository boardRepository,
       IPostRepository repo,
       ITopicRepository TopicRepo,
       UserManager<BeonUser> userManager,
       ILogger<DiaryPostController> logger) {
       repository = repo;
+      _boardRepository = boardRepository;
       _topicRepository = TopicRepo;
       _userManager = userManager;
       _logger = logger;
@@ -31,35 +34,42 @@ namespace Beon.Controllers
     [HttpPost]
     [Authorize]
     [ValidateAntiForgeryToken]
-    [Route("/diary/{userName:required}/{topicId:int}/CreatePost")]
-    public async Task<IActionResult> Create(string userName, int topicId, PostCreateViewModel model) {
+    [Route("/diary/{userName:required}/{topicOrd:int}/CreatePost")]
+    public async Task<IActionResult> Create(string userName, int topicOrd, PostFormModel model) {
       if (!ModelState.IsValid) {
-        return this.RedirectToLocal("");
+        return NotFound();
       }
 
-      Topic? t = _topicRepository.Topics
-        .Include(t => t.Board)
-        .Where(t => t.Board!.OwnerName.Equals(userName))
-        .Where(t => t.Board!.Type.Equals(BoardType.Diary))
-        .Skip(topicId-1)
-        .FirstOrDefault();
+      int boardId = await _boardRepository.Boards
+        .Where(b => b.OwnerName.Equals(userName) && b.Type.Equals(BoardType.Diary))
+        .Select(b => b.BoardId)
+        .FirstOrDefaultAsync();
+      
+      if (boardId == 0) {
+        return NotFound();
+      }
 
-      if (t == default(Topic)) {
-        return View("Error");
+      int topicId = await _topicRepository.Topics
+        .Where(t => t.BoardId.Equals(boardId))
+        .Skip(topicOrd-1)
+        .Select(t => t.TopicId)
+        .FirstOrDefaultAsync();
+
+      if (topicId == 0) {
+        return NotFound();
       }
-      //_logger.LogCritical($"Topic id {model.TopicId} {model.Post.Title}");
-      if (ModelState.IsValid && t != default(Topic) && model.Post != null) {
-        model.Post.Topic = t;
-        model.Post.TimeStamp = DateTime.UtcNow;
-        model.Post.Poster = await _userManager.GetUserAsync(User);
-        repository.SavePost(model.Post);
-        return RedirectToAction("Show", "DiaryTopic", new { topicId = topicId, userName = userName });
+      
+      BeonUser? u = await _userManager.Users
+        .Where(u => u.UserName.Equals(userName))
+        .FirstOrDefaultAsync();   
+         
+      if (u == null) {
+        return NotFound();
       }
-      else {
-        //return View("Show", new { TopicId = model.TopicId });
-        return View("Error");
-        //return RedirectToAction("Show", "Topic", new { TopicId = model.TopicId });
-      }
+
+      Post p = new Post { TopicId = topicId, Body = model.Body, TimeStamp = DateTime.UtcNow, Poster = u };
+      repository.SavePost(p);
+      return RedirectToAction("Show", "DiaryTopic", new { topicOrd = topicOrd, userName = userName });
     }
   }
 }

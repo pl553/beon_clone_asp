@@ -31,69 +31,75 @@ namespace Beon.Controllers
     [HttpPost]
     [Authorize]
     [Route("/diary/{userName:required}/CreateTopic")]
-    public async Task<IActionResult> Create(string userName, TopicCreateViewModel form) {
-      Board? b = boardRepository.Boards
-        .Where(b => b.OwnerName == userName)
-        .Where(b => b.Type == BoardType.Diary)
-        .FirstOrDefault();
+    public async Task<IActionResult> Create(string userName, TopicFormModel model) {
+      int boardId = await boardRepository.Boards
+        .Where(b => b.OwnerName.Equals(userName) && b.Type.Equals(BoardType.Diary))
+        .Select(b => b.BoardId)
+        .FirstOrDefaultAsync();
+
+      if (boardId == 0) {
+        return NotFound("1");
+      }
       
-      //_logger.LogCritical($"board id {form.boardId} {form.Topic.Title}");
-      if (ModelState.IsValid && b != default(Board) && form.Topic != null) {
+      BeonUser? u = await _userManager.GetUserAsync(User);
+
+      if (u == null) {
+        return NotFound("2");
+      }
+
+      if (ModelState.IsValid) {
         int topicCount = repository.Topics
-          .Where(t => t.BoardId == b.BoardId)
+          .Where(t => t.BoardId.Equals(boardId))
           .Count();
 
-        form.Topic.Board = b;
-        repository.SaveTopic(form.Topic);
-        form.Op.Topic = form.Topic;
-        form.Op.Poster = await _userManager.GetUserAsync(User);
-        form.Op.TimeStamp = DateTime.UtcNow;
-        postRepository.SavePost(form.Op);
-        if (b.Type == BoardType.Diary)
-        {
-          return RedirectToAction("Show", "DiaryTopic", new { userName = b.OwnerName, topicId = topicCount+1});
-        }
-        else
-        {
-          return RedirectToAction("Show", "Board", new { boardId = b.BoardId });
-        }
+        Topic topic = new Topic { Title = model.Title, BoardId = boardId };
+        repository.SaveTopic(topic);
+        Post op = new Post { Body = model.Op.Body, Topic = topic, Poster = u, TimeStamp = DateTime.UtcNow };
+        postRepository.SavePost(op);
+        return RedirectToAction("Show", "DiaryTopic", new { userName = userName, topicOrd = topicCount+1});
       }
       else {
-        //return View("Show", new { boardId = model.boardId });
-        return View("Error");
-        //return RedirectToAction("Show", "Board", new { boardId = model.boardId });
+        return NotFound("3");
       }
     }
 
-    [Route("/diary/{userName:required}/{topicId:int}")]
-    public IActionResult Show(string userName, int topicId) {
-      BeonUser? user = _userManager.Users
+    [Route("/diary/{userName:required}/{topicOrd:int}")]
+    public async Task<IActionResult> Show(string userName, int topicOrd) {
+      string? displayName = await _userManager.Users
         .Where(u => u.UserName.Equals(userName))
-        .Include(u => u.Diary)
-        .FirstOrDefault();
+        .Select(u => u.DisplayName)
+        .FirstOrDefaultAsync();
       
-      if (user == null || user.Diary == null)
-      {
-        return this.RedirectToLocal("");
+      if (displayName == null) {
+        return NotFound();
       }
-      Topic? t = repository.Topics
-        .Include(t => t.Board)
-        .Where(t => t.Board!.OwnerName.Equals(userName))
-        .Where(t => t.Board!.Type.Equals(BoardType.Diary))
-        .Skip(topicId-1)
+
+      int boardId = await boardRepository.Boards
+        .Where(b => b.OwnerName.Equals(userName) && b.Type.Equals(BoardType.Diary))
+        .Select(b => b.BoardId)
+        .FirstOrDefaultAsync();
+      
+      Topic? t = await repository.Topics
+        .Where(t => t.BoardId.Equals(boardId))
+        .Skip(topicOrd-1)
         .Include(t => t.Posts)
         .ThenInclude(p => p.Poster)
-        .FirstOrDefault();
+        .FirstOrDefaultAsync();
 
-      if (t == default(Topic)) {
-        return View("Error");
+      if (t == null) {
+        return NotFound();
       }
-      else {
-        ViewBag.IsDiaryPage = true;
-        ViewBag.DiaryTitle = user.DisplayName;
-        ViewBag.DiarySubtitle = user.DisplayName;
-        return View(new TopicShowViewModel(t));
+
+      ICollection<PostShowViewModel> posts = new List<PostShowViewModel>();
+
+      foreach (var p in t.Posts) if (p.Poster != null) {
+        posts.Add(new PostShowViewModel(p.Body, p.TimeStamp, new PosterViewModel(p.Poster.UserName, p.Poster.DisplayName)));
       }
+      
+      ViewBag.IsDiaryPage = true;
+      ViewBag.DiaryTitle = displayName;
+      ViewBag.DiarySubtitle = displayName;
+      return View(new TopicShowViewModel(BoardType.Diary, userName, topicOrd, t.Title, posts));
     }
   }
 }

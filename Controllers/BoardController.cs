@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+/*using Microsoft.AspNetCore.Mvc;
 using Beon.Models;
 using Beon.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
@@ -37,20 +37,15 @@ namespace Beon.Controllers
     }
 
     [Route("Board/{boardId:int}")]
-    public IActionResult Show(int boardId) {
-      Board? b = repository.Boards
-        .Where(b => b.BoardId == boardId)
-        .Include(b => b.Topics)
-        .ThenInclude(t => t.Posts)
-        .ThenInclude(p => p.Poster)
-        .FirstOrDefault();
+    public async Task<IActionResult> Show(int boardId) {
+      Board
       if (b == null) {
         return View("Error");
       }
       else {
         //_logger.LogCritical($"board id {boardId}");
-        return View(new BoardShowViewModel(b));
+        return View(new BoardShowViewModel()
       }
     }
   }
-}
+}*/

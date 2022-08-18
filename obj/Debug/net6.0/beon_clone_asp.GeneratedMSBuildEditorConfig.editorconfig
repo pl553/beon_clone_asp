@@ -75,18 +75,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWNjb3VudC9WZXJpZnlDb2RlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/h/beon_clone_asp/Views/Board/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQm9hcmQvQ3JlYXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/home/h/beon_clone_asp/Views/Board/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQm9hcmQvSW5kZXguY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[/home/h/beon_clone_asp/Views/Board/Show.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQm9hcmQvU2hvdy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
 [/home/h/beon_clone_asp/Views/Diary/Show.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRGlhcnkvU2hvdy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -169,6 +157,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [/home/h/beon_clone_asp/Views/Shared/_TopicCreatePartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19Ub3BpY0NyZWF0ZVBhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/h/beon_clone_asp/Views/Shared/_TopicInputsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19Ub3BpY0lucHV0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/h/beon_clone_asp/Views/Shared/_TopicPreviewPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19Ub3BpY1ByZXZpZXdQYXJ0aWFsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [/home/h/beon_clone_asp/Views/Shared/_UserProfileLinkPartial.cshtml]

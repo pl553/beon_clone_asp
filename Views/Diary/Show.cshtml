@@ -1,6 +1,3 @@
-@model Diary
+@model DiaryViewModel
 
-@if (Model.Board != null)
-{
-  <partial name="_BoardShowPartial" model="@new BoardShowViewModel(Model.Board)"></partial>
-}
+<partial name="_BoardShowPartial" model="@Model.Board"></partial>

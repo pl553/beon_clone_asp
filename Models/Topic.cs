@@ -11,7 +11,7 @@ namespace Beon.Models {
     public Board? Board { get; set; }
     [Required(ErrorMessage = "Please enter a title")]
     [MaxLength(30)]
-    public string? Title { get; set; }
+    public string Title { get; set; } = String.Empty;
 
     public ICollection<Post> Posts { get; set; } = new List<Post>();
   }

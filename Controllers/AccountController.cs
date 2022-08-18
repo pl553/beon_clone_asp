@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Beon.Models;
 using Beon.Models.AccountViewModels;
+using Beon.Models.ViewModels;
 using Beon.Services;
 using Beon.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
@@ -141,7 +142,7 @@ namespace Beon.Controllers
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation(4, "User logged out.");
-            return RedirectToAction(nameof(BoardController.Index), "Board");
+            return this.RedirectToLocal("");
         }
 
         //
@@ -545,14 +546,18 @@ namespace Beon.Controllers
         [Route("/users/{userName:required}/")]
         public IActionResult ShowInfo(string userName)
         {
-            BeonUser? user = _userManager.GetByUserName(userName);
-            if (user == default(BeonUser))
+            var info = _userManager.Users
+                .Where(u => u.UserName.Equals(userName))
+                .Select(u => new { u.DisplayName, u.UserName })
+                .FirstOrDefault();
+
+            if (info == null)
             {
-                return RedirectToAction("Index", "Board");
+                return NotFound();
             }
             else
             {
-                return View(user);
+                return View(new UserProfileViewModel(info.UserName, info.DisplayName));
             }
         }
         #region Helpers
