@@ -1,3 +1,16 @@
+@using Microsoft.AspNetCore.Identity
+@using Beon.Infrastructure
+@using Beon.Models
+
 @model DiaryViewModel
 
+@inject SignInManager<BeonUser> SignInManager
+@inject UserManager<BeonUser> UserManager
+
 <partial name="_BoardShowPartial" model="@Model.Board"></partial>
+
+@if (SignInManager.IsSignedIn(User)) {
+  @if (Model.Board.BoardOwnerName.Equals(await UserManager.GetUserNameAsync(await UserManager.GetUserAsync(User)))) {
+    <partial name="_TopicCreatePartial" model="@new TopicCreateViewModel(Model.Board.BoardType, Model.Board.BoardOwnerName)"></partial>
+  }
+}

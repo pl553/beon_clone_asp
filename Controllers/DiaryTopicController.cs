@@ -32,6 +32,12 @@ namespace Beon.Controllers
     [Authorize]
     [Route("/diary/{userName:required}/CreateTopic")]
     public async Task<IActionResult> Create(string userName, TopicFormModel model) {
+      string loggedInUserName = await _userManager.GetUserNameAsync(await _userManager.GetUserAsync(User));
+
+      if (loggedInUserName != userName) {
+        return NotFound();
+      }
+      
       int boardId = await boardRepository.Boards
         .Where(b => b.OwnerName.Equals(userName) && b.Type.Equals(BoardType.Diary))
         .Select(b => b.BoardId)
