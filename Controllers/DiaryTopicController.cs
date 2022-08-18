@@ -38,13 +38,13 @@ namespace Beon.Controllers
         .FirstOrDefaultAsync();
 
       if (boardId == 0) {
-        return NotFound("1");
+        return NotFound();
       }
       
       BeonUser? u = await _userManager.GetUserAsync(User);
 
       if (u == null) {
-        return NotFound("2");
+        return NotFound();
       }
 
       if (ModelState.IsValid) {
@@ -59,7 +59,7 @@ namespace Beon.Controllers
         return RedirectToAction("Show", "DiaryTopic", new { userName = userName, topicOrd = topicCount+1});
       }
       else {
-        return NotFound("3");
+        return NotFound();
       }
     }
 
@@ -93,7 +93,7 @@ namespace Beon.Controllers
       ICollection<PostShowViewModel> posts = new List<PostShowViewModel>();
 
       foreach (var p in t.Posts) if (p.Poster != null) {
-        posts.Add(new PostShowViewModel(p.Body, p.TimeStamp, new PosterViewModel(p.Poster.UserName, p.Poster.DisplayName)));
+        posts.Add(new PostShowViewModel(p.Body, p.TimeStamp, new PosterViewModel(p.Poster.UserName, p.Poster.DisplayName), true));
       }
       
       ViewBag.IsDiaryPage = true;

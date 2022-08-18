@@ -126,9 +126,11 @@ A {
 }
 
 .header-links-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  top: -5px;
 }
 
 .header-links-container a {

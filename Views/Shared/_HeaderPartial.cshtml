@@ -37,16 +37,28 @@
       {
         <span>
           <span class="m3">•</span>
+          <a href="" onclick="event.preventDefault(); $('#logoff-form').submit()">
+            Log out
+          </a>
+          <form id="logoff-form" asp-controller="Account" asp-action="LogOff"></form>
+        </span>
+        <span>
+          <span class="m3">•</span>
           <a asp-controller="Manage" asp-action="Index">
             Account settings
           </a>
         </span>
         <span>
           <span class="m3">•</span>
-          <a href="" onclick="event.preventDefault(); $('#logoff-form').submit()">
-            Log out
-          </a>
-          <form id="logoff-form" asp-controller="Account" asp-action="LogOff"></form>
+          <a asp-controller="Diary" asp-action="Show" asp-route-userName="@await UserManager.GetUserNameAsync(await UserManager.GetUserAsync(User))">Мой дневник</a>
+        </span>
+        <span>
+          <span class="m3">•</span>
+          <a asp-controller="Diary" asp-action="Show" asp-route-userName="@await UserManager.GetUserNameAsync(await UserManager.GetUserAsync(User))">Написать в дневник</a>
+        </span>
+        <span>
+          <span class="m3">•</span>
+          <a asp-controller="Diary" asp-action="Show" asp-route-userName="@await UserManager.GetUserNameAsync(await UserManager.GetUserAsync(User))">Написать в дневник</a>
         </span>
       }
       else
