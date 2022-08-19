@@ -373,3 +373,4 @@
 /home/h/beon_clone_asp/bin/Debug/net6.0/ref/beon_clone_asp.dll
 /home/h/beon_clone_asp/bin/Debug/net6.0/Npgsql.dll
 /home/h/beon_clone_asp/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+/home/h/beon_clone_asp/bin/Debug/net6.0/CodeKicker.BBCode.dll

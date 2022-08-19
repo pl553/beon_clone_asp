@@ -67,7 +67,7 @@ namespace Beon.Controllers
       ViewBag.IsDiaryPage = true;
       ViewBag.DiaryTitle = displayName;
       ViewBag.DiarySubtitle = displayName;
-      return View(new DiaryViewModel(new BoardShowViewModel(b.Type, b.OwnerName, previews)));
+      return View(new DiaryViewModel(new BoardShowViewModel(b.Type, b.OwnerName, previews), userName));
     }
   }
 }

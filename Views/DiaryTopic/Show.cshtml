@@ -1,10 +1,15 @@
 @model TopicShowViewModel //l8r DiaryTopicShowViewModel n move this to a partial
 
-<h2 class="topic-title">@Model.Title</h2>
-@foreach (var p in Model.Posts) 
-{
-  <partial name="_PostShowPartial" model="@p"></partial>
-  <br>
-}
+<div class="flex-container">
+  <partial name="_DiarySideBarPartial" model="@Model.BoardOwnerName"></partial>
+  <div class="content-container">
+    <h2 class="topic-title">@Model.Title</h2>
+    @foreach (var p in Model.Posts) 
+    {
+      <partial name="_PostShowPartial" model="@p"></partial>
+      <br>
+    }
 
-<partial name="_PostCreatePartial" model="@new PostCreateViewModel(Model.BoardType, Model.BoardOwnerName, Model.TopicOrd)"></partial>
+    <partial name="_PostCreatePartial" model="@new PostCreateViewModel(Model.BoardType, Model.BoardOwnerName, Model.TopicOrd)"></partial>
+  </div>
+</div>

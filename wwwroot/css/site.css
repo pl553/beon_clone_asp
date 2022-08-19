@@ -81,6 +81,50 @@ A {
   color: #0048AB;
 }
 
+textarea.ar {
+  width: 100%;
+  overflow: hidden;
+  min-height: 280px;
+  resize: none;
+} 
+
+.postbg {
+  width: 100%;
+  overflow-wrap: break-word;
+}
+
+.leftbanner {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  width: 24%;
+  min-height: 128px;
+  padding: 0 1% 2% 0;
+}
+
+.mheadred {
+  font-size: 11.2px;
+  color: #ffffff;
+  font-weight: bold;
+  padding: 0.4em 0.6em 0.4em 0.5em;
+  background-color: #990000;
+}
+
+.flex-container {
+  display: flex;
+}
+
+.content-container {
+  flex: 1;
+}
+
+.menubg {
+  background-color: #ffffff;
+  border: solid 1px #dddddd;
+  padding: 6px;
+  border-radius: 2px;
+  min-height: 200px;
+}
 /* Header */
 
 #header {

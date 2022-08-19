@@ -2,6 +2,15 @@
   "version": 3,
   "targets": {
     "net6.0": {
+      "CodeKicker.BBCode/5.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net35/CodeKicker.BBCode.dll": {}
+        },
+        "runtime": {
+          "lib/net35/CodeKicker.BBCode.dll": {}
+        }
+      },
       "Humanizer.Core/2.8.26": {
         "type": "package",
         "compile": {
@@ -3648,6 +3657,18 @@
     }
   },
   "libraries": {
+    "CodeKicker.BBCode/5.0.0": {
+      "sha512": "yd/5qKy3EBwIA6ZL/eZeAe+1fOxytmrh7hxe+y/uxkASbr7DEWVUvepgjVPk+ZrY9ZCqsl0r6RXWCbJHiZ2CiQ==",
+      "type": "package",
+      "path": "codekicker.bbcode/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "codekicker.bbcode.5.0.0.nupkg.sha512",
+        "codekicker.bbcode.nuspec",
+        "lib/net35/CodeKicker.BBCode.dll"
+      ]
+    },
     "Humanizer.Core/2.8.26": {
       "sha512": "OiKusGL20vby4uDEswj2IgkdchC1yQ6rwbIkZDVBPIR6al2b7n3pC91elBul9q33KaBgRKhbZH3+2Ur4fnWx2A==",
       "type": "package",
@@ -10772,6 +10793,7 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
+      "CodeKicker.BBCode >= 5.0.0",
       "Microsoft.AspNetCore.Identity >= 2.2.0",
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 6.0.7",
       "Microsoft.AspNetCore.Identity.UI >= 6.0.7",
@@ -10819,6 +10841,10 @@
       "net6.0": {
         "targetAlias": "net6.0",
         "dependencies": {
+          "CodeKicker.BBCode": {
+            "target": "Package",
+            "version": "[5.0.0, )"
+          },
           "Microsoft.AspNetCore.Identity": {
             "target": "Package",
             "version": "[2.2.0, )"
@@ -10875,5 +10901,17 @@
         "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/6.0.108/RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'CodeKicker.BBCode 5.0.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework 'net6.0'. This package may not be fully compatible with your project.",
+      "libraryId": "CodeKicker.BBCode",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    }
+  ]
 }

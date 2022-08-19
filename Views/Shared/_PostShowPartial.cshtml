@@ -9,6 +9,6 @@
 <partial name="_UserProfileLinkPartial" model="@new UserProfileLinkViewModel(Model.Poster.UserName, Model.Poster.DisplayName)"></partial>
 &nbsp;<span class="m7">@time</span>
 
-<p>
-  @Model.Body
-</p>
+<div class="postbg">
+  @Html.Raw(@Html.Encode(Model.Body.Replace("\n", "[br]")).Replace("[br]", "<br />"))
+</div>

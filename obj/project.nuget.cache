@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "2Q4N920wAPORafjSXbeA9xqlcu4Aw6Qu5a44mKL0L5JUYYJsxhAnSG1gIH4gvNoeVSeWZX/bMfZWtC2sCvhLvw==",
+  "dgSpecHash": "BrebxqGD5bqwMOY8Ves2IAIEINcrNr0YwcQ6p3l07TiPxMm02N4R3tqRrn+62CCs+jmpU9PgdTt4fqOzIhAvzA==",
   "success": true,
   "projectFilePath": "/home/h/beon_clone_asp/beon_clone_asp.csproj",
   "expectedPackageFiles": [
+    "/home/h/.nuget/packages/codekicker.bbcode/5.0.0/codekicker.bbcode.5.0.0.nupkg.sha512",
     "/home/h/.nuget/packages/humanizer.core/2.8.26/humanizer.core.2.8.26.nupkg.sha512",
     "/home/h/.nuget/packages/messagepack/2.1.152/messagepack.2.1.152.nupkg.sha512",
     "/home/h/.nuget/packages/messagepack.annotations/2.1.152/messagepack.annotations.2.1.152.nupkg.sha512",
@@ -213,5 +214,16 @@
     "/home/h/.nuget/packages/system.xml.readerwriter/4.3.0/system.xml.readerwriter.4.3.0.nupkg.sha512",
     "/home/h/.nuget/packages/system.xml.xdocument/4.3.0/system.xml.xdocument.4.3.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'CodeKicker.BBCode 5.0.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework 'net6.0'. This package may not be fully compatible with your project.",
+      "libraryId": "CodeKicker.BBCode",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    }
+  ]
 }
