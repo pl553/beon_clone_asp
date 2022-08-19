@@ -59,9 +59,7 @@ namespace Beon.Controllers
         return NotFound();
       }
       
-      BeonUser? u = await _userManager.Users
-        .Where(u => u.UserName.Equals(userName))
-        .FirstOrDefaultAsync();   
+      BeonUser? u = await _userManager.GetUserAsync(User); 
          
       if (u == null) {
         return NotFound();

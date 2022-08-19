@@ -55,7 +55,9 @@ namespace beon_clone_asp.Migrations
                 {
                     BoardId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 30, nullable: false)
+                    Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
+                    Type = table.Column<int>(type: "INTEGER", nullable: false),
+                    OwnerName = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -169,12 +171,58 @@ namespace beon_clone_asp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Diaries",
+                columns: table => new
+                {
+                    DiaryId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    BoardId = table.Column<int>(type: "INTEGER", nullable: false),
+                    OwnerId = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Diaries", x => x.DiaryId);
+                    table.ForeignKey(
+                        name: "FK_Diaries_AspNetUsers_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Diaries_Boards_BoardId",
+                        column: x => x.BoardId,
+                        principalTable: "Boards",
+                        principalColumn: "BoardId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PublicForum",
+                columns: table => new
+                {
+                    PublicForumId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    BoardId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PublicForum", x => x.PublicForumId);
+                    table.ForeignKey(
+                        name: "FK_PublicForum_Boards_BoardId",
+                        column: x => x.BoardId,
+                        principalTable: "Boards",
+                        principalColumn: "BoardId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Topics",
                 columns: table => new
                 {
                     TopicId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    BoardId = table.Column<int>(type: "INTEGER", nullable: true),
+                    BoardId = table.Column<int>(type: "INTEGER", nullable: false),
                     Title = table.Column<string>(type: "TEXT", maxLength: 30, nullable: false)
                 },
                 constraints: table =>
@@ -184,7 +232,8 @@ namespace beon_clone_asp.Migrations
                         name: "FK_Topics_Boards_BoardId",
                         column: x => x.BoardId,
                         principalTable: "Boards",
-                        principalColumn: "BoardId");
+                        principalColumn: "BoardId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -251,6 +300,23 @@ namespace beon_clone_asp.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Boards_OwnerName",
+                table: "Boards",
+                column: "OwnerName");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Diaries_BoardId",
+                table: "Diaries",
+                column: "BoardId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Diaries_OwnerId",
+                table: "Diaries",
+                column: "OwnerId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Posts_PosterId",
                 table: "Posts",
                 column: "PosterId");
@@ -259,6 +325,12 @@ namespace beon_clone_asp.Migrations
                 name: "IX_Posts_TopicId",
                 table: "Posts",
                 column: "TopicId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PublicForum_BoardId",
+                table: "PublicForum",
+                column: "BoardId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Topics_BoardId",
@@ -284,7 +356,13 @@ namespace beon_clone_asp.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Diaries");
+
+            migrationBuilder.DropTable(
                 name: "Posts");
+
+            migrationBuilder.DropTable(
+                name: "PublicForum");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

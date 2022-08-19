@@ -2,16 +2,50 @@ using Microsoft.EntityFrameworkCore;
 using Beon.Models;
 using Microsoft.AspNetCore.Identity;
 using Beon.Services;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 //var connectionString = builder.Configuration.GetConnectionString("IdentityDbContextConnection") ?? throw new InvalidOperationException("Connection string 'IdentityDbContextConnection' not found.");
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<BeonDbContext>(opts => {
-  opts.UseSqlite(
-  builder.Configuration["ConnectionStrings:BeonConnection"]);
-});
+bool tryMigrate = false;
+
+var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+//to create migrations for heroku (postgres):
+//DATABASE_URL=DesignTime dotnet ef migrations add Initial
+if (databaseUrl != null) { //on heroku  
+  if (databaseUrl != "DesignTime") {  
+    tryMigrate = true;
+    var databaseUri = new Uri(databaseUrl);
+    var userInfo = databaseUri.UserInfo.Split(':');
+
+    var strb = new NpgsqlConnectionStringBuilder
+    {
+        Host = databaseUri.Host,
+        Port = databaseUri.Port,
+        Username = userInfo[0],
+        Password = userInfo[1],
+        Database = databaseUri.LocalPath.TrimStart('/'),
+        TrustServerCertificate = true
+    };
+    builder.Services.AddDbContext<BeonDbContext>(opts => {
+      opts.UseNpgsql(strb.ToString());
+    });
+  }
+  else {
+    builder.Services.AddDbContext<BeonDbContext>(opts => {
+      opts.UseNpgsql();
+    });
+  }
+}
+else { //on localhost
+  builder.Services.AddDbContext<BeonDbContext>(opts => {
+    opts.UseSqlite(
+    builder.Configuration["ConnectionStrings:BeonConnection"]);
+  });
+}
 
 /*builder.Services.AddDbContext<IdentityDbContext>(opts => {
   opts.UseSqlite(
@@ -69,6 +103,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 //app.MapRazorPages();
 
-CreateAdmin.Create(app);
+CreateAdmin.Create(app, tryMigrate);
 
 app.Run();

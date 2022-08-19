@@ -4,8 +4,16 @@ namespace Beon.Models
 {
   public static class CreateAdmin
   {
-    public static async void Create(IApplicationBuilder app)
+    public static async void Create(IApplicationBuilder app, bool tryMigrate = false)
     {
+      if (tryMigrate) { //on heroku
+        BeonDbContext context = app.ApplicationServices
+        .CreateScope().ServiceProvider.GetRequiredService<BeonDbContext>();
+
+        if (context.Database.GetPendingMigrations().Any()) {
+          context.Database.Migrate();
+        }
+      }
       var roles = app.ApplicationServices.CreateScope().ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
       var users = app.ApplicationServices.CreateScope().ServiceProvider.GetRequiredService<UserManager<BeonUser>>();
       bool x = await roles.RoleExistsAsync("Admin");

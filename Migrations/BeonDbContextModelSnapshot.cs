@@ -93,7 +93,7 @@ namespace beon_clone_asp.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(30)
+                        .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("OwnerName")
@@ -162,13 +162,33 @@ namespace beon_clone_asp.Migrations
                     b.ToTable("Posts");
                 });
 
+            modelBuilder.Entity("Beon.Models.PublicForum", b =>
+                {
+                    b.Property<int>("PublicForumId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("BoardId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("PublicForumId");
+
+                    b.HasIndex("BoardId")
+                        .IsUnique();
+
+                    b.ToTable("PublicForum");
+                });
+
             modelBuilder.Entity("Beon.Models.Topic", b =>
                 {
                     b.Property<int>("TopicId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("BoardId")
+                    b.Property<int>("BoardId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
@@ -349,11 +369,24 @@ namespace beon_clone_asp.Migrations
                     b.Navigation("Topic");
                 });
 
+            modelBuilder.Entity("Beon.Models.PublicForum", b =>
+                {
+                    b.HasOne("Beon.Models.Board", "Board")
+                        .WithOne()
+                        .HasForeignKey("Beon.Models.PublicForum", "BoardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Board");
+                });
+
             modelBuilder.Entity("Beon.Models.Topic", b =>
                 {
                     b.HasOne("Beon.Models.Board", "Board")
                         .WithMany("Topics")
-                        .HasForeignKey("BoardId");
+                        .HasForeignKey("BoardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Board");
                 });

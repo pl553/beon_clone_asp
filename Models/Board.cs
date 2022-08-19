@@ -16,7 +16,7 @@ namespace Beon.Models {
     public int BoardId { get; set; }
 
     [Required(ErrorMessage = "Please enter a name")]
-    [MaxLength(30)]
+    [MaxLength(256)]
     public string Name { get; set; } = String.Empty;
 
     [BindNever]
