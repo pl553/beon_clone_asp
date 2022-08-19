@@ -112,6 +112,7 @@ A {
   border-radius: 10px 0 0 10px;
   background: #F7F7F7;
   flex: 1;
+  max-width: 1528px;
 }
 
 #login-header {
@@ -122,7 +123,6 @@ A {
 
 .header-links-spacer {
   width: 8%;
-  max-width: 41px;
 }
 
 .header-links-container {
@@ -131,6 +131,7 @@ A {
   justify-content: center;
   position: relative;
   top: -5px;
+  white-space: nowrap;
 }
 
 .header-links-container a {
