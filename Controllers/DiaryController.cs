@@ -51,10 +51,10 @@ namespace Beon.Controllers
         return NotFound();
       }
 
-      ICollection<int> previewTopicIds = await _topicRepository.Topics
+      ICollection<Tuple<int,DateTime>> topics = await _topicRepository.Topics
         .Where(t => t.BoardId.Equals(b.BoardId))
         .OrderByDescending(t => t.TopicId)
-        .Select(t => t.TopicId)
+        .Select(t => new Tuple<int,DateTime>(t.TopicId, t.TimeStamp))
         .ToListAsync();
 
       ViewBag.IsDiaryPage = true;
@@ -67,10 +67,10 @@ namespace Beon.Controllers
         if (createTopicPath == null) {
           return NotFound();
         }
-        return View(new DiaryViewModel(new BoardShowViewModel(previewTopicIds, true, createTopicPath), userName));
+        return View(new DiaryViewModel(new BoardShowViewModel(topics, true, createTopicPath), userName));
       }
       else {
-        return View(new DiaryViewModel(new BoardShowViewModel(previewTopicIds), userName));
+        return View(new DiaryViewModel(new BoardShowViewModel(topics), userName));
       }
     }
   }

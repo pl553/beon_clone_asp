@@ -1,8 +1,18 @@
 @model BoardShowViewModel
 
-@foreach (var t in Model.TopicIds) {
-  <vc:topic-preview topic-id="@t" />
+@{
+  var lastDate = new DateTime();
+  int i = 0;
+}
+
+@foreach (var t in Model.Topics) {
+  @if (i == 0 || lastDate.Date > t.Item2.Date) {
+    <partial name="_BoardDatePartial" model="@t.Item2"></partial>
+    lastDate = t.Item2;
+  }
+  <vc:topic-preview topic-id="@t.Item1" />
   <br>
+  ++i;
 }
 
 @if (Model.CanCreateTopics) {

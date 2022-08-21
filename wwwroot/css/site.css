@@ -12,6 +12,13 @@ body {
   white-space: nowrap;
 }
 
+.m2 {
+  /* 0.75*0.75 */
+  font-size: 75%;
+  color: #666666;
+  white-space: nowrap;
+}
+
 /* 0.75*0.75 */
 .m4 {
   font-size: 56.25%;
@@ -125,6 +132,15 @@ textarea.ar {
   border-radius: 2px;
   min-height: 200px;
 }
+
+.datebg {
+  width: 100%;
+  background-color: #ffffff;
+  margin-bottom: 18px;
+  padding-left: 3px;
+  font-size: 18px;
+}
+
 /* Header */
 
 #header {

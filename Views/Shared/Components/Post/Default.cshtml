@@ -3,11 +3,12 @@
 @model PostShowViewModel
 
 @{  
-  var time = Model.ShowDate ? Model.TimeStamp.ToString("d MMMM yyyy г. HH:mm:ss", CultureInfo.CreateSpecificCulture("ru-RU")) : Model.TimeStamp.ToString("HH:mm:ss");
+  var time = TimeZoneInfo.ConvertTimeFromUtc(Model.TimeStamp, Beon.Settings.TimeZone); 
+  var timeStr = Model.ShowDate ? time.ToString("d MMMM yyyy г. HH:mm:ss", CultureInfo.CreateSpecificCulture("ru-RU")) : time.ToString("HH:mm:ss");
 }
 
 <partial name="_UserProfileLinkPartial" model="@new UserProfileLinkViewModel(Model.Poster.UserName, Model.Poster.DisplayName)"></partial>
-&nbsp;<span class="m7">@time</span>
+&nbsp;<span class="m7">@timeStr</span>
 
 <div class="postbg">
   @Html.Raw(@Html.Encode(Model.Body.Replace("\n", "[br]")).Replace("[br]", "<br />"))

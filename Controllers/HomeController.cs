@@ -18,15 +18,21 @@ namespace Beon.Controllers
 
     [HttpGet]
     [Route("/")]
-    public async Task<IActionResult> Index()
+    [Route("/{page:int}")]
+    public async Task<IActionResult> Index(int page = 1)
     {
-      List<int> topicIds = await _topicRepository.Topics
+      List<Tuple<int,DateTime>> topics = await _topicRepository.Topics
         .OrderByDescending(t => t.TopicId)
-        .Take(100)
-        .Select(t => t.TopicId)
+        .Skip((page-1)*Beon.Settings.Page.ItemCount)
+        .Take(Beon.Settings.Page.ItemCount)
+        .Select(t => new Tuple<int,DateTime>(t.TopicId, t.TimeStamp))
         .ToListAsync();
       
-      return View(new HomeViewModel(new BoardShowViewModel(topicIds)));
+      if (topics.Count() == 0) {
+        return NotFound();
+      }
+
+      return View(new HomeViewModel(new BoardShowViewModel(topics)));
     }
   }
 }

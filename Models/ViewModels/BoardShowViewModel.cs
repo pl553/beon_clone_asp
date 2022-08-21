@@ -1,11 +1,12 @@
 namespace Beon.Models.ViewModels 
 {
   public class BoardShowViewModel {
-    public ICollection<int> TopicIds { get; set; }
+    //id and timestamp
+    public ICollection<Tuple<int,DateTime>> Topics { get; set; }
     public bool CanCreateTopics { get; set; }
     public string CreateTopicPath { get; set; }
-    public BoardShowViewModel(ICollection<int> topicIds, bool canCreateTopics = false, string createTopicPath = "") {
-      TopicIds = topicIds;
+    public BoardShowViewModel(ICollection<Tuple<int,DateTime>> topics, bool canCreateTopics = false, string createTopicPath = "") {
+      Topics = topics;
       CanCreateTopics = canCreateTopics;
       CreateTopicPath = createTopicPath;
     }

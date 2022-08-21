@@ -1,0 +1,26 @@
+@model DateTime
+
+@using System.Globalization
+
+@{
+  var time = TimeZoneInfo.ConvertTimeFromUtc(Model, Beon.Settings.TimeZone);
+  var timeStr = time.ToString("dddd, d MMMM yyyy г.", CultureInfo.CreateSpecificCulture("ru-RU"));
+  string spStr = "";
+
+  if (Model.Date == DateTime.UtcNow.Date) {
+    spStr = "Сегодня";
+  }
+  else if (Model.Date == DateTime.UtcNow.Date.AddDays(-1)) {
+    spStr = "Вчера";
+  }
+}
+
+<div class="datebg">
+  @if (spStr != "") {
+    @spStr
+    <span class="m2">— @timeStr</span>
+  }
+  else {
+    @timeStr
+  }
+</div>
