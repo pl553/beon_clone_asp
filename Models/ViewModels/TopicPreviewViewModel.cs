@@ -1,17 +1,13 @@
 namespace Beon.Models.ViewModels 
 {
   public class TopicPreviewViewModel {
-    public BoardType BoardType { get; set; }
-    public string BoardOwnerName { get; set; }
-    public int TopicOrd { get; set; }
+    public string Path { get; set; }
     public string Title { get; set; }
-    public PostShowViewModel Op { get; set; }
-    public TopicPreviewViewModel(BoardType boardType, string boardOwnerName, int topicOrd, string title, PostShowViewModel op) {
-      BoardType = boardType;
-      BoardOwnerName = boardOwnerName;
+    public int OpId { get; set; }
+    public TopicPreviewViewModel(string path, string title, int opId) {
+      Path = path;
       Title = title;
-      TopicOrd = topicOrd;
-      Op = op;
+      OpId = opId;
     }
   }
 }

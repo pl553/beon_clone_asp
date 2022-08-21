@@ -30,5 +30,7 @@ namespace Beon.Models {
     //forum name if the type is f0rum 
     [BindNever]
     public string OwnerName { get; set; } = String.Empty;
+
+    public int topicCounter { get; set; } = 1;
   }
 }

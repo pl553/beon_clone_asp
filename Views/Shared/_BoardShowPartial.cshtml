@@ -1,6 +1,10 @@
 @model BoardShowViewModel
 
-@foreach (var t in Model.Topics) {
-  <partial name="_TopicPreviewPartial" model="@t"></partial>
+@foreach (var t in Model.TopicIds) {
+  <vc:topic-preview topic-id="@t" />
   <br>
+}
+
+@if (Model.CanCreateTopics) {
+  <partial name="_TopicCreatePartial" model="@new TopicCreateViewModel(Model.CreateTopicPath)"></partial>
 }

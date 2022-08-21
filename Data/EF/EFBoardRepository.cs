@@ -11,6 +11,11 @@ namespace Beon.Models {
       context.Boards.Add(board);
       context.SaveChanges();
     }
+
+    public void UpdateBoard(Board board) {
+      context.Entry(board).State = EntityState.Modified;
+      context.SaveChanges();
+    }
     public IQueryable<Board> Boards => context.Boards;
   }
 }

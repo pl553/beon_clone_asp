@@ -3,16 +3,9 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Beon.Models.ViewModels {
   public class PostCreateViewModel {
-    public BoardType BoardType { get; set; }
-    public string BoardOwnerName { get; set; }
-    public int TopicOrd { get; set; }
-    public PostCreateViewModel(
-      BoardType boardType,
-      string boardOwnerName,
-      int topicOrd) {
-      BoardType = boardType;
-      BoardOwnerName = boardOwnerName;
-      TopicOrd = topicOrd;
+    public string CreatePath { get; set; }
+    public PostCreateViewModel(string createPath) {
+      CreatePath = createPath;
     }
   }
 }

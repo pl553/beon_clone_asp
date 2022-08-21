@@ -3,25 +3,8 @@
 @using Microsoft.AspNetCore.Identity
 @using Beon.Infrastructure
 
-@inject SignInManager<BeonUser> SignInManager
-@inject UserManager<BeonUser> UserManager
-
-@{
-  string controller = "DiaryPost";
-  string action = "Create";
-  var routeParams = new Dictionary<string,string> {
-    { "userName", Model.BoardOwnerName },
-    { "topicOrd", Model.TopicOrd.ToString() }  
-  };
-}
-
-@if (SignInManager.IsSignedIn(User)) { 
-<form asp-controller="@controller" asp-action="@action" asp-all-route-data="@routeParams" method="post">
+<form action="@Model.CreatePath" method="post" asp-antiforgery="true">
   Create a post:<br>
   <partial name="_PostInputsPartial" model="@new PostFormModel()"></partial>
   <input type="submit" value="Create" />
 </form>
-}
-else {
-  <p>Log in to create Posts</p>
-}

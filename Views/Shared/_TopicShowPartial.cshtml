@@ -1,0 +1,20 @@
+@model TopicShowViewModel //l8r DiaryTopicShowViewModel n move this to a partial
+
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<BeonUser> SignInManager
+@inject UserManager<BeonUser> UserManager
+
+<h2 class="topic-title">@Model.Title</h2>
+@foreach (var p in Model.PostIds) 
+{
+  <vc:post post-id="@p" show-date="true" />
+  <br>
+}
+
+@if (SignInManager.IsSignedIn(User)) { 
+  <partial name="_PostCreatePartial" model="@new PostCreateViewModel(Model.PostCreatePath)"></partial>
+}
+else {
+  <p>Log in to create posts</p>
+}

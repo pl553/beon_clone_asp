@@ -11,19 +11,22 @@ namespace Beon.Controllers
   {
     private readonly ILogger _logger;
     private readonly UserManager<BeonUser> _userManager;
+    private readonly SignInManager<BeonUser> _signInManager;
     private readonly ITopicRepository _topicRepository;
-    private readonly IPostRepository _postRepository;
     private readonly IBoardRepository _boardRepository;
+    private readonly LinkGenerator _linkGenerator;
     public DiaryController(
       UserManager<BeonUser> userManager,
+      SignInManager<BeonUser> signInManager,
       ITopicRepository topicRepository,
       IBoardRepository boardRepository,
-      IPostRepository postRepository,
+      LinkGenerator linkGenerator,
       ILogger<DiaryController> logger) {
       _userManager = userManager;
       _topicRepository = topicRepository;
       _boardRepository = boardRepository;
-      _postRepository = postRepository;
+      _linkGenerator = linkGenerator;
+      _signInManager = signInManager;
       _logger = logger;
     }
 
@@ -48,26 +51,27 @@ namespace Beon.Controllers
         return NotFound();
       }
 
-      ICollection<TopicPreviewViewModel> previews = new List<TopicPreviewViewModel>();
+      ICollection<int> previewTopicIds = await _topicRepository.Topics
+        .Where(t => t.BoardId.Equals(b.BoardId))
+        .OrderByDescending(t => t.TopicId)
+        .Select(t => t.TopicId)
+        .ToListAsync();
 
-      int i = 1;
-      foreach (var t in b.Topics) {
-        Post? op = await _postRepository.Posts
-          .Where(p => p.TopicId.Equals(t.TopicId))
-          .Include(p => p.Poster)
-          .FirstOrDefaultAsync();
-        
-        if (op != null && op.Poster != null) {
-          PosterViewModel posterVm = new PosterViewModel(op.Poster.UserName, op.Poster.DisplayName);
-          PostShowViewModel opVm = new PostShowViewModel(op.Body, op.TimeStamp, posterVm);
-          previews.Add(new TopicPreviewViewModel(b.Type, b.OwnerName, i, t.Title, opVm));
-        }
-        ++i;
-      }
       ViewBag.IsDiaryPage = true;
       ViewBag.DiaryTitle = displayName;
       ViewBag.DiarySubtitle = displayName;
-      return View(new DiaryViewModel(new BoardShowViewModel(b.Type, b.OwnerName, previews), userName));
+
+      if (_signInManager.IsSignedIn(User) &&
+            userName.Equals(await _userManager.GetUserNameAsync(await _userManager.GetUserAsync(User)))) {
+        string? createTopicPath = _linkGenerator.GetPathByAction("Create", "DiaryTopic", new { userName = userName});
+        if (createTopicPath == null) {
+          return NotFound();
+        }
+        return View(new DiaryViewModel(new BoardShowViewModel(previewTopicIds, true, createTopicPath), userName));
+      }
+      else {
+        return View(new DiaryViewModel(new BoardShowViewModel(previewTopicIds), userName));
+      }
     }
   }
 }

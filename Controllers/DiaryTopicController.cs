@@ -14,18 +14,21 @@ namespace Beon.Controllers
     private ITopicRepository repository;
     private IBoardRepository boardRepository;
     private IPostRepository postRepository;
+    private LinkGenerator _linkGenerator;
     private readonly ILogger _logger;
     public DiaryTopicController(
       ITopicRepository repo,
       IBoardRepository boardRepo,
       IPostRepository postRepo,
       UserManager<BeonUser> userManager,
+      LinkGenerator linkGenerator,
       ILogger<DiaryTopicController> logger) {
       repository = repo;
       boardRepository = boardRepo;
       postRepository = postRepo;
       _userManager = userManager;
       _logger = logger;
+      _linkGenerator = linkGenerator;
     }
 
     [HttpPost]
@@ -38,12 +41,11 @@ namespace Beon.Controllers
         return NotFound();
       }
       
-      int boardId = await boardRepository.Boards
+      Board? board = await boardRepository.Boards
         .Where(b => b.OwnerName.Equals(userName) && b.Type.Equals(BoardType.Diary))
-        .Select(b => b.BoardId)
         .FirstOrDefaultAsync();
 
-      if (boardId == 0) {
+      if (board == null) {
         return NotFound();
       }
       
@@ -54,22 +56,21 @@ namespace Beon.Controllers
       }
 
       if (ModelState.IsValid) {
-        int topicCount = repository.Topics
-          .Where(t => t.BoardId.Equals(boardId))
-          .Count();
-
-        Topic topic = new Topic { Title = model.Title, BoardId = boardId };
+        int topicOrd = board.topicCounter++;
+        boardRepository.UpdateBoard(board);
+        DateTime timeStamp = DateTime.UtcNow;
+        Topic topic = new Topic { Title = model.Title, BoardId = board.BoardId, TopicOrd = topicOrd, TimeStamp = timeStamp };
         repository.SaveTopic(topic);
-        Post op = new Post { Body = model.Op.Body, Topic = topic, Poster = u, TimeStamp = DateTime.UtcNow };
+        Post op = new Post { Body = model.Op.Body, Topic = topic, Poster = u, TimeStamp = timeStamp };
         postRepository.SavePost(op);
-        return RedirectToAction("Show", "DiaryTopic", new { userName = userName, topicOrd = topicCount+1});
+        return RedirectToAction("Show", "DiaryTopic", new { userName = userName, topicOrd = topicOrd});
       }
       else {
         return NotFound();
       }
     }
 
-    [Route("/diary/{userName:required}/{topicOrd:int}")]
+    [Route("/diary/{userName:required}/0-{topicOrd:int}")]
     public async Task<IActionResult> Show(string userName, int topicOrd) {
       string? displayName = await _userManager.Users
         .Where(u => u.UserName.Equals(userName))
@@ -86,26 +87,25 @@ namespace Beon.Controllers
         .FirstOrDefaultAsync();
       
       Topic? t = await repository.Topics
-        .Where(t => t.BoardId.Equals(boardId))
-        .Skip(topicOrd-1)
-        .Include(t => t.Posts)
-        .ThenInclude(p => p.Poster)
+        .Where(t => t.BoardId.Equals(boardId) && t.TopicOrd.Equals(topicOrd))
         .FirstOrDefaultAsync();
 
       if (t == null) {
         return NotFound();
       }
 
-      ICollection<PostShowViewModel> posts = new List<PostShowViewModel>();
+      string? postCreatePath = _linkGenerator.GetPathByAction("Create", "DiaryPost", new { userName = userName, topicOrd = topicOrd });  
 
-      foreach (var p in t.Posts) if (p.Poster != null) {
-        posts.Add(new PostShowViewModel(p.Body, p.TimeStamp, new PosterViewModel(p.Poster.UserName, p.Poster.DisplayName), true));
+      if (postCreatePath == null) {
+        throw new Exception("Couldn't generate post creation path");
       }
-      
+
+      ICollection<int> postIds = await postRepository.GetPostIdsOfTopicAsync(t.TopicId);
+
       ViewBag.IsDiaryPage = true;
       ViewBag.DiaryTitle = displayName;
       ViewBag.DiarySubtitle = displayName;
-      return View(new TopicShowViewModel(BoardType.Diary, userName, topicOrd, t.Title, posts));
+      return View(new DiaryTopicShowViewModel(userName, new TopicShowViewModel(postCreatePath, t.Title, postIds)));
     }
   }
 }

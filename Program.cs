@@ -103,6 +103,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 //app.MapRazorPages();
 
+if (!app.Environment.IsDevelopment()) {
+  app.UseExceptionHandler("/Error");
+}
+
 CreateAdmin.Create(app, tryMigrate);
 
 app.Run();

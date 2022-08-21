@@ -34,10 +34,10 @@ namespace Beon.Controllers
     [HttpPost]
     [Authorize]
     [ValidateAntiForgeryToken]
-    [Route("/diary/{userName:required}/{topicOrd:int}/CreatePost")]
+    [Route("/diary/{userName:required}/0-{topicOrd:int}/CreatePost")]
     public async Task<IActionResult> Create(string userName, int topicOrd, PostFormModel model) {
       if (!ModelState.IsValid) {
-        return NotFound();
+        return new JsonResult("1");
       }
 
       int boardId = await _boardRepository.Boards
@@ -46,7 +46,7 @@ namespace Beon.Controllers
         .FirstOrDefaultAsync();
       
       if (boardId == 0) {
-        return NotFound();
+        return new JsonResult("2");
       }
 
       int topicId = await _topicRepository.Topics
@@ -56,13 +56,13 @@ namespace Beon.Controllers
         .FirstOrDefaultAsync();
 
       if (topicId == 0) {
-        return NotFound();
+        return new JsonResult("3");
       }
       
       BeonUser? u = await _userManager.GetUserAsync(User); 
          
       if (u == null) {
-        return NotFound();
+        return new JsonResult("4");
       }
 
       Post p = new Post { TopicId = topicId, Body = model.Body, TimeStamp = DateTime.UtcNow, Poster = u };

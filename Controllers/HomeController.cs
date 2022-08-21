@@ -6,29 +6,27 @@ using Beon.Models.ViewModels;
 
 namespace Beon.Controllers
 {
+  using Microsoft.EntityFrameworkCore;
+
   public class HomeController : Controller
   {
-    private readonly UserManager<BeonUser> _userManager;
-    public HomeController(UserManager<BeonUser> userManager)
+    private readonly ITopicRepository _topicRepository;
+    public HomeController(ITopicRepository topicRepository)
     {
-      _userManager = userManager;
+      _topicRepository = topicRepository;
     }
 
     [HttpGet]
     [Route("/")]
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-      ICollection<UserProfileLinkViewModel> users = new List<UserProfileLinkViewModel>();
-      var dt = _userManager.Users
-        .Select(u => new { u.UserName, u.DisplayName })
-        .ToList();
-
-      foreach (var u in dt)
-      {
-        users.Add(new UserProfileLinkViewModel(u.UserName, u.DisplayName));
-      }
-
-      return View(new HomeViewModel(users));
+      List<int> topicIds = await _topicRepository.Topics
+        .OrderByDescending(t => t.TopicId)
+        .Take(100)
+        .Select(t => t.TopicId)
+        .ToListAsync();
+      
+      return View(new HomeViewModel(new BoardShowViewModel(topicIds)));
     }
   }
 }

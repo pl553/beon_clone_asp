@@ -11,6 +11,7 @@ namespace Beon.Models
     [DataType(DataType.Text)]
     public string Body { get; set; } = String.Empty;
     public DateTime TimeStamp { get; set; }
+    public string? PosterId { get; set; }
     public BeonUser? Poster { get; set; }
   }
 }

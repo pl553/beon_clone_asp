@@ -3,5 +3,6 @@ namespace Beon.Models {
     IQueryable<Board> Boards { get; }
 
     void SaveBoard(Board board);
+    void UpdateBoard(Board board);
   }
 }

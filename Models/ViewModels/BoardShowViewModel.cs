@@ -1,14 +1,13 @@
 namespace Beon.Models.ViewModels 
 {
   public class BoardShowViewModel {
-    public ICollection<TopicPreviewViewModel> Topics { get; set; }
-    public BoardType BoardType;
-    public string BoardOwnerName;
-
-    public BoardShowViewModel(BoardType boardType, string boardOwnerName, ICollection<TopicPreviewViewModel> topics) {
-      Topics = topics;
-      BoardType = boardType;
-      BoardOwnerName = boardOwnerName;
+    public ICollection<int> TopicIds { get; set; }
+    public bool CanCreateTopics { get; set; }
+    public string CreateTopicPath { get; set; }
+    public BoardShowViewModel(ICollection<int> topicIds, bool canCreateTopics = false, string createTopicPath = "") {
+      TopicIds = topicIds;
+      CanCreateTopics = canCreateTopics;
+      CreateTopicPath = createTopicPath;
     }
   }
 }

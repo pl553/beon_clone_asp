@@ -11,11 +11,5 @@
   <partial name="_DiarySideBarPartial" model="@Model.UserName"></partial>
   <div class="content-container">
     <partial name="_BoardShowPartial" model="@Model.Board"></partial>
-
-    @if (SignInManager.IsSignedIn(User)) {
-      @if (Model.Board.BoardOwnerName.Equals(await UserManager.GetUserNameAsync(await UserManager.GetUserAsync(User)))) {
-        <partial name="_TopicCreatePartial" model="@new TopicCreateViewModel(Model.Board.BoardType, Model.Board.BoardOwnerName)"></partial>
-      }
-    }
   </div>
 </div>
