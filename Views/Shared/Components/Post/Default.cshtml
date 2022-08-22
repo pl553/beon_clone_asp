@@ -11,5 +11,5 @@
 &nbsp;<span class="m7">@timeStr</span>
 
 <div class="postbg">
-  @Html.Raw(@Html.Encode(Model.Body.Replace("\n", "[br]")).Replace("[br]", "<br />"))
+  @Html.Raw(@Html.Encode(Model.Body.Replace("\n", "[br]")).Replace("[br]", "<br />").Replace("[PRE]", "<pre>").Replace("[/PRE]", "</pre>"))
 </div>

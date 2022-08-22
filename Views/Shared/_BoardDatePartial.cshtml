@@ -4,13 +4,14 @@
 
 @{
   var time = TimeZoneInfo.ConvertTimeFromUtc(Model, Beon.Settings.TimeZone);
+  var currTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, Beon.Settings.TimeZone);
   var timeStr = time.ToString("dddd, d MMMM yyyy г.", CultureInfo.CreateSpecificCulture("ru-RU"));
   string spStr = "";
 
-  if (Model.Date == DateTime.UtcNow.Date) {
+  if (time.Date == currTime.Date) {
     spStr = "Сегодня";
   }
-  else if (Model.Date == DateTime.UtcNow.Date.AddDays(-1)) {
+  else if (time.Date == currTime.Date.AddDays(-1)) {
     spStr = "Вчера";
   }
 }
