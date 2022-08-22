@@ -9,6 +9,7 @@ connection.on("ReceivePost", function(postRawHtml) {
   const postContainer = $("#post-container");
   postContainer.append(postRawHtml);
   postContainer.append('<br>');
+  PlayOkSound();
 });
 
 connection.start().then(function () {
