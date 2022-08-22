@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Beon.Models;
 using Beon.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;

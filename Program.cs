@@ -2,12 +2,15 @@ using Microsoft.EntityFrameworkCore;
 using Beon.Models;
 using Microsoft.AspNetCore.Identity;
 using Beon.Services;
+using Beon.Infrastructure;
 using Npgsql;
+using Beon.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 //var connectionString = builder.Configuration.GetConnectionString("IdentityDbContextConnection") ?? throw new InvalidOperationException("Connection string 'IdentityDbContextConnection' not found.");
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddSignalR();
 
 bool tryMigrate = false;
 
@@ -81,6 +84,7 @@ builder.Services.AddScoped<IPostRepository, EFPostRepository>();
 builder.Services.AddScoped<IDiaryRepository, EFDiaryRepository>();
 builder.Services.AddScoped<IEmailSender, AuthMessageSender>();
 builder.Services.AddScoped<ISmsSender, AuthMessageSender>();
+builder.Services.AddScoped<IViewComponentRenderService, ViewComponentRenderService>();
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
@@ -89,6 +93,8 @@ var app = builder.Build();
 
 
 app.UseStaticFiles();
+
+app.MapHub<TopicHub>("/SignalR");
 
 app.MapControllerRoute(
     name: "default",

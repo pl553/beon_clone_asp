@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "b3hVztvb4k6BboSiM9e9cclb2yamYqAo8hB2Qaevkok=",
+  "Hash": "a0eA4JnlfvJvBpZryh+sLmQFhQmV122/LMpenmmSNwQ=",
   "Source": "beon_clone_asp",
   "BasePath": "_content/beon_clone_asp",
   "Mode": "Default",
@@ -1156,6 +1156,23 @@
       "OriginalItemSpec": "wwwroot/i/smiles/user.png"
     },
     {
+      "Identity": "/home/h/beon_clone_asp/wwwroot/js/signalr/dist/browser/signalr.js",
+      "SourceId": "beon_clone_asp",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/h/beon_clone_asp/wwwroot/",
+      "BasePath": "_content/beon_clone_asp",
+      "RelativePath": "js/signalr/dist/browser/signalr.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/js/signalr/dist/browser/signalr.js"
+    },
+    {
       "Identity": "/home/h/beon_clone_asp/wwwroot/js/site.js",
       "SourceId": "beon_clone_asp",
       "SourceType": "Discovered",
@@ -1171,6 +1188,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/js/site.js"
+    },
+    {
+      "Identity": "/home/h/beon_clone_asp/wwwroot/js/topic.js",
+      "SourceId": "beon_clone_asp",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/h/beon_clone_asp/wwwroot/",
+      "BasePath": "_content/beon_clone_asp",
+      "RelativePath": "js/topic.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/js/topic.js"
     },
     {
       "Identity": "/home/h/beon_clone_asp/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.css",

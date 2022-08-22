@@ -105,7 +105,7 @@ namespace Beon.Controllers
       ViewBag.IsDiaryPage = true;
       ViewBag.DiaryTitle = displayName;
       ViewBag.DiarySubtitle = displayName;
-      return View(new DiaryTopicShowViewModel(userName, new TopicShowViewModel(postCreatePath, t.Title, postIds)));
+      return View(new DiaryTopicShowViewModel(userName, new TopicShowViewModel(postCreatePath, t.TopicId, t.Title, postIds)));
     }
   }
 }

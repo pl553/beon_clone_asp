@@ -3,8 +3,15 @@
 @using Microsoft.AspNetCore.Identity
 @using Beon.Infrastructure
 
-<form action="@Model.CreatePath" method="post" asp-antiforgery="true">
+<form id="post-form" asp-controller="Post" asp-action="Create" method="post" asp-antiforgery="true">
   Create a post:<br>
+  <input type="hidden" name="topicId" value="@Model.TopicId" />
   <partial name="_PostInputsPartial" model="@new PostFormModel()"></partial>
-  <input type="submit" value="Create" />
+  <input id="post-submit-button" type="button" value="Create" />
 </form>
+
+<script>
+  $("#post-submit-button").click(function (event) {
+    $.post($("#post-form").attr('action'), $("#post-form").serialize())
+  })
+</script>

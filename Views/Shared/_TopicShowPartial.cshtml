@@ -6,15 +6,23 @@
 @inject UserManager<BeonUser> UserManager
 
 <h2 class="topic-title">@Model.Title</h2>
-@foreach (var p in Model.PostIds) 
-{
-  <vc:post post-id="@p" show-date="true" />
-  <br>
-}
+<div id="post-container">
+  @foreach (var p in Model.PostIds) 
+  {
+    <vc:post post-id="@p" show-date="true" />
+    <br>
+  }
+</div>
 
 @if (SignInManager.IsSignedIn(User)) { 
-  <partial name="_PostCreatePartial" model="@new PostCreateViewModel(Model.PostCreatePath)"></partial>
+  <partial name="_PostCreatePartial" model="@new PostCreateViewModel(Model.TopicId)"></partial>
 }
 else {
   <p>Log in to create posts</p>
 }
+
+<script>
+  topicId = @Model.TopicId
+</script>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/topic.js"></script>
