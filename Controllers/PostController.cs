@@ -57,7 +57,7 @@ namespace Beon.Controllers
       Post p = new Post { TopicId = topicId, Body = model.Body, TimeStamp = DateTime.UtcNow, Poster = u };
       _postRepository.SavePost(p);
 
-      string postRawHtml = await _vcRender.RenderAsync(ControllerContext, ViewData, TempData, "Post", new { postId = p.PostId });
+      string postRawHtml = await _vcRender.RenderAsync(ControllerContext, ViewData, TempData, "Post", new { postId = p.PostId, showDate = true });
 
       await _hubContext.Clients.Group(topicId.ToString()).SendAsync("ReceivePost", postRawHtml);
 
