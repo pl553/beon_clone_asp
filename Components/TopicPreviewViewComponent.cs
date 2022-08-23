@@ -44,11 +44,15 @@ namespace Beon.Components {
         .Select(p => p.PostId)
         .FirstOrDefaultAsync(); 
 
+      int count = await _postRepository.Posts
+        .Where(p => p.TopicId.Equals(topicId))
+        .CountAsync();
+      
       if (opId == 0) {
         throw new Exception("Invalid topic");
       }
 
-      return View(new TopicPreviewViewModel(topicPath, t.Title, opId));
+      return View(new TopicPreviewViewModel(topicPath, t.Title, opId, count));
     }
   }
 }

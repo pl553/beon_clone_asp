@@ -1,7 +1,33 @@
 @model TopicPreviewViewModel
 
+@{
+  var commentCount = Model.PostCount-1;
+  var commentCountStr = "";
+  if (commentCount != 0) {
+    var ending = "";
+    if (commentCount%10 == 1) {
+      ending = "й";
+    }
+    else if (commentCount%10 >= 2 && commentCount%10 <= 4) {
+      ending = "я";
+    }
+    else {
+      ending = "ев";
+    }
+    commentCountStr = commentCount.ToString() + " комментари" + ending;
+  }
+}
+
 <a class="topic-title" href="@Model.Path">
   @Model.Title
 </a>
 
 <vc:post post-id="@Model.OpId" />
+<span style="float: right; font-size: 9px">
+  @if (commentCount != 0) {
+    <img class="flag" src="/i/discuss.png" width="13" height="12">
+    <a href="@Model.Path">@commentCountStr</a>
+    <span>|</span> 
+  }
+  <a href="@Model.Path">Прокомментировать</a>
+</span>
