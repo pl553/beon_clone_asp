@@ -1,8 +1,6 @@
 @model string //username
 
 <div class="leftbanner">
-  <div class="mheadred">О себе:</div>
-  <div class="menubg">
-    <vc:diary-user-info user-name=@Model />
-  </div>
+  <vc:new-comments-notification />
+  <vc:diary-user-info user-name=@Model />
 </div>

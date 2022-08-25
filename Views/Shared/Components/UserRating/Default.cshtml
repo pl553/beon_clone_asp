@@ -1,6 +1,9 @@
 @model IEnumerable<UserProfileLinkViewModel>
 
-@foreach (var u in Model) {
-  <partial name="_UserProfileLinkPartial" model="@u"></partial>
-  <br>
-}
+<div class="mheadred">Рейтинг пользователей:</div>
+<div class="menubg">
+  @foreach (var u in Model) {
+    <partial name="_UserProfileLinkPartial" model="@u"></partial>
+    <br>
+  }
+</div>

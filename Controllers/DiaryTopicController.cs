@@ -16,19 +16,22 @@ namespace Beon.Controllers
     private IPostRepository postRepository;
     private LinkGenerator _linkGenerator;
     private readonly ILogger _logger;
+    private readonly ITopicSubscriptionRepository _tsRepository;
     public DiaryTopicController(
       ITopicRepository repo,
       IBoardRepository boardRepo,
       IPostRepository postRepo,
       UserManager<BeonUser> userManager,
       LinkGenerator linkGenerator,
-      ILogger<DiaryTopicController> logger) {
+      ILogger<DiaryTopicController> logger,
+      ITopicSubscriptionRepository tsRepository) {
       repository = repo;
       boardRepository = boardRepo;
       postRepository = postRepo;
       _userManager = userManager;
       _logger = logger;
       _linkGenerator = linkGenerator;
+      _tsRepository = tsRepository;
     }
 
     [HttpPost]
@@ -63,6 +66,7 @@ namespace Beon.Controllers
         repository.SaveTopic(topic);
         Post op = new Post { Body = model.Op.Body, Topic = topic, Poster = u, TimeStamp = timeStamp };
         postRepository.SavePost(op);
+        _tsRepository.SubscribeAsync(topic.TopicId, u.Id);
         return RedirectToAction("Show", "DiaryTopic", new { userName = userName, topicOrd = topicOrd});
       }
       else {
@@ -100,6 +104,11 @@ namespace Beon.Controllers
         throw new Exception("Couldn't generate post creation path");
       }
 
+      BeonUser? user = await _userManager.GetUserAsync(User);
+      if (user != null) {
+        _tsRepository.UnsetNewCommentsAsync(t.TopicId, user.Id);
+      }
+      
       ICollection<int> postIds = await postRepository.GetPostIdsOfTopicAsync(t.TopicId);
 
       ViewBag.IsDiaryPage = true;

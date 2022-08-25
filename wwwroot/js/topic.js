@@ -10,6 +10,8 @@ connection.on("ReceivePost", function(postRawHtml) {
   postContainer.append(postRawHtml);
   postContainer.append('<br>');
   PlayOkSound();
+
+  connection.invoke("ReceivedPost", topicId);
 });
 
 connection.start().then(function () {

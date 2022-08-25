@@ -117,6 +117,14 @@ textarea.ar {
   background-color: #990000;
 }
 
+.mheadorange {
+  font-size: 11.2px;
+  color: #ffffff;
+  font-weight: bold;
+  padding: 0.4em 0.6em 0.4em 0.5em;
+  background-color: #f57a28;
+}
+
 .flex-container {
   display: flex;
 }
@@ -132,7 +140,7 @@ textarea.ar {
   border: solid 1px #dddddd;
   padding: 6px;
   border-radius: 2px;
-  min-height: 200px;
+  margin-bottom: 5px;
 }
 
 .datebg {

@@ -28,11 +28,23 @@ namespace Beon.Models {
           .HasOne<PublicForum>()
           .WithOne(f => f.Board)
           .IsRequired();
+
+        builder.Entity<Topic>()
+          .HasMany<TopicSubscription>()
+          .WithOne(t => t.Topic)
+          .IsRequired();
+
+        builder.Entity<BeonUser>()
+          .HasMany<TopicSubscription>()
+          .WithOne(t => t.Subscriber)
+          .IsRequired();
+
     }
 
     public DbSet<Board> Boards => Set<Board>();
     public DbSet<Topic> Topics => Set<Topic>();
     public DbSet<Post> Posts => Set<Post>();
     public DbSet<Diary> Diaries => Set<Diary>();
+    public DbSet<TopicSubscription> TopicSubscriptions => Set<TopicSubscription>();
   }
 }

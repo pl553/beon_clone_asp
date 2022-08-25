@@ -16,6 +16,7 @@ namespace Beon.Controllers
     private ITopicRepository _topicRepository;
     private readonly UserManager<BeonUser> _userManager;
     private readonly IViewComponentRenderService _vcRender;
+    private readonly ITopicSubscriptionRepository _tsRepository;
     private IHubContext<TopicHub> _hubContext;    
     private readonly ILogger _logger;
     public PostController(
@@ -24,6 +25,7 @@ namespace Beon.Controllers
       UserManager<BeonUser> userManager,
       IHubContext<TopicHub> hubContext,
       ILogger<PostController> logger,
+      ITopicSubscriptionRepository tsRepository,
       IViewComponentRenderService vcRender) {
       _postRepository = repo;
       _topicRepository = TopicRepo;
@@ -31,6 +33,7 @@ namespace Beon.Controllers
       _hubContext = hubContext;
       _logger = logger;
       _vcRender = vcRender;
+      _tsRepository = tsRepository;
     }
     public IActionResult Index() {
       return View();
@@ -53,6 +56,9 @@ namespace Beon.Controllers
       if (u == null) {
         return NotFound();
       }
+
+      _tsRepository.SubscribeAsync(topicId, u.Id);
+      _tsRepository.SetNewCommentsAsync(topicId);
 
       Post p = new Post { TopicId = topicId, Body = model.Body, TimeStamp = DateTime.UtcNow, Poster = u };
       _postRepository.SavePost(p);

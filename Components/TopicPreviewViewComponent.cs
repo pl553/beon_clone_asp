@@ -30,14 +30,7 @@ namespace Beon.Components {
         throw new Exception("Invalid topicId");
       }
 
-      string? topicPath = null;
-      if (t.Board.Type == BoardType.Diary) {
-        topicPath = _linkGenerator.GetPathByAction("Show", "DiaryTopic", new { userName = t.Board.OwnerName, topicOrd = t.TopicOrd });  
-      }
-
-      if (topicPath == null) {
-        throw new Exception("Couldn't generate topic path");
-      }
+      string topicPath = await _topicRepository.GetTopicPathAsync(t);
 
       int opId = await _postRepository.Posts
         .Where(p => p.TopicId.Equals(topicId))
