@@ -66,7 +66,7 @@ namespace Beon.Controllers
         repository.SaveTopic(topic);
         Post op = new Post { Body = model.Op.Body, Topic = topic, Poster = u, TimeStamp = timeStamp };
         postRepository.SavePost(op);
-        _tsRepository.SubscribeAsync(topic.TopicId, u.Id);
+        await _tsRepository.SubscribeAsync(topic.TopicId, u.Id);
         return RedirectToAction("Show", "DiaryTopic", new { userName = userName, topicOrd = topicOrd});
       }
       else {
@@ -106,9 +106,9 @@ namespace Beon.Controllers
 
       BeonUser? user = await _userManager.GetUserAsync(User);
       if (user != null) {
-        _tsRepository.UnsetNewCommentsAsync(t.TopicId, user.Id);
+        await _tsRepository.UnsetNewCommentsAsync(t.TopicId, user.Id);
       }
-      
+
       ICollection<int> postIds = await postRepository.GetPostIdsOfTopicAsync(t.TopicId);
 
       ViewBag.IsDiaryPage = true;

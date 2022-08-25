@@ -57,8 +57,8 @@ namespace Beon.Controllers
         return NotFound();
       }
 
-      _tsRepository.SubscribeAsync(topicId, u.Id);
-      _tsRepository.SetNewCommentsAsync(topicId);
+      await _tsRepository.SubscribeAsync(topicId, u.Id);
+      await _tsRepository.SetNewCommentsAsync(topicId);
 
       Post p = new Post { TopicId = topicId, Body = model.Body, TimeStamp = DateTime.UtcNow, Poster = u };
       _postRepository.SavePost(p);

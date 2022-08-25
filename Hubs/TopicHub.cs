@@ -36,7 +36,7 @@ namespace Beon.Hubs {
         }
         BeonUser? user = await _userManager.GetUserAsync(Context.User);
         if (user != null) {
-          _tsRepository.UnsetNewCommentsAsync(topicId, user.Id);
+          await _tsRepository.UnsetNewCommentsAsync(topicId, user.Id);
         }
     }
   }
