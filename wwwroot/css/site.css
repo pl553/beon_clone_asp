@@ -25,7 +25,7 @@ body {
 }
 
 .m3 {
-  font-size: 75%;
+  font-size: 12px;
 }
 
 h2, h3, p, div, span {
@@ -64,12 +64,11 @@ h2, h3, p, div, span {
   background: url('/i/smiles/user.png') no-repeat scroll 3px 0px;
   padding-left: 18px;
   /* 1.1 * 0.75 */
-  font-size: 82.5%;
+  font-size: 13.2px;
 }
 
 .topic-title {
-  /* 1.6 * 0.75 */
-  font-size: 120%;
+  font-size: 19.2px;
   margin-left: 3px;
 }
 
@@ -98,6 +97,7 @@ textarea.ar {
 .postbg {
   width: 100%;
   overflow-wrap: break-word;
+  font-size: 12px;
 }
 
 .leftbanner {
@@ -209,7 +209,7 @@ textarea.ar {
 }
 
 .header-links-container a {
-  font-size: 63.75%;
+  font-size: 10.2px;
   color: #666666;
 }
 .header-links-container span {
