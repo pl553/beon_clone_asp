@@ -14,6 +14,11 @@
     else {
       ending = "ев";
     }
+
+    if ((commentCount/10)%10 == 1) {
+      ending = "ев";
+    }
+    
     commentCountStr = commentCount.ToString() + " комментари" + ending;
   }
 }
