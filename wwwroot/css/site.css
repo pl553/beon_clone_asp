@@ -155,6 +155,18 @@ textarea.ar {
   margin-bottom: -2px;
 }
 
+.image-small {
+  max-width: 25%;
+}
+
+.image-medium {
+  max-width: 50%;
+}
+
+.image-large {
+  max-width: 90%;
+}
+
 /* Header */
 
 #header {
