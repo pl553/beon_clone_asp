@@ -95,9 +95,9 @@ textarea.ar {
 } 
 
 .postbg {
-  width: 100%;
   overflow-wrap: break-word;
   font-size: 12px;
+  padding-right: 2px;
 }
 
 .leftbanner {
