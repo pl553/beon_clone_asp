@@ -1,0 +1,13 @@
+@model int
+
+<span>
+  <a href="" onclick="optionsLinkClicked(event, this)">Опции</a>
+  <span class="post-options" style="display: none;">
+    <img class="flag" src="/i/delete.gif" width="13" height="12" />
+    <a href="" onclick="deleteLinkClicked(event, this)"> Удалить</a>
+    <form class="delete-form" asp-controller="Topic" asp-action="Delete">
+      <input type="hidden" name="topicId" value="@Model" />
+      <input type="hidden" name="returnUrl" value="@ViewContext.HttpContext.Request.PathAndQuery()" />
+    </form>
+  </span>
+</span>

@@ -10,14 +10,17 @@ namespace Beon.Components {
     private readonly ITopicRepository _topicRepository;
     private readonly IPostRepository _postRepository;
     private readonly LinkGenerator _linkGenerator;
+    private readonly UserManager<BeonUser> _userManager;
 
     public TopicPreviewViewComponent(
         ITopicRepository topicRepository, 
         IPostRepository postRepository,
-        LinkGenerator linkGenerator) {
+        LinkGenerator linkGenerator,
+        UserManager<BeonUser> userManager) {
       _topicRepository = topicRepository;
       _postRepository = postRepository;
       _linkGenerator = linkGenerator;
+      _userManager = userManager;
     }
 
     public async Task<IViewComponentResult> InvokeAsync(int topicId) {
@@ -45,7 +48,11 @@ namespace Beon.Components {
         throw new Exception("Invalid topic");
       }
 
-      return View(new TopicPreviewViewModel(topicPath, t.Title, opId, count));
+      BeonUser? u = await _userManager.GetUserAsync(UserClaimsPrincipal);
+      bool canEdit = false;
+      if (u != null) canEdit = await _topicRepository.UserMayEditTopicAsync(t, u);
+
+      return View(new TopicPreviewViewModel(topicId, topicPath, t.Title, opId, count, canEdit));
     }
   }
 }

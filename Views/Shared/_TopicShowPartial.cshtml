@@ -1,4 +1,4 @@
-@model TopicShowViewModel //l8r DiaryTopicShowViewModel n move this to a partial
+@model TopicShowViewModel
 
 @using Microsoft.AspNetCore.Identity
 
@@ -7,10 +7,19 @@
 
 <h2 class="topic-title">@Model.Title</h2>
 <div id="post-container">
+  @{
+    int i = 0;
+  }
   @foreach (var p in Model.PostIds) 
   {
     <vc:post post-id="@p" show-date="true" />
+    if (Model.CanEdit && i == 0) {
+      <span style="float: left;" class="m9">
+        <partial name="_TopicOptionsPartial" model="@Model.TopicId"></partial>
+      </span>
+    }
     <br>
+    ++i;
   }
 </div>
 

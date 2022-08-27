@@ -9,7 +9,11 @@ namespace Beon.Infrastructure
       if (principal == null) return false;
       var user = await manager.GetUserAsync(principal);
       if (user == null) return false;
-      var roles = await manager.GetRolesAsync(await manager.GetUserAsync(principal));
+      return await manager.IsAdmin(user);
+    }
+
+    public static async Task<bool> IsAdmin(this UserManager<BeonUser> manager, BeonUser user) {
+      var roles = await manager.GetRolesAsync(user);
       return roles.Contains("Admin");
     }
 

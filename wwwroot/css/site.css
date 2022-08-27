@@ -5,6 +5,10 @@ body {
   background-color: #ffffff;
 }
 
+.m9 {
+  font-size: 9px;
+}
+
 .m7 {
   /* 0.75*0.75 */
   font-size: 56.25%;
@@ -165,6 +169,10 @@ textarea.ar {
 
 .image-large {
   max-width: 90%;
+}
+
+.post-options {
+  font-size: 9px;
 }
 
 /* Header */

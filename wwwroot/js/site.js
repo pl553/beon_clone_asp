@@ -8,3 +8,18 @@ PlayOkSound = function () {
   audio.loop = false;
   audio.play();
 }
+
+deleteLinkClicked = function(event, link) {
+  event.preventDefault();
+  parent = link.parentNode;
+  form = $(parent).find('.delete-form');
+  form.submit();
+}
+
+optionsLinkClicked = function(event, link) {
+  event.preventDefault();
+  parent = link.parentNode;
+  options = $(parent).find('.post-options');
+  options.css('display', 'inline-block');
+  $(link).css('display', 'none');
+}

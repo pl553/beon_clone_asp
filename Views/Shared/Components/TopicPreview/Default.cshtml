@@ -28,6 +28,12 @@
 </a>
 
 <vc:post post-id="@Model.OpId" />
+<span style="float: left;" class="m9">
+  @if (Model.CanEdit) {
+    <partial name="_TopicOptionsPartial" model="@Model.TopicId"></partial>
+  }
+</span>
+
 <span style="float: right; font-size: 9px">
   @if (commentCount != 0) {
     <img class="flag" src="/i/discuss.png" width="13" height="12">

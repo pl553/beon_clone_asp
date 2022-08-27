@@ -32,12 +32,20 @@ namespace Beon.Models {
         builder.Entity<Topic>()
           .HasMany<TopicSubscription>()
           .WithOne(t => t.Topic)
-          .IsRequired();
+          .IsRequired()
+          .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Topic>()
+          .HasMany<Post>(t => t.Posts)
+          .WithOne(p => p.Topic)
+          .IsRequired()
+          .OnDelete(DeleteBehavior.Cascade);
 
         builder.Entity<BeonUser>()
           .HasMany<TopicSubscription>()
           .WithOne(t => t.Subscriber)
-          .IsRequired();
+          .IsRequired()
+          .OnDelete(DeleteBehavior.Cascade);
 
     }
 

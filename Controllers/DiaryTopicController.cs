@@ -90,12 +90,16 @@ namespace Beon.Controllers
         .Select(b => b.BoardId)
         .FirstOrDefaultAsync();
       
+      if (boardId == 0) {
+        return NotFound();
+      }
+
       Topic? t = await repository.Topics
         .Where(t => t.BoardId.Equals(boardId) && t.TopicOrd.Equals(topicOrd))
         .FirstOrDefaultAsync();
 
       if (t == null) {
-        return NotFound();
+        return RedirectToAction("Show", "Diary", new { userName = userName });
       }
 
       string? postCreatePath = _linkGenerator.GetPathByAction("Create", "DiaryPost", new { userName = userName, topicOrd = topicOrd });  
@@ -105,8 +109,10 @@ namespace Beon.Controllers
       }
 
       BeonUser? user = await _userManager.GetUserAsync(User);
+      bool canEdit = false;
       if (user != null) {
         await _tsRepository.UnsetNewCommentsAsync(t.TopicId, user.Id);
+        canEdit = await repository.UserMayEditTopicAsync(t, user);
       }
 
       ICollection<int> postIds = await postRepository.GetPostIdsOfTopicAsync(t.TopicId);
@@ -114,7 +120,7 @@ namespace Beon.Controllers
       ViewBag.IsDiaryPage = true;
       ViewBag.DiaryTitle = displayName;
       ViewBag.DiarySubtitle = displayName;
-      return View(new DiaryTopicShowViewModel(userName, new TopicShowViewModel(postCreatePath, t.TopicId, t.Title, postIds)));
+      return View(new DiaryTopicShowViewModel(userName, new TopicShowViewModel(postCreatePath, t.TopicId, t.Title, postIds, canEdit)));
     }
   }
 }
