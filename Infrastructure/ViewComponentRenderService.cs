@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Beon.Infrastructure {
   public interface IViewComponentRenderService {
-    public Task<string> RenderAsync(ControllerContext controllerContext, ViewDataDictionary viewData, ITempDataDictionary tempData, string name, object model);
+    public Task<string> RenderAsync(ActionContext controllerContext, ViewDataDictionary viewData, ITempDataDictionary tempData, string name, object model);
   }
 
   public class ViewComponentRenderService : IViewComponentRenderService {
@@ -22,9 +22,9 @@ namespace Beon.Infrastructure {
       
       _helper = new DefaultViewComponentHelper(provider, HtmlEncoder.Default, selector, invokerFactory, scope);
     }
-    public async Task<string> RenderAsync(ControllerContext controllerContext, ViewDataDictionary viewData, ITempDataDictionary tempData, string name, object model) {
+    public async Task<string> RenderAsync(ActionContext controllerContext, ViewDataDictionary viewData, ITempDataDictionary tempData, string name, object model) {
       using (var writer = new StringWriter()) {
-        ViewContext context = new ViewContext(controllerContext, NullView.Instance, viewData, tempData, writer, new HtmlHelperOptions());
+        ViewContext context = new ViewContext(controllerContext, NullView.Instance, viewData, tempData, writer, new HtmlHelperOptions()); 
         _helper.Contextualize(context);
         var result = await _helper.InvokeAsync(name, model);
         result.WriteTo(writer, HtmlEncoder.Default);

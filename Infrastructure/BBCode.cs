@@ -11,6 +11,8 @@ namespace Beon.Infrastructure {
       new BBTag("IMG", "<img class=\"image-medium\" src=\"${content}\" />", "", false, true, 4, allowUrlProcessingAsText: false), 
       new BBTag("IMGSMALL", "<img class=\"image-small\" src=\"${content}\" />", "", false, true, 5, allowUrlProcessingAsText: false), 
       new BBTag("IMGLARGE", "<img class=\"image-large\" src=\"${content}\" />", "", false, true, 6, allowUrlProcessingAsText: false), 
+      new BBTag("I", "<i>", "</i>", 7),
+      new BBTag("U", "<u>", "</u>", 8)
     });
   }
 }

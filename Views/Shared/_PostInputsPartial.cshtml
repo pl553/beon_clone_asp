@@ -1,5 +1,21 @@
 @model PostFormModel
 
-<b>Post body:</b><br>
+<div class="hbutton-bar">
+  <a class="hbutton" href="#" onclick="event.preventDefault(); addTag('B', this);">
+    <img src="/i/smiles/b.gif" alt="B" title="Жирный" />
+  </a>
+  <a class="hbutton" href="#" onclick="event.preventDefault(); addTag('I', this);">
+    <img src="/i/smiles/i.gif" alt="I" title="Курсив" />
+  </a>
+  <a class="hbutton" href="#" onclick="event.preventDefault(); addTag('U', this);">
+    <img src="/i/smiles/u.gif" alt="U" title="Подчёркнутый" />
+  </a>
+  <a class="hbutton" href="#" onclick="event.preventDefault(); addTag('CENTER', this);">
+    <img src="/i/smiles/center.gif" alt="CENTER" title="По центру" />
+  </a>
+  <a class="hbutton" href="#" onclick="event.preventDefault(); addTag('RIGHT', this);">
+    <img src="/i/smiles/right.gif" alt="RIGHT" title="По правому краю" />
+  </a>
+</div>
 <textarea class="ar" rows="17" cols="50" asp-for="Body" ></textarea><br>
 <span asp-validation-for="Body"></span><br>

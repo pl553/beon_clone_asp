@@ -35,6 +35,7 @@ namespace Beon.Components {
         throw new Exception("Invalid post");
       }
 
+      
       PosterViewModel posterVm = new PosterViewModel(userInfo.UserName, userInfo.DisplayName);
       PostShowViewModel postVm = new PostShowViewModel(post.Body, post.TimeStamp, posterVm, showDate);
       return View(postVm);

@@ -23,3 +23,12 @@ optionsLinkClicked = function(event, link) {
   options.css('display', 'inline-block');
   $(link).css('display', 'none');
 }
+
+addTag = function(tag, hbutton) {
+  // hbutton -> hbuttonbar -> form
+  console.log(hbutton);
+  parent = hbutton.parentNode.parentNode.parentNode;
+  textarea = $(parent).find('textarea');
+  textarea.replaceSelectedText('[' + tag + ']' + textarea.getSelection().text + '[/' + tag + ']');
+  return false;
+}
