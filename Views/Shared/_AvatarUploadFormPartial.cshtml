@@ -1,0 +1,7 @@
+@model AvatarUploadFormModel
+
+<form enctype="multipart/form-data" method="post" asp-controller="Manage" asp-action="UploadAvatar">
+  <input asp-for="File" />
+  <br>
+  <input type="submit" value="Upload" />
+</form>

@@ -41,6 +41,7 @@ namespace Beon.Controllers
 
     [HttpPost]
     [Authorize]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(int topicId, PostFormModel model) {
       topicId = await _topicRepository.Topics
         .Where(t => t.TopicId.Equals(topicId))

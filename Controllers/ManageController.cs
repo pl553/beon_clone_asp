@@ -123,6 +123,27 @@ namespace Beons.Controllers
             return RedirectToAction(nameof(Index), new { Message = ManageMessageId.Error });
         }
 
+        [HttpGet]
+        [Authorize]
+        [Route("/Manage/Avatars")]
+        public async Task<IActionResult> ManageAvatars() {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UploadAvatar(AvatarUploadFormModel model) {
+            if (!ModelState.IsValid) {
+                return RedirectToAction("ManageAvatars");
+            }
+            using (var memoryStream = new MemoryStream()) {
+                await model.File.CopyToAsync(memoryStream);
+                byte[] image = memoryStream.ToArray();
+                return View("ManageAvatars", image);
+            }
+        }
+
         #region Helpers
 
         private void AddErrors(IdentityResult result)

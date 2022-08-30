@@ -30,6 +30,7 @@ namespace Beon.Controllers
 
     [HttpPost]
     [Authorize]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int topicId, string returnUrl) {
       BeonUser? u = await _userManager.GetUserAsync(User);
       Topic? t = await repository.Topics
