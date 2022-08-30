@@ -137,11 +137,13 @@ namespace Beons.Controllers
             if (!ModelState.IsValid) {
                 return RedirectToAction("ManageAvatars");
             }
-            using (var memoryStream = new MemoryStream()) {
-                await model.File.CopyToAsync(memoryStream);
-                byte[] image = memoryStream.ToArray();
-                return View("ManageAvatars", image);
+            var fileName = Path.GetRandomFileName() + Path.GetExtension(model.File.FileName);
+            var filePath = Path.Combine("wwwroot/i/user/", fileName);
+
+            using (var stream = System.IO.File.Create(filePath)) {
+                await model.File.CopyToAsync(stream);
             }
+            return View("ManageAvatars", Path.Combine("/i/user", fileName));
         }
 
         #region Helpers
