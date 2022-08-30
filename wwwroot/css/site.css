@@ -176,6 +176,10 @@ textarea.ar {
   font-size: 9px;
 }
 
+.smile {
+  margin-bottom: -2px;
+}
+
 /* Post input */
 
 .hbutton-bar {

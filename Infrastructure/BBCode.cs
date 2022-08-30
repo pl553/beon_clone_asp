@@ -5,8 +5,8 @@ namespace Beon.Infrastructure {
   public static class BBCode {
     public static string Parse(string text) {
       text = parser.ToHtml(text);
-      foreach (var s in SmileButtons) {
-        text = text.Replace(s.Text, $"<img src=\"{s.ImgPath}\" />");
+      foreach (var s in Enumerable.Reverse(SmileButtons)) {
+        text = text.Replace(HttpUtility.HtmlEncode(s.Text), $"<img class=\"smile\" src=\"{s.ImgPath}\" />");
       }
       return text;
     }
@@ -47,7 +47,29 @@ namespace Beon.Infrastructure {
     public static IEnumerable<BBTagButton> SmileButtons { get; private set; } = new List<BBTagButton>
     {
       new BBTagButton(":-)", "улыбка", "/i/smiles/smile.png"),
-      new BBTagButton(":-(", "разочарование", "/i/smiles/sad.png")
+      new BBTagButton(":-(", "разочарование", "/i/smiles/sad.png"),
+      new BBTagButton(";-)", "подмигивание", "/i/smiles/wink.png"),
+      new BBTagButton(":-*", "поцелуйчик", "/i/smiles/kiss.png"),
+      new BBTagButton(":-D", "смеяться", "/i/smiles/big-smile.png"),
+      new BBTagButton(":-O", "удивление", "/i/smiles/surprised.png"),
+      new BBTagButton(":-P", "показывать язык", "/i/smiles/tongue-sticking-out.png"),
+      new BBTagButton("X-(", "злость", "/i/smiles/angry.png"),
+      new BBTagButton("]:-)", "чёртик", "/i/smiles/devil.png"),
+      new BBTagButton("O:-)", "ангелочек", "/i/smiles/angel.png"),
+      new BBTagButton(":\'(", "плакать", "/i/smiles/cry.png"),
+      new BBTagButton(":-[", "огорчение", "/i/smiles/upset.png"),
+      new BBTagButton(":-\\", "смущение", "/i/smiles/confused.png"),
+      new BBTagButton(":-|", "неуверенность", "/i/smiles/undecided.png"),
+      new BBTagButton(":-?", "хм-м-м...", "/i/smiles/thinking.png"),
+      new BBTagButton(";~)", "хитрая улыбка", "/i/smiles/cunning.png"),
+      new BBTagButton("(:|", "усталость", "/i/smiles/tired.png"),
+      new BBTagButton("8-}", "сумасшествие", "/i/smiles/crazy.png"),
+      new BBTagButton(":-$", "тц-ц-ц!", "/i/smiles/shhh.png"),
+      new BBTagButton("8-|", "я в шоке!", "/i/smiles/shocked.png"),
+      new BBTagButton("B-)", "в очках!", "/i/smiles/sun-glasses.png"),
+      new BBTagButton(":^)", "покраснеть!", "/i/smiles/turn-red.png"),
+      new BBTagButton("=^B", "классно!", "/i/smiles/thumbs-up.png"),
+      new BBTagButton("=,B", "отстой", "/i/smiles/thumbs-down.png")
     };
   }
 }

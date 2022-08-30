@@ -9,7 +9,9 @@
 </div>
 <div class="smiles-box">
   @foreach(var s in BBCode.SmileButtons) {
-    <a href="#" onclick="event.preventDefault(); addSmile('@s.Text ', this)">
+    var text = s.Text.Replace("\\", "\\\\");
+    text = text.Replace("'", "\\'");
+    <a href="#" onclick="event.preventDefault(); addSmile('@text ', this)">
       <img src="@s.ImgPath" alt="@s.Text" title="@s.Text @s.Title" /></a>
   }
 </div>
