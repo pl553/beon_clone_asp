@@ -26,9 +26,14 @@ optionsLinkClicked = function(event, link) {
 
 addTag = function(tag, hbutton) {
   // hbutton -> hbuttonbar -> form
-  console.log(hbutton);
   parent = hbutton.parentNode.parentNode.parentNode;
   textarea = $(parent).find('textarea');
   textarea.replaceSelectedText('[' + tag + ']' + textarea.getSelection().text + '[/' + tag + ']');
-  return false;
+}
+
+addSmile = function(smile, button) {
+  // button -> smilebar -> form
+  parent = button.parentNode.parentNode.parentNode;
+  textarea = $(parent).find('textarea');
+  textarea.replaceSelectedText(smile);
 }

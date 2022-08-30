@@ -3,7 +3,14 @@ using System.Web;
 
 namespace Beon.Infrastructure {
   public static class BBCode {
-    public static readonly BBCodeParser parser = new BBCodeParser(new []
+    public static string Parse(string text) {
+      text = parser.ToHtml(text);
+      foreach (var s in SmileButtons) {
+        text = text.Replace(s.Text, $"<img src=\"{s.ImgPath}\" />");
+      }
+      return text;
+    }
+    private static BBCodeParser parser = new BBCodeParser(new []
     {
       new BBTag("B", "<b>", "</b>", 0),
       new BBTag("PRE", "<pre>", "</pre>", 1),
@@ -15,6 +22,33 @@ namespace Beon.Infrastructure {
       new BBTag("I", "<i>", "</i>", 7),
       new BBTag("U", "<u>", "</u>", 8)
     });
+
+    public class BBTagButton {
+      public string Text { get; set; }
+      public string Title { get; set; }
+      public string ImgPath { get; set; }
+      public BBTagButton(string text, string title, string imgPath) {
+        Text = text;
+        Title = title;
+        ImgPath = imgPath;
+      }
+    }
+    
+    public static IEnumerable<BBTagButton> TagButtons { get; private set; } = new List<BBTagButton>
+    {
+      new BBTagButton("B", "Жирный", "/i/smiles/b.gif"),
+      new BBTagButton("I", "Курсив", "/i/smiles/i.gif"),
+      new BBTagButton("U", "Подчёркнутый", "/i/smiles/u.gif"),
+      new BBTagButton("CENTER", "По центру", "/i/smiles/center.gif"),
+      new BBTagButton("RIGHT", "По правому краю", "/i/smiles/right.gif"),
+      new BBTagButton("IMG", "Изображение", "/i/smiles/image.gif")
+    };
+
+    public static IEnumerable<BBTagButton> SmileButtons { get; private set; } = new List<BBTagButton>
+    {
+      new BBTagButton(":-)", "улыбка", "/i/smiles/smile.png"),
+      new BBTagButton(":-(", "разочарование", "/i/smiles/sad.png")
+    };
   }
 }
 

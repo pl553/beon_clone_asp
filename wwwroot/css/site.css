@@ -184,6 +184,8 @@ textarea.ar {
   margin: 0;
   padding: 1px;
   width: fit-content;
+  white-space: nowrap;
+  font-size: 75%;
 }
 
 .hbutton {
@@ -194,7 +196,6 @@ textarea.ar {
   margin-bottom: 1px;
   vertical-align: 2px;
   height: 18px;
-  font-size: 75%;
 }
 
 .hbutton:hover {
@@ -204,6 +205,16 @@ textarea.ar {
 
 .hbutton img {
   margin: 0px 0px -2px;
+}
+
+.smiles-box {
+  font-size: 75%;
+}
+
+.smiles-box img {
+  margin-bottom: -1px;
+  margin-top: 2px;
+  border: 0px;
 }
 
 /* Header */
