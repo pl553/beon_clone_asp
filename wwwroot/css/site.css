@@ -40,6 +40,11 @@ h2, h3, p, div, span {
   color: #ff0000;
 } 
 
+.field-validation-error {
+  color: #ff0000;
+  font-size: 12px;
+}
+
 .custom-summary {
   height: 80%;
 }
