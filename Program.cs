@@ -76,7 +76,10 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.SignIn.RequireConfirmedPhoneNumber = false;
 });
 
-
+builder.Services.ConfigureApplicationCookie(options => {
+  options.LoginPath = "/Account/Login";
+  options.ReturnUrlParameter = "returnUrl";
+});
 
 builder.Services.AddScoped<IBoardRepository, EFBoardRepository>();
 builder.Services.AddScoped<ITopicRepository, EFTopicRepository>();

@@ -47,9 +47,9 @@ namespace Beon.Controllers
         // GET: /Account/Login
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Login()
+        public IActionResult Login(string returnUrl = "")
         {
-            return View(new LoginViewModel());
+            return View(new LoginViewModel { ReturnUrl = returnUrl });
         }
 
         //
