@@ -132,10 +132,11 @@ namespace Beons.Controllers
 
         [HttpPost]
         [Authorize]
+        [Route("/Manage/Avatars")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UploadAvatar(AvatarUploadFormModel model) {
+        public async Task<IActionResult> ManageAvatars(AvatarUploadFormModel model) {
             if (!ModelState.IsValid) {
-                return RedirectToAction("ManageAvatars");
+                return View();
             }
             var fileName = Path.GetRandomFileName() + Path.GetExtension(model.File.FileName);
             var filePath = Path.Combine("wwwroot/i/user/", fileName);
@@ -143,7 +144,7 @@ namespace Beons.Controllers
             using (var stream = System.IO.File.Create(filePath)) {
                 await model.File.CopyToAsync(stream);
             }
-            return View("ManageAvatars", Path.Combine("/i/user", fileName));
+            return View();
         }
 
         #region Helpers

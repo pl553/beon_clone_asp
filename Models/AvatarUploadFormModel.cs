@@ -8,6 +8,7 @@ namespace Beon.Models
   {
     [Required]
     [MaxFileSize(1 * 1024 * 1024)]
+    [Image(80, 115)]
     public IFormFile File { get; set; } = null!;
   }
 }

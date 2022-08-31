@@ -11,7 +11,7 @@ namespace Beon.Validation {
             _maxFileSize = maxFileSize;
         }
 
-        public string GetErrorMessage()
+        private string GetErrorMessage()
         {
             return $"Maximum allowed file size is { _maxFileSize} bytes.";
         }
@@ -21,7 +21,7 @@ namespace Beon.Validation {
             var file = value as IFormFile;
             if (file != null)
             {
-            if (file.Length > _maxFileSize)
+                if (file.Length > _maxFileSize)
                 {
                     return new ValidationResult(GetErrorMessage());
                 }

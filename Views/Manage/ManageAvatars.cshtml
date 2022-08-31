@@ -1,7 +1,7 @@
-@model string
+<div class="custom-summary" asp-validation-summary="All"></div>
 
-@if (Model != null) {
-  <img src="@Model" />
-}
-
+<partial name="_AvatarUploadFormPartial" model="@new AvatarUploadFormModel()"></partial>
+<br>
+<partial name="_AvatarUploadFormPartial" model="@new AvatarUploadFormModel()"></partial>
+<br>
 <partial name="_AvatarUploadFormPartial" model="@new AvatarUploadFormModel()"></partial>
