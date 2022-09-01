@@ -105,8 +105,17 @@ textarea.ar {
 
 .postbg {
   overflow-wrap: break-word;
+  display: flex;
+}
+
+.post-body {
   font-size: 12px;
-  padding-right: 2px;
+  flex: 1;
+}
+
+.avatar {
+  flex-shrink: 0;
+  width: fit-content;
 }
 
 .leftbanner {

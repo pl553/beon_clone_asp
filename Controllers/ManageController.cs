@@ -138,12 +138,24 @@ namespace Beons.Controllers
             if (!ModelState.IsValid) {
                 return View();
             }
-            var fileName = Path.GetRandomFileName() + Path.GetExtension(model.File.FileName);
-            var filePath = Path.Combine("wwwroot/i/user/", fileName);
+            BeonUser? user = await _userManager.GetUserAsync(User);
+            if (user == null) {
+                return NotFound();
+            }
+            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.File.FileName);
+            var filePath = Path.Combine("wwwroot/", Beon.Settings.UserImages.Path, fileName);
 
             using (var stream = System.IO.File.Create(filePath)) {
                 await model.File.CopyToAsync(stream);
             }
+
+            if (user.AvatarFileName != null) {
+                System.IO.File.Delete(Path.Combine("wwwroot/", Beon.Settings.UserImages.Path, user.AvatarFileName));
+            }
+
+            user.AvatarFileName = fileName;
+            await _userManager.UpdateAsync(user);
+            
             return View();
         }
 

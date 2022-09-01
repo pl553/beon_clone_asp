@@ -13,5 +13,12 @@
 &nbsp;<span class="m7">@timeStr</span>
 
 <div class="postbg">
-  @Html.Raw(postBody)
+  @if (Model.Poster.AvatarFilePath != null) {
+    <div class="avatar">
+      <img src="@Model.Poster.AvatarFilePath" />
+    </div>
+  }
+  <div class="post-body">
+    @Html.Raw(postBody)
+  </div>
 </div>

@@ -28,7 +28,7 @@ namespace Beon.Components {
 
       var userInfo = await _userManager.Users
         .Where(u => u.Id.Equals(post.PosterId))
-        .Select(u => new { u.UserName, u.DisplayName })
+        .Select(u => new { u.UserName, u.DisplayName, u.AvatarFileName })
         .FirstOrDefaultAsync();
 
       if (userInfo == null) {
@@ -36,7 +36,9 @@ namespace Beon.Components {
       }
 
       
-      PosterViewModel posterVm = new PosterViewModel(userInfo.UserName, userInfo.DisplayName);
+      PosterViewModel posterVm = new PosterViewModel(userInfo.UserName,
+        userInfo.DisplayName,
+        userInfo.AvatarFileName == null ? null : Path.Combine("/", Beon.Settings.UserImages.Path, userInfo.AvatarFileName));
       PostShowViewModel postVm = new PostShowViewModel(post.Body, post.TimeStamp, posterVm, showDate);
       return View(postVm);
     }

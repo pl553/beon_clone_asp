@@ -2,10 +2,11 @@ namespace Beon.Models.ViewModels {
   public class PosterViewModel {
     public string UserName { get; set; }
     public string DisplayName { get; set; }
-    //avatar image
-    public PosterViewModel(string userName, string displayName) {
+    public string? AvatarFilePath { get; set; }
+    public PosterViewModel(string userName, string displayName, string? avatarFilePath) {
       UserName = userName;
       DisplayName = displayName;
+      AvatarFilePath = avatarFilePath;
     }
   }
 }
