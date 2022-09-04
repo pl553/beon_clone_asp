@@ -90,6 +90,17 @@
         </a>
       </span>
     </div>
+    <div class="header-links-spacer"></div>
+    <div class="header-links-container">
+      <span>
+        @if (SignInManager.IsSignedIn(User)) {
+        <span class="m3">•</span>
+        <a asp-controller="Manage" asp-action="ManageAvatars">
+          Загрузка аватар
+        </a>
+        }
+      </span>
+    </div>
   </div>
 </div>
 

@@ -89,7 +89,17 @@ builder.Services.AddScoped<IDiaryRepository, EFDiaryRepository>();
 builder.Services.AddScoped<IEmailSender, AuthMessageSender>();
 builder.Services.AddScoped<ISmsSender, AuthMessageSender>();
 builder.Services.AddScoped<IViewComponentRenderService, ViewComponentRenderService>();
-builder.Services.AddScoped<IUserFileRepository>(provider => new DiskUserFileRepository("i/user"));
+
+string? endpoint = Environment.GetEnvironmentVariable("S3_ENDPOINT");
+string? accessKeyId = Environment.GetEnvironmentVariable("S3_ACCESSKEY");
+string? secret = Environment.GetEnvironmentVariable("S3_SECRET");
+string? bucket = Environment.GetEnvironmentVariable("S3_BUCKET");
+
+if (endpoint == null || accessKeyId == null || secret == null || bucket == null) {
+  throw new Exception("please set le s3 connection environment vvariablez");
+}
+
+builder.Services.AddScoped<IUserFileRepository>(provider => new S3UserFileRepository("i/user", endpoint, accessKeyId, secret, bucket));
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();

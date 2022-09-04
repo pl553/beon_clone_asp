@@ -145,8 +145,17 @@ namespace Beons.Controllers
             if (user == null) {
                 return NotFound();
             }
+
             var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.File.FileName);
-            await _userFileRepository.SaveFileAsync(user.UserName, fileName, model.File);
+
+            try {
+                await _userFileRepository.SaveFileAsync(user.UserName, fileName, model.File);
+            }
+            catch (Exception e) {
+                ModelState.AddModelError("", "Please try again");
+                _logger.LogError(e.ToString());
+                return View();
+            }
 
             if (user.AvatarFileName != null) {
                 await _userFileRepository.DeleteFileAsync(user.UserName, user.AvatarFileName);
