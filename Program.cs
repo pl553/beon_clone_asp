@@ -89,6 +89,7 @@ builder.Services.AddScoped<IDiaryRepository, EFDiaryRepository>();
 builder.Services.AddScoped<IEmailSender, AuthMessageSender>();
 builder.Services.AddScoped<ISmsSender, AuthMessageSender>();
 builder.Services.AddScoped<IViewComponentRenderService, ViewComponentRenderService>();
+builder.Services.AddScoped<IUserFileRepository>(provider => new DiskUserFileRepository("i/user"));
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();

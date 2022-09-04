@@ -30,10 +30,5 @@ namespace Beon
     {
       public const int ItemCount = 25;
     }
-
-    public static class UserImages 
-    {
-      public const string Path = "i/user/";
-    }
   }
 }

@@ -19,18 +19,21 @@ namespace Beons.Controllers
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
+        private readonly IUserFileRepository _userFileRepository;
 
         public ManageController(
         UserManager<BeonUser> userManager,
         SignInManager<BeonUser> signInManager,
         IEmailSender emailSender,
         ISmsSender smsSender,
-        ILoggerFactory loggerFactory)
+        ILoggerFactory loggerFactory,
+        IUserFileRepository userFileRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _smsSender = smsSender;
+            _userFileRepository = userFileRepository;
             _logger = loggerFactory.CreateLogger<ManageController>();
         }
 
@@ -143,14 +146,10 @@ namespace Beons.Controllers
                 return NotFound();
             }
             var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.File.FileName);
-            var filePath = Path.Combine("wwwroot/", Beon.Settings.UserImages.Path, fileName);
-
-            using (var stream = System.IO.File.Create(filePath)) {
-                await model.File.CopyToAsync(stream);
-            }
+            await _userFileRepository.SaveFileAsync(user.UserName, fileName, model.File);
 
             if (user.AvatarFileName != null) {
-                System.IO.File.Delete(Path.Combine("wwwroot/", Beon.Settings.UserImages.Path, user.AvatarFileName));
+                await _userFileRepository.DeleteFileAsync(user.UserName, user.AvatarFileName);
             }
 
             user.AvatarFileName = fileName;
