@@ -3,8 +3,46 @@ using System.Web;
 
 namespace Beon.Infrastructure {
   public static class BBCode {
+    //returns length of s if it doesnt contain t
+    private static int MyIndexOf(string s, string t, int start = 0) {
+      int res = s.IndexOf(t, start);
+      return res == -1 ? s.Length : res;
+    }
     public static string Parse(string text) {
+      //BBCode Core's link generator doesnt work properly for some reason so we're rolling our own
+      //need to prefix links with _ so that it doesnt try to generate links
+      text = text.Replace("_", "._.");
+      if (text.Length >= 4 && text.Substring(0, 4) == "http") {
+        text = text.Remove(0, 4).Insert(0, "_http");
+      }
+      text = text.Replace(" http", " _http").Replace("\nhttp", "\n_http").Replace("]http", "]_http");
+      //undo prefixing within image tags
+      text = text.Replace("[IMG]_", "[IMG]").Replace("[IMGSMALL]_", "[IMGSMALL]").Replace("[IMGLARGE]_", "[IMGLARGE]");
+
       text = parser.ToHtml(text);
+      
+      int i = 0;
+      for (;;) {
+        i = MyIndexOf(text, "_http");
+        if (i == text.Length) {
+          break;
+        }
+        int j = Math.Min(MyIndexOf(text, " ", i), MyIndexOf(text, "\n", i));
+        j = Math.Min(j, MyIndexOf(text, "<", i));
+
+        try {
+          Uri link = new Uri(text.Substring(i+1, j-(i+1)));
+          string elem = "<a target=\"_blank\" href=" + link + ">" + link + "</a>";
+          text = text.Remove(i, j-i).Insert(i, elem);
+        }
+        //if its not a valid uri
+        catch {
+          text = text.Remove(i, 5).Insert(i, "http");
+        }
+      }
+
+      text = text.Replace("._.", "_");
+
       foreach (var s in Enumerable.Reverse(SmileButtons)) {
         text = text.Replace(HttpUtility.HtmlEncode(s.Text), $"<img class=\"smile\" src=\"{s.ImgPath}\" />");
       }

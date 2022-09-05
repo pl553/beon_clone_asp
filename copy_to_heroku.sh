@@ -13,6 +13,7 @@ cp -r Services $1/
 cp -r Views $1/
 cp -r Properties $1/
 cp -r wwwroot $1/
+cp -r Validation $1/
 cp Program.cs $1/
 cp .gitignore $1/
 

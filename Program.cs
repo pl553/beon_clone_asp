@@ -48,6 +48,7 @@ else { //on localhost
     opts.UseSqlite(
     builder.Configuration["ConnectionStrings:BeonConnection"]);
   });
+  return;
 }
 
 /*builder.Services.AddDbContext<IdentityDbContext>(opts => {
