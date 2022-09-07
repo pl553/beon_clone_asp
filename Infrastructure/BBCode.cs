@@ -30,13 +30,12 @@ namespace Beon.Infrastructure {
         int j = Math.Min(MyIndexOf(text, " ", i), MyIndexOf(text, "\n", i));
         j = Math.Min(j, MyIndexOf(text, "<", i));
 
-        try {
-          Uri link = new Uri(text.Substring(i+1, j-(i+1)));
-          string elem = "<a target=\"_blank\" href=" + link + ">" + link + "</a>";
+        string uri = text.Substring(i+1, j-(i+1));
+        if (Uri.IsWellFormedUriString(uri, UriKind.Absolute)) {
+          string elem = "<a target=\"_blank\" href=" + uri + ">" + uri + "</a>";
           text = text.Remove(i, j-i).Insert(i, elem);
         }
-        //if its not a valid uri
-        catch {
+        else {
           text = text.Remove(i, 5).Insert(i, "http");
         }
       }

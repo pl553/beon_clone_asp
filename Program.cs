@@ -18,37 +18,44 @@ var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 
 //to create migrations for heroku (postgres):
 //DATABASE_URL=DesignTime dotnet ef migrations add Initial
-if (databaseUrl != null) { //on heroku  
-  if (databaseUrl != "DesignTime") {  
+if (databaseUrl != null)
+{ //on heroku  
+  if (databaseUrl != "DesignTime")
+  {
     tryMigrate = true;
     var databaseUri = new Uri(databaseUrl);
     var userInfo = databaseUri.UserInfo.Split(':');
 
     var strb = new NpgsqlConnectionStringBuilder
     {
-        Host = databaseUri.Host,
-        Port = databaseUri.Port,
-        Username = userInfo[0],
-        Password = userInfo[1],
-        Database = databaseUri.LocalPath.TrimStart('/'),
-        TrustServerCertificate = true
+      Host = databaseUri.Host,
+      Port = databaseUri.Port,
+      Username = userInfo[0],
+      Password = userInfo[1],
+      Database = databaseUri.LocalPath.TrimStart('/'),
+      TrustServerCertificate = true
     };
-    builder.Services.AddDbContext<BeonDbContext>(opts => {
+    builder.Services.AddDbContext<BeonDbContext>(opts =>
+    {
       opts.UseNpgsql(strb.ToString());
     });
   }
-  else {
-    builder.Services.AddDbContext<BeonDbContext>(opts => {
+  else
+  {
+    builder.Services.AddDbContext<BeonDbContext>(opts =>
+    {
       opts.UseNpgsql();
     });
+    return;
   }
 }
-else { //on localhost
-  builder.Services.AddDbContext<BeonDbContext>(opts => {
+else
+{ //on localhost
+  builder.Services.AddDbContext<BeonDbContext>(opts =>
+  {
     opts.UseSqlite(
     builder.Configuration["ConnectionStrings:BeonConnection"]);
   });
-  return;
 }
 
 /*builder.Services.AddDbContext<IdentityDbContext>(opts => {
@@ -62,22 +69,23 @@ builder.Services.AddDefaultIdentity<BeonUser>(options => options.SignIn.RequireC
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
-    // Default Lockout settings.
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-    options.Lockout.MaxFailedAccessAttempts = 5;
-    options.Lockout.AllowedForNewUsers = true;
+  // Default Lockout settings.
+  options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+  options.Lockout.MaxFailedAccessAttempts = 5;
+  options.Lockout.AllowedForNewUsers = true;
 
-    options.Password.RequireDigit = false;
-    options.Password.RequireLowercase = false;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireUppercase = false;
+  options.Password.RequireDigit = false;
+  options.Password.RequireLowercase = false;
+  options.Password.RequireNonAlphanumeric = false;
+  options.Password.RequireUppercase = false;
 
-    options.SignIn.RequireConfirmedAccount = false;
-    options.SignIn.RequireConfirmedEmail = false;
-    options.SignIn.RequireConfirmedPhoneNumber = false;
+  options.SignIn.RequireConfirmedAccount = false;
+  options.SignIn.RequireConfirmedEmail = false;
+  options.SignIn.RequireConfirmedPhoneNumber = false;
 });
 
-builder.Services.ConfigureApplicationCookie(options => {
+builder.Services.ConfigureApplicationCookie(options =>
+{
   options.LoginPath = "/Account/Login";
   options.ReturnUrlParameter = "returnUrl";
 });
@@ -91,16 +99,34 @@ builder.Services.AddScoped<IEmailSender, AuthMessageSender>();
 builder.Services.AddScoped<ISmsSender, AuthMessageSender>();
 builder.Services.AddScoped<IViewComponentRenderService, ViewComponentRenderService>();
 
-string? endpoint = Environment.GetEnvironmentVariable("S3_ENDPOINT");
-string? accessKeyId = Environment.GetEnvironmentVariable("S3_ACCESSKEY");
-string? secret = Environment.GetEnvironmentVariable("S3_SECRET");
-string? bucket = Environment.GetEnvironmentVariable("S3_BUCKET");
+string? userFileStorageType = Environment.GetEnvironmentVariable("USER_STORAGE_TYPE");
 
-if (endpoint == null || accessKeyId == null || secret == null || bucket == null) {
-  throw new Exception("please set le s3 connection environment vvariablez");
+if (userFileStorageType == null)
+{
+  throw new Exception("please set le USER_STORAGE_TYPE envar ");
 }
 
-builder.Services.AddScoped<IUserFileRepository>(provider => new S3UserFileRepository("i/user", endpoint, accessKeyId, secret, bucket));
+if (userFileStorageType == "S3")
+{
+  string? endpoint = Environment.GetEnvironmentVariable("S3_ENDPOINT");
+  string? accessKeyId = Environment.GetEnvironmentVariable("S3_ACCESSKEY");
+  string? secret = Environment.GetEnvironmentVariable("S3_SECRET");
+  string? bucket = Environment.GetEnvironmentVariable("S3_BUCKET");
+
+  if (endpoint == null || accessKeyId == null || secret == null || bucket == null)
+  {
+    throw new Exception("please set le s3 connection environment vvariablez");
+  }
+
+  builder.Services.AddScoped<IUserFileRepository>
+    (provider => new S3UserFileRepository("i/user", endpoint, accessKeyId, secret, bucket));
+}
+else if (userFileStorageType == "DISK") {
+  builder.Services.AddScoped<IUserFileRepository>(provider => new DiskUserFileRepository("i/user"));
+}
+else {
+  throw new Exception("invalid USER_STORAGE_TYPE envar value");
+}
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
@@ -125,7 +151,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 //app.MapRazorPages();
 
-if (!app.Environment.IsDevelopment()) {
+if (!app.Environment.IsDevelopment())
+{
   app.UseExceptionHandler("/Error");
 }
 
