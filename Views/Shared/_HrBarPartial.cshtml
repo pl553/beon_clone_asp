@@ -1,0 +1,77 @@
+@model HrBarViewModel
+
+<hr class="hrline">
+@if(Model != null) {
+  <div class="crumbsbg">
+    @if(Model.Crumbs != null) {
+      <div class="crumbsinner">
+        @{
+          int i = 0;
+        }
+        @foreach(var v in Model.Crumbs) {
+          if (i == Model.Crumbs.Count-1) {
+            <strong>@v.Text</strong>
+          }
+          else {
+            <a href="@v.Url">@v.Text</a><span style="font-size: 11.4px; color: #666666;"> > </span>
+          }
+          ++i;
+        }
+        
+        @if(Model.TimeStamp != null) {
+          var time = TimeZoneInfo.ConvertTimeFromUtc(Model.TimeStamp, Beon.Settings.TimeZone); 
+          var timeStr = time.ToString("d MMMM yyyy г. HH:mm:ss", CultureInfo.CreateSpecificCulture("ru-RU"));
+          <span style="font-size: 9px; color: #666666"> @timeStr</span>
+        }
+      </div>
+    }
+
+    @if(Model.PagingInfo != null) {
+      <div class="crumbsinnerlinks">
+        <span>
+          <span style="color: #666666;">Перейти на страницу: </span>
+          @if(Model.PagingInfo.CurrentPage != 1) {
+            var prev = Model.PagingInfo.BaseUrl + "/" + (Model.PagingInfo.CurrentPage-1).ToString();
+            <a href="@prev">« предыдущую</a>
+          }
+          @{
+            int total = Model.PagingInfo.TotalShown;
+            int num = Model.PagingInfo.NumPages;
+            int curr = Model.PagingInfo.CurrentPage;
+            int left = 0, right = 0;
+            left += Math.Min(curr-1, total/2);
+            right += Math.Min(num-curr, (total+1)/2-1);
+            total--;
+            total -= left;
+            total -= right;
+            int dl = Math.Min(curr-1-left, total);
+            total -= dl;
+            left += dl;
+            right += Math.Min(num-curr-right, total);
+
+            @if (curr != 1) {
+              <span> | </span>
+            }
+            for (int i = curr-left; i <= curr+right; ++i) {
+              if (i == curr) {
+                <span>@i</span>
+              }
+              else {
+                var href = Model.PagingInfo.BaseUrl + "/" + i.ToString();
+                <a href="@href">@i</a>
+              }
+              @if (!(i == curr && i == Model.PagingInfo.NumPages)) {
+                <span> | </span>
+              }
+            } 
+          }
+          @if(Model.PagingInfo.CurrentPage != Model.PagingInfo.NumPages) {
+            var next = Model.PagingInfo.BaseUrl + "/" + (Model.PagingInfo.CurrentPage+1).ToString();
+            <a href="@next">следующую »</a>
+          }
+        </span>
+      </div>
+    }
+  </div>
+}
+<hr class="hrline">

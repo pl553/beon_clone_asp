@@ -29,9 +29,12 @@ namespace Beon.Controllers
         .ToListAsync();
       
       if (topics.Count() == 0) {
-        return NotFound();
+        //return NotFound();
       }
 
+      ViewBag.HrBarViewModel = new HrBarViewModel
+        (crumbs: new List<LinkViewModel>{new LinkViewModel("BeOn", "")}, pagingInfo: new PagingInfo("/", page, 8));
+      
       return View(new HomeViewModel(new BoardShowViewModel(topics)));
     }
   }
