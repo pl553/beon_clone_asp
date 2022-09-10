@@ -160,6 +160,14 @@ namespace Beon.Controllers
             }
             else
             {
+                ViewBag.HrBarViewModel = new HrBarViewModel(
+                    crumbs: new List<LinkViewModel>
+                    {
+                        new LinkViewModel("BeOn", "/"),
+                        new LinkViewModel("Пользователи", "/users"),
+                        new LinkViewModel(info.DisplayName, "")
+                    });
+                
                 return View(new UserProfileViewModel(info.UserName, info.DisplayName));
             }
         }

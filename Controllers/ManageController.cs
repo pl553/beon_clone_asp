@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Beon.Models;
+using Beon.Models.ViewModels;
 using Beon.Models.ManageViewModels;
 using Beon.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -20,6 +21,7 @@ namespace Beons.Controllers
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
         private readonly IUserFileRepository _userFileRepository;
+        private readonly LinkGenerator _linkGenerator;
 
         public ManageController(
         UserManager<BeonUser> userManager,
@@ -27,6 +29,7 @@ namespace Beons.Controllers
         IEmailSender emailSender,
         ISmsSender smsSender,
         ILoggerFactory loggerFactory,
+        LinkGenerator linkGenerator,
         IUserFileRepository userFileRepository)
         {
             _userManager = userManager;
@@ -35,6 +38,7 @@ namespace Beons.Controllers
             _smsSender = smsSender;
             _userFileRepository = userFileRepository;
             _logger = loggerFactory.CreateLogger<ManageController>();
+            _linkGenerator = linkGenerator;
         }
 
         //
@@ -62,6 +66,8 @@ namespace Beons.Controllers
                 BrowserRemembered = await _signInManager.IsTwoFactorClientRememberedAsync(user),
                 AuthenticatorKey = await _userManager.GetAuthenticatorKeyAsync(user)
             };
+
+            ViewBag.HrBarViewModel = new HrBarViewModel(crumbs: GetCrumbsBase(user.UserName));
             return View(model);
         }
 
@@ -130,6 +136,9 @@ namespace Beons.Controllers
         [Authorize]
         [Route("/Manage/Avatars")]
         public async Task<IActionResult> ManageAvatars() {
+            var crumbs = GetCrumbsBase((await GetCurrentUserAsync()).UserName);
+            crumbs.Add(new LinkViewModel("Загрузка аватар", ""));
+            ViewBag.HrBarViewModel = new HrBarViewModel(crumbs: crumbs);
             return View();
         }
 
@@ -195,6 +204,14 @@ namespace Beons.Controllers
             return _userManager.GetUserAsync(HttpContext.User);
         }
 
+        private ICollection<LinkViewModel> GetCrumbsBase(string userName) {
+            return new List<LinkViewModel>
+            {
+                new LinkViewModel("BeOn", "/"),
+                new LinkViewModel("Мой дневник", _linkGenerator.GetPathByAction("Show", "Diary", new { userName = userName}) ?? "error"),
+                new LinkViewModel("Настройки", _linkGenerator.GetPathByAction("Index", "Manage") ?? "error")
+            };
+        }
         #endregion
     }
 }

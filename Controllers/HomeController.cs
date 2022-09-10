@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 
 using Beon.Models;
 using Beon.Models.ViewModels;
+using Beon.Services;
 
 namespace Beon.Controllers
 {
@@ -10,26 +11,21 @@ namespace Beon.Controllers
 
   public class HomeController : Controller
   {
-    private readonly IRepository<Topic> _topicRepository;
-    public HomeController(IRepository<Topic> topicRepository)
+    private readonly TopicLogic _topicLogic;
+    public HomeController(TopicLogic topicLogic)
     {
-      _topicRepository = topicRepository;
+      _topicLogic = topicLogic;
     }
 
     [HttpGet]
     [Route("/")]
     [Route("/{page:int}")]
     public async Task<IActionResult> Index(int page = 1)
-    {
-      List<Tuple<int,DateTime>> topics = await _topicRepository.Entities
-        .OrderByDescending(t => t.TopicId)
-        .Skip((page-1)*Beon.Settings.Page.ItemCount)
-        .Take(Beon.Settings.Page.ItemCount)
-        .Select(t => new Tuple<int,DateTime>(t.TopicId, t.TimeStamp))
-        .ToListAsync();
-      
-      if (topics.Count() == 0) {
-        //return NotFound();
+    { 
+      var topics = await _topicLogic.GetTopicPreviewViewModelsAsync(t => true, page, User);
+
+      if (topics.Count() == 0 && page > 1) {
+        return NotFound();
       }
 
       ViewBag.HrBarViewModel = new HrBarViewModel

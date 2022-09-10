@@ -19,14 +19,15 @@
         }
         
         @if(Model.TimeStamp != null) {
-          //var time = TimeZoneInfo.ConvertTimeFromUtc(Model.TimeStamp, Beon.Settings.TimeZone); 
-          //var timeStr = time.ToString("d MMMM yyyy г. HH:mm:ss", CultureInfo.CreateSpecificCulture("ru-RU"));
-          //<span style="font-size: 9px; color: #666666"> @timeStr</span>
+          DateTime timeStamp = Model.TimeStamp ?? DateTime.MinValue;
+          var time = TimeZoneInfo.ConvertTimeFromUtc(timeStamp, Beon.Settings.TimeZone); 
+          var timeStr = time.ToString("d MMMM yyyy г. HH:mm:ss", System.Globalization.CultureInfo.CreateSpecificCulture("ru-RU"));
+          <strong style="font-size: 9px; color: #666666"> @timeStr</strong>
         }
       </div>
     }
 
-    @if(Model.PagingInfo != null) {
+    @if(Model.PagingInfo != null && Model.PagingInfo.NumPages > 1) {
       <div class="crumbsinnerlinks">
         <span>
           <span style="color: #666666;">Перейти на страницу: </span>

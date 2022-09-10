@@ -10,6 +10,7 @@
 </head>
 <body>
     <partial name="_HeaderPartial"></partial>
+    <partial name="_HrBarPartial" model="@ViewBag.HrBarViewModel"></partial>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <!--<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>-->
     <script src="~/lib/rangyinputs-jquery/rangyinputs-jquery.js"></script>
@@ -18,6 +19,7 @@
     <div class="container">
         @RenderBody()
     </div>
+    <partial name="_HrBarPartial" model="@ViewBag.HrBarViewModel"></partial>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

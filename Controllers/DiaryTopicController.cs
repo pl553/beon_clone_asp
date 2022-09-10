@@ -125,6 +125,14 @@ namespace Beon.Controllers
       ViewBag.IsDiaryPage = true;
       ViewBag.DiaryTitle = displayName;
       ViewBag.DiarySubtitle = displayName;
+      ViewBag.HrBarViewModel = new HrBarViewModel(
+        crumbs: new List<LinkViewModel>
+        {
+          new LinkViewModel(displayName, _linkGenerator.GetPathByAction("Show", "Diary", new { userName = userName }) ?? "error"),
+          await _topicLogic.GetShortLinkAsync(t)
+        },
+        timeStamp: t.TimeStamp);
+      
       return View(new DiaryTopicShowViewModel(userName, new TopicShowViewModel(postCreatePath, t.TopicId, t.Title, postIds, canEdit)));
     }
   }
