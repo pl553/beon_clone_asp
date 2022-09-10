@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Beon.Models;
+using Beon.Services;
 using Beon.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -11,27 +12,31 @@ namespace Beon.Controllers
   public class DiaryTopicController : Controller
   {
     private readonly UserManager<BeonUser> _userManager;
-    private ITopicRepository repository;
-    private IBoardRepository boardRepository;
-    private IPostRepository postRepository;
+    private IRepository<Topic> _topicRepository;
+    private TopicLogic _topicLogic;
+    private IRepository<Board> boardRepository;
+    private IRepository<Post> postRepository;
     private LinkGenerator _linkGenerator;
     private readonly ILogger _logger;
-    private readonly ITopicSubscriptionRepository _tsRepository;
+    private readonly TopicSubscriptionLogic _topicSubscriptionLogic;
     public DiaryTopicController(
-      ITopicRepository repo,
-      IBoardRepository boardRepo,
-      IPostRepository postRepo,
+      IRepository<Topic> topicRepository,
+      TopicLogic topicLogic,
+      IRepository<Board> boardRepo,
+      IRepository<Post> postRepo,
       UserManager<BeonUser> userManager,
       LinkGenerator linkGenerator,
       ILogger<DiaryTopicController> logger,
-      ITopicSubscriptionRepository tsRepository) {
-      repository = repo;
+      TopicSubscriptionLogic topicSubscriptionLogic)
+    {
+      _topicRepository = topicRepository;
       boardRepository = boardRepo;
       postRepository = postRepo;
       _userManager = userManager;
       _logger = logger;
       _linkGenerator = linkGenerator;
-      _tsRepository = tsRepository;
+      _topicSubscriptionLogic = topicSubscriptionLogic;
+      _topicLogic = topicLogic;
     }
 
     [HttpPost]
@@ -44,7 +49,7 @@ namespace Beon.Controllers
         return NotFound();
       }
       
-      Board? board = await boardRepository.Boards
+      Board? board = await boardRepository.Entities
         .Where(b => b.OwnerName.Equals(userName) && b.Type.Equals(BoardType.Diary))
         .FirstOrDefaultAsync();
 
@@ -60,13 +65,13 @@ namespace Beon.Controllers
 
       if (ModelState.IsValid) {
         int topicOrd = board.topicCounter++;
-        boardRepository.UpdateBoard(board);
+        await boardRepository.UpdateAsync(board);
         DateTime timeStamp = DateTime.UtcNow;
         Topic topic = new Topic { Title = model.Title, BoardId = board.BoardId, TopicOrd = topicOrd, TimeStamp = timeStamp };
-        repository.SaveTopic(topic);
+        _topicRepository.Create(topic);
         Post op = new Post { Body = model.Op.Body, Topic = topic, Poster = u, TimeStamp = timeStamp };
-        postRepository.SavePost(op);
-        await _tsRepository.SubscribeAsync(topic.TopicId, u.Id);
+        await postRepository.CreateAsync(op);
+        await _topicSubscriptionLogic.SubscribeAsync(topic.TopicId, u.Id);
         return RedirectToAction("Show", "DiaryTopic", new { userName = userName, topicOrd = topicOrd});
       }
       else {
@@ -85,7 +90,7 @@ namespace Beon.Controllers
         return NotFound();
       }
 
-      int boardId = await boardRepository.Boards
+      int boardId = await boardRepository.Entities
         .Where(b => b.OwnerName.Equals(userName) && b.Type.Equals(BoardType.Diary))
         .Select(b => b.BoardId)
         .FirstOrDefaultAsync();
@@ -94,7 +99,7 @@ namespace Beon.Controllers
         return NotFound();
       }
 
-      Topic? t = await repository.Topics
+      Topic? t = await _topicRepository.Entities
         .Where(t => t.BoardId.Equals(boardId) && t.TopicOrd.Equals(topicOrd))
         .FirstOrDefaultAsync();
 
@@ -111,11 +116,11 @@ namespace Beon.Controllers
       BeonUser? user = await _userManager.GetUserAsync(User);
       bool canEdit = false;
       if (user != null) {
-        await _tsRepository.UnsetNewCommentsAsync(t.TopicId, user.Id);
-        canEdit = await repository.UserMayEditTopicAsync(t, user);
+        await _topicSubscriptionLogic.UnsetNewCommentsAsync(t.TopicId, user.Id);
+        canEdit = await _topicLogic.UserMayEditTopicAsync(t, user);
       }
 
-      ICollection<int> postIds = await postRepository.GetPostIdsOfTopicAsync(t.TopicId);
+      ICollection<int> postIds = await _topicLogic.GetPostIdsOfTopicAsync(t.TopicId);
 
       ViewBag.IsDiaryPage = true;
       ViewBag.DiaryTitle = displayName;

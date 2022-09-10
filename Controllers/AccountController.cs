@@ -21,8 +21,8 @@ namespace Beon.Controllers
         private readonly SignInManager<BeonUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
-        private readonly IDiaryRepository _diaryRepository;
-        private readonly IBoardRepository _boardRepository;
+        private readonly IRepository<Diary> _diaryRepository;
+        private readonly IRepository<Board> _boardRepository;
         private readonly ILogger _logger;
 
         public AccountController(
@@ -30,8 +30,8 @@ namespace Beon.Controllers
             SignInManager<BeonUser> signInManager,
             IEmailSender emailSender,
             ISmsSender smsSender,
-            IDiaryRepository diaryRepository,
-            IBoardRepository boardRepository,
+            IRepository<Diary> diaryRepository,
+            IRepository<Board> boardRepository,
             ILoggerFactory loggerFactory)
         {
             _userManager = userManager;
@@ -120,9 +120,9 @@ namespace Beon.Controllers
                     //await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
                     //    "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
                     var diaryBoard = new Board { Name = $"DiaryBoard{user.Id}", Type = BoardType.Diary, OwnerName = model.UserName };
-                    _boardRepository.SaveBoard(diaryBoard);
+                    await _boardRepository.CreateAsync(diaryBoard);
                     var diary = new Diary { Board = diaryBoard, Owner = user };
-                    _diaryRepository.SaveDiary(diary);
+                    await _diaryRepository.CreateAsync(diary);
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation(3, "User created a new account with password.");
                     return this.RedirectToLocal(returnUrl);

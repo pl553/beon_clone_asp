@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Beon.Models;
 using Beon.Hubs;
 using Beon.Models.ViewModels;
+using Beon.Services;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -12,28 +13,28 @@ namespace Beon.Controllers
 {
   public class PostController : Controller
   {
-    private IPostRepository _postRepository;
-    private ITopicRepository _topicRepository;
+    private IRepository<Post> _postRepository;
+    private IRepository<Topic> _topicRepository;
     private readonly UserManager<BeonUser> _userManager;
     private readonly IViewComponentRenderService _vcRender;
-    private readonly ITopicSubscriptionRepository _tsRepository;
+    private readonly TopicSubscriptionLogic _topicSubscriptionLogic;
     private IHubContext<TopicHub> _hubContext;    
     private readonly ILogger _logger;
     public PostController(
-      IPostRepository repo,
-      ITopicRepository TopicRepo,
+      IRepository<Post> repo,
+      IRepository<Topic> topicRepository,
       UserManager<BeonUser> userManager,
       IHubContext<TopicHub> hubContext,
       ILogger<PostController> logger,
-      ITopicSubscriptionRepository tsRepository,
+      TopicSubscriptionLogic topicSubscriptionLogic,
       IViewComponentRenderService vcRender) {
       _postRepository = repo;
-      _topicRepository = TopicRepo;
+      _topicRepository = topicRepository;
       _userManager = userManager;
       _hubContext = hubContext;
       _logger = logger;
       _vcRender = vcRender;
-      _tsRepository = tsRepository;
+      _topicSubscriptionLogic = topicSubscriptionLogic;
     }
     public IActionResult Index() {
       return View();
@@ -43,7 +44,7 @@ namespace Beon.Controllers
     [Authorize]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(int topicId, PostFormModel model) {
-      topicId = await _topicRepository.Topics
+      topicId = await _topicRepository.Entities
         .Where(t => t.TopicId.Equals(topicId))
         .Select(t => t.TopicId)
         .FirstOrDefaultAsync();
@@ -58,11 +59,11 @@ namespace Beon.Controllers
         return NotFound();
       }
 
-      await _tsRepository.SubscribeAsync(topicId, u.Id);
-      await _tsRepository.SetNewCommentsAsync(topicId);
+      await _topicSubscriptionLogic.SubscribeAsync(topicId, u.Id);
+      await _topicSubscriptionLogic.SetNewCommentsAsync(topicId);
 
       Post p = new Post { TopicId = topicId, Body = model.Body, TimeStamp = DateTime.UtcNow, Poster = u };
-      _postRepository.SavePost(p);
+      await _postRepository.CreateAsync(p);
 
       string postRawHtml = await _vcRender.RenderAsync(ControllerContext, ViewData, TempData, "Post", new { postId = p.PostId, showDate = true });
 

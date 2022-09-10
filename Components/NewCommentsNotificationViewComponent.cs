@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Beon.Models;
+using Beon.Services;
 using Beon.Hubs;
 using Beon.Models.ViewModels;
 using Microsoft.AspNetCore.SignalR;
@@ -13,15 +14,15 @@ namespace Beon.Components {
   public class NewCommentsNotificationViewComponent : ViewComponent
   {
     private readonly UserManager<BeonUser> _userManager;
-    private readonly ITopicSubscriptionRepository _tsRepository;
-    private readonly ITopicRepository _topicRepository;
+    private readonly TopicSubscriptionLogic _topicSubscriptionLogic;
+    private readonly TopicLogic _topicLogic;
     public NewCommentsNotificationViewComponent(
         UserManager<BeonUser> userManager,
-        ITopicRepository topicRepository,
-        ITopicSubscriptionRepository tsRepository) {
+        TopicLogic topicLogic,
+        TopicSubscriptionLogic topicSubscriptionLogic) {
       _userManager = userManager;
-      _tsRepository = tsRepository;
-      _topicRepository = topicRepository;
+      _topicSubscriptionLogic = topicSubscriptionLogic;
+      _topicLogic = topicLogic;
     }
 
     public async Task<IViewComponentResult> InvokeAsync() {
@@ -30,15 +31,12 @@ namespace Beon.Components {
         return View(new List<LinkViewModel>());
       }
 
-      List<TopicSubscription> tss = await _tsRepository.TopicSubscriptions
-        .Where(t => t.SubscriberId!.Equals(u.Id) && t.NewPosts.Equals(true))
-        .Include(ts => ts.Topic)
-        .ToListAsync();
+      var tss = await _topicSubscriptionLogic.GetWithNewPosts(u.Id);
 
       ICollection<LinkViewModel> links = new List<LinkViewModel>();
       foreach(var ts in tss) {
         if (ts.Topic != null) {
-          links.Add(new LinkViewModel(ts.Topic.Title, await _topicRepository.GetTopicPathAsync(ts.Topic)));
+          links.Add(new LinkViewModel(ts.Topic.Title, await _topicLogic.GetTopicPathAsync(ts.Topic)));
         }
       }
 

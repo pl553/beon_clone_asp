@@ -12,14 +12,14 @@ namespace Beon.Controllers
     private readonly ILogger _logger;
     private readonly UserManager<BeonUser> _userManager;
     private readonly SignInManager<BeonUser> _signInManager;
-    private readonly ITopicRepository _topicRepository;
-    private readonly IBoardRepository _boardRepository;
+    private readonly IRepository<Topic> _topicRepository;
+    private readonly IRepository<Board> _boardRepository;
     private readonly LinkGenerator _linkGenerator;
     public DiaryController(
       UserManager<BeonUser> userManager,
       SignInManager<BeonUser> signInManager,
-      ITopicRepository topicRepository,
-      IBoardRepository boardRepository,
+      IRepository<Topic> topicRepository,
+      IRepository<Board> boardRepository,
       LinkGenerator linkGenerator,
       ILogger<DiaryController> logger) {
       _userManager = userManager;
@@ -42,7 +42,7 @@ namespace Beon.Controllers
         return NotFound();
       }
       
-      Board? b = await _boardRepository.Boards
+      Board? b = await _boardRepository.Entities
         .Where(b => b.OwnerName.Equals(userName) && b.Type.Equals(BoardType.Diary))
         .Include(b => b.Topics)
         .FirstOrDefaultAsync();
@@ -51,7 +51,7 @@ namespace Beon.Controllers
         return NotFound();
       }
 
-      ICollection<Tuple<int,DateTime>> topics = await _topicRepository.Topics
+      ICollection<Tuple<int,DateTime>> topics = await _topicRepository.Entities
         .Where(t => t.BoardId.Equals(b.BoardId))
         .OrderByDescending(t => t.TopicId)
         .Select(t => new Tuple<int,DateTime>(t.TopicId, t.TimeStamp))

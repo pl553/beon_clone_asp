@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Beon.Models;
 using Beon.Models.ViewModels;
+using Beon.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
@@ -11,19 +12,23 @@ namespace Beon.Controllers
   public class TopicController : Controller
   {
     private readonly UserManager<BeonUser> _userManager;
-    private ITopicRepository repository;
-    private IBoardRepository boardRepository;
-    private IPostRepository postRepository;
+    private readonly IRepository<Topic> _topicRepository;
+    private readonly TopicLogic _topicLogic;
+    private IRepository<Board> boardRepository;
+    private IRepository<Post> postRepository;
     private readonly ILogger _logger;
     public TopicController(
-      ITopicRepository repo,
-      IBoardRepository boardRepo,
-      IPostRepository postRepo,
+      IRepository<Topic> topicRepository,
+      TopicLogic topicLogic,
+      IRepository<Board> boardRepo,
+      IRepository<Post> postRepo,
       UserManager<BeonUser> userManager,
-      ILogger<TopicController> logger) {
-      repository = repo;
+      ILogger<TopicController> logger)
+    {
+      _topicRepository = topicRepository;
       boardRepository = boardRepo;
       postRepository = postRepo;
+      _topicLogic = topicLogic;
       _userManager = userManager;
       _logger = logger;
     }
@@ -33,13 +38,13 @@ namespace Beon.Controllers
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int topicId, string returnUrl) {
       BeonUser? u = await _userManager.GetUserAsync(User);
-      Topic? t = await repository.Topics
+      Topic? t = await _topicRepository.Entities
         .Where(t => t.TopicId.Equals(topicId))
         .Include(t => t.Board)
         .FirstOrDefaultAsync();
 
-      if (u != null && t != null && await repository.UserMayEditTopicAsync(t, u)) {
-        repository.DeleteTopic(t);
+      if (u != null && t != null && await _topicLogic.UserMayEditTopicAsync(t, u)) {
+        await _topicRepository.DeleteAsync(t);
         return this.RedirectToLocal(returnUrl);
       }
 

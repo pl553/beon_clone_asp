@@ -9,20 +9,21 @@ using Microsoft.EntityFrameworkCore;
 namespace Beon.Components {
   public class PostViewComponent : ViewComponent
   {
-    private readonly IPostRepository _postRepository;
+    private readonly IRepository<Post> _postRepository;
     private readonly UserManager<BeonUser> _userManager;
     private readonly IUserFileRepository _userFileRepository;
     public PostViewComponent(
-        IPostRepository postRepository,
+        IRepository<Post> postRepository,
         UserManager<BeonUser> userManager,
-        IUserFileRepository userFileRepository) {
+        IUserFileRepository userFileRepository)
+    {
       _postRepository = postRepository;
       _userManager = userManager;
       _userFileRepository = userFileRepository;
     }
 
     public async Task<IViewComponentResult> InvokeAsync(int postId, bool showDate = false) {
-      Post? post = await _postRepository.Posts
+      Post? post = await _postRepository.Entities
         .Where(p => p.PostId.Equals(postId))
         .FirstOrDefaultAsync();
 

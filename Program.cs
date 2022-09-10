@@ -90,14 +90,18 @@ builder.Services.ConfigureApplicationCookie(options =>
   options.ReturnUrlParameter = "returnUrl";
 });
 
-builder.Services.AddScoped<IBoardRepository, EFBoardRepository>();
-builder.Services.AddScoped<ITopicRepository, EFTopicRepository>();
-builder.Services.AddScoped<ITopicSubscriptionRepository, EFTopicSubscriptionRepository>();
-builder.Services.AddScoped<IPostRepository, EFPostRepository>();
-builder.Services.AddScoped<IDiaryRepository, EFDiaryRepository>();
+builder.Services.AddScoped<IRepository<Topic>, EFRepository<Topic>>();
+builder.Services.AddScoped<IRepository<Board>, EFRepository<Board>>();
+builder.Services.AddScoped<IRepository<TopicSubscription>, EFRepository<TopicSubscription>>();
+builder.Services.AddScoped<IRepository<Post>, EFRepository<Post>>();
+builder.Services.AddScoped<IRepository<Diary>, EFRepository<Diary>>();
+
 builder.Services.AddScoped<IEmailSender, AuthMessageSender>();
 builder.Services.AddScoped<ISmsSender, AuthMessageSender>();
+
 builder.Services.AddScoped<IViewComponentRenderService, ViewComponentRenderService>();
+builder.Services.AddScoped<TopicLogic, TopicLogic>();
+builder.Services.AddScoped<TopicSubscriptionLogic, TopicSubscriptionLogic>();
 
 string? userFileStorageType = Environment.GetEnvironmentVariable("USER_STORAGE_TYPE");
 

@@ -10,8 +10,8 @@ namespace Beon.Controllers
 
   public class HomeController : Controller
   {
-    private readonly ITopicRepository _topicRepository;
-    public HomeController(ITopicRepository topicRepository)
+    private readonly IRepository<Topic> _topicRepository;
+    public HomeController(IRepository<Topic> topicRepository)
     {
       _topicRepository = topicRepository;
     }
@@ -21,7 +21,7 @@ namespace Beon.Controllers
     [Route("/{page:int}")]
     public async Task<IActionResult> Index(int page = 1)
     {
-      List<Tuple<int,DateTime>> topics = await _topicRepository.Topics
+      List<Tuple<int,DateTime>> topics = await _topicRepository.Entities
         .OrderByDescending(t => t.TopicId)
         .Skip((page-1)*Beon.Settings.Page.ItemCount)
         .Take(Beon.Settings.Page.ItemCount)
