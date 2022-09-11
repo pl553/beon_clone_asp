@@ -1,7 +1,7 @@
 namespace Beon.Models.ViewModels {
   public class HomeViewModel {
-    public BoardShowViewModel Board;
-    public HomeViewModel(BoardShowViewModel board) {
+    public BoardViewModel Board;
+    public HomeViewModel(BoardViewModel board) {
       Board = board;
     }
   }

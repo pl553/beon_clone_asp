@@ -1,4 +1,4 @@
-@model TopicShowViewModel
+@model TopicViewModel
 
 @using Microsoft.AspNetCore.Identity
 
@@ -10,9 +10,9 @@
   @{
     int i = 0;
   }
-  @foreach (var p in Model.PostIds) 
+  @foreach (var p in Model.Posts) 
   {
-    <vc:post post-id="@p" show-date="true" />
+    <partial name="_PostShowPartial" model="@p"></partial>
     if (Model.CanEdit && i == 0) {
       <span style="float: left;" class="m9">
         <partial name="_TopicOptionsPartial" model="@Model.TopicId"></partial>

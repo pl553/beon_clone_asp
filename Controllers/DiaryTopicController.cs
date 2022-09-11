@@ -120,7 +120,7 @@ namespace Beon.Controllers
         canEdit = await _topicLogic.UserMayEditTopicAsync(t, user);
       }
 
-      ICollection<int> postIds = await _topicLogic.GetPostIdsOfTopicAsync(t.TopicId);
+      ICollection<PostViewModel> posts = await _topicLogic.GetPostsAsync(t.TopicId);
 
       ViewBag.IsDiaryPage = true;
       ViewBag.DiaryTitle = displayName;
@@ -133,7 +133,7 @@ namespace Beon.Controllers
         },
         timeStamp: t.TimeStamp);
       
-      return View(new DiaryTopicShowViewModel(userName, new TopicShowViewModel(postCreatePath, t.TopicId, t.Title, postIds, canEdit)));
+      return View(new DiaryTopicViewModel(userName, new TopicViewModel(postCreatePath, t.TopicId, t.Title, posts, canEdit)));
     }
   }
 }

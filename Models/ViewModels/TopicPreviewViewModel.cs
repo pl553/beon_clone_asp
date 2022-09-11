@@ -6,20 +6,20 @@ namespace Beon.Models.ViewModels
     public string Path { get; set; }
     public string Title { get; set; }
     public int PostCount { get; set; }
-    public int OpId { get; set; }
+    public PostViewModel Op { get; set; }
     public bool CanEdit { get; set; }
     public TopicPreviewViewModel(
       int topicId,
       string path,
       string title,
-      int opId,
+      PostViewModel op,
       int postCount,
       DateTime timeStamp,
       bool canEdit = false)
     {
       Path = path;
       Title = title;
-      OpId = opId;
+      Op = op;
       PostCount = postCount;
       CanEdit = canEdit;
       TimeStamp = timeStamp;

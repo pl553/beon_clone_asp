@@ -1,9 +1,9 @@
 namespace Beon.Models.ViewModels {
-  public class DiaryTopicShowViewModel {
+  public class DiaryTopicViewModel {
     public string UserName { get; set; }
-    public TopicShowViewModel Topic { get; set; }
+    public TopicViewModel Topic { get; set; }
 
-    public DiaryTopicShowViewModel(string userName, TopicShowViewModel topic) {
+    public DiaryTopicViewModel(string userName, TopicViewModel topic) {
       UserName = userName;
       Topic = topic;
     }

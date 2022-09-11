@@ -20,14 +20,18 @@ namespace Beon.Controllers
     private readonly TopicSubscriptionLogic _topicSubscriptionLogic;
     private IHubContext<TopicHub> _hubContext;    
     private readonly ILogger _logger;
+    private readonly PostLogic _postLogic;
     public PostController(
+      PostLogic postLogic,
       IRepository<Post> repo,
       IRepository<Topic> topicRepository,
       UserManager<BeonUser> userManager,
       IHubContext<TopicHub> hubContext,
       ILogger<PostController> logger,
       TopicSubscriptionLogic topicSubscriptionLogic,
-      IViewComponentRenderService vcRender) {
+      IViewComponentRenderService vcRender)
+    {
+      _postLogic = postLogic;
       _postRepository = repo;
       _topicRepository = topicRepository;
       _userManager = userManager;
@@ -64,8 +68,10 @@ namespace Beon.Controllers
 
       Post p = new Post { TopicId = topicId, Body = model.Body, TimeStamp = DateTime.UtcNow, Poster = u };
       await _postRepository.CreateAsync(p);
+      PostViewModel vm = await _postLogic.GetPostViewModelAsync(p);
+      vm.ShowDate = true;
 
-      string postRawHtml = await _vcRender.RenderAsync(ControllerContext, ViewData, TempData, "Post", new { postId = p.PostId, showDate = true });
+      string postRawHtml = await _vcRender.RenderAsync(ControllerContext, ViewData, TempData, "Post", new { post = vm });
 
       await _hubContext.Clients.Group(topicId.ToString()).SendAsync("ReceivePost", postRawHtml);
 

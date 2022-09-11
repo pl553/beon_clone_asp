@@ -13,13 +13,13 @@ namespace Beon.Controllers
     private readonly ILogger _logger;
     private readonly UserManager<BeonUser> _userManager;
     private readonly SignInManager<BeonUser> _signInManager;
-    private readonly TopicLogic _topicLogic;
+    private readonly BoardLogic _boardLogic;
     private readonly IRepository<Board> _boardRepository;
     private readonly LinkGenerator _linkGenerator;
     public DiaryController(
       UserManager<BeonUser> userManager,
       SignInManager<BeonUser> signInManager,
-      TopicLogic topicLogic,
+      BoardLogic boardLogic,
       IRepository<Board> boardRepository,
       LinkGenerator linkGenerator,
       ILogger<DiaryController> logger)
@@ -28,7 +28,7 @@ namespace Beon.Controllers
       _boardRepository = boardRepository;
       _linkGenerator = linkGenerator;
       _signInManager = signInManager;
-      _topicLogic = topicLogic;
+      _boardLogic = boardLogic;
       _logger = logger;
     }
 
@@ -54,12 +54,12 @@ namespace Beon.Controllers
         return NotFound();
       }
 
-      var topics = await _topicLogic.GetTopicPreviewViewModelsAsync(t => t.BoardId.Equals(boardId), page, User);
+      var topics = await _boardLogic.GetTopicPreviewViewModelsAsync(t => t.BoardId.Equals(boardId), page, User);
       if (topics.Count == 0 && page > 1) {
         return NotFound();
       }
-      
-      int numPages = await _topicLogic.GetNumPagesAsync(t => t.BoardId.Equals(boardId));
+
+      int numPages = await _boardLogic.GetNumPagesAsync(t => t.BoardId.Equals(boardId));
 
       ViewBag.IsDiaryPage = true;
       ViewBag.DiaryTitle = displayName;
@@ -75,10 +75,10 @@ namespace Beon.Controllers
         if (createTopicPath == null) {
           return NotFound();
         }
-        return View(new DiaryViewModel(new BoardShowViewModel(topics, true, createTopicPath), userName));
+        return View(new DiaryViewModel(new BoardViewModel(topics, true, createTopicPath), userName));
       }
       else {
-        return View(new DiaryViewModel(new BoardShowViewModel(topics), userName));
+        return View(new DiaryViewModel(new BoardViewModel(topics), userName));
       }
     }
   }

@@ -31,7 +31,7 @@ namespace Beon.Components {
         return View(new List<LinkViewModel>());
       }
 
-      var tss = await _topicSubscriptionLogic.GetWithNewPosts(u.Id);
+      var tss = await _topicSubscriptionLogic.GetWithNewPostsAsync(u.Id);
 
       ICollection<LinkViewModel> links = new List<LinkViewModel>();
       foreach(var ts in tss) {

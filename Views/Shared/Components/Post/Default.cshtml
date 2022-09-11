@@ -1,24 +1,2 @@
-@using System.Globalization
-
-@model PostShowViewModel
-
-@{  
-  var time = TimeZoneInfo.ConvertTimeFromUtc(Model.TimeStamp, Beon.Settings.TimeZone); 
-  var timeStr = Model.ShowDate ? time.ToString("d MMMM yyyy г. HH:mm:ss", CultureInfo.CreateSpecificCulture("ru-RU")) : time.ToString("HH:mm:ss");
-
-  var postBody = Beon.Infrastructure.BBCode.Parse(Model.Body);
-}
-
-<partial name="_UserProfileLinkPartial" model="@new UserProfileLinkViewModel(Model.Poster.UserName, Model.Poster.DisplayName)"></partial>
-&nbsp;<span class="m7">@timeStr</span>
-
-<div class="postbg">
-  @if (Model.Poster.AvatarFilePath != null) {
-    <div class="avatar">
-      <img src="@Model.Poster.AvatarFilePath" />
-    </div>
-  }
-  <div class="post-body">
-    @Html.Raw(postBody)
-  </div>
-</div>
+@model PostViewModel
+<partial name="_PostShowPartial" model="@Model"></partial>

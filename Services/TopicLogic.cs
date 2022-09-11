@@ -13,7 +13,9 @@ namespace Beon.Services {
     private readonly IRepository<Board> _boardRepository;
     private readonly LinkGenerator _linkGenerator;
     private readonly ILogger<TopicLogic> _logger;
+    private readonly PostLogic _postLogic;
     public TopicLogic(
+      PostLogic postLogic,
       UserManager<BeonUser> userManager,
       IRepository<Post> postRepository,
       IRepository<Topic> topicRepository,
@@ -21,6 +23,7 @@ namespace Beon.Services {
       ILogger<TopicLogic> logger,
       LinkGenerator linkGenerator)
     {
+      _postLogic = postLogic;
       _postRepository = postRepository;
       _boardRepository = boardRepository;
       _topicRepository = topicRepository;
@@ -59,6 +62,14 @@ namespace Beon.Services {
         .ToListAsync();
     }
 
+    public async Task<ICollection<PostViewModel>> GetPostsAsync(int topicId) {
+      var posts = await _postRepository.Entities
+        .Where(p => p.TopicId.Equals(topicId))
+        .Include(p => p.Poster)
+        .ToListAsync();
+      
+      return await Task.WhenAll(posts.Select(async p => await _postLogic.GetPostViewModelAsync(p)).ToList());
+    }
     public async Task<LinkViewModel> GetShortLinkAsync(Topic topic){
       string text = topic.Title.Substring(0, Math.Min(34, topic.Title.Length));
       if (topic.Title.Length > 34) {
@@ -66,54 +77,6 @@ namespace Beon.Services {
       }
       return new LinkViewModel(text, await GetTopicPathAsync(topic));
     } 
-    public async Task<int> GetNumPagesAsync(Expression<Func<Topic,bool>> which) {
-      int n = Beon.Settings.Page.ItemCount;
-      return (await _topicRepository.Entities.Where(which).CountAsync() + n - 1) / n;
-    }
-    public async Task<ICollection<TopicPreviewViewModel>> GetTopicPreviewViewModelsAsync(
-      Expression<Func<Topic,bool>> which,
-      int page,
-      ClaimsPrincipal userClaim)
-    {
-      var topics = await _topicRepository.Entities
-        .Where(which)
-        .OrderByDescending(t => t.TopicId)
-        .Skip((page-1)*Beon.Settings.Page.ItemCount)
-        .Take(Beon.Settings.Page.ItemCount)
-        .Include(t => t.Board)
-        .ToListAsync();
-      
-      BeonUser? user = await _userManager.GetUserAsync(userClaim);
-
-      List<TopicPreviewViewModel> res = new List<TopicPreviewViewModel>();
-      foreach(var t in topics) {
-        int opId = await _postRepository.Entities
-          .Where(p => p.TopicId.Equals(t.TopicId))
-          .Select(p => p.PostId)
-          .FirstOrDefaultAsync();
-        
-        if (opId == 0) {
-          _logger.LogWarning($"Topic with id {t.TopicId} has no op");
-          continue;
-        }
-
-        bool canEdit = await UserMayEditTopicAsync(t, user);
-        int postCount = await _postRepository.Entities
-          .Where(p => p.TopicId.Equals(t.TopicId))
-          .CountAsync();
-        
-        res.Add(new TopicPreviewViewModel(
-          t.TopicId,
-          await GetTopicPathAsync(t),
-          t.Title,
-          opId,
-          postCount,
-          t.TimeStamp,
-          canEdit));
-      }
-
-      return res;
-    }
     private async Task<Board> LoadBoardAsync(Topic topic) {
       if (topic.Board == null) {
         topic.Board = await _boardRepository.Entities

@@ -101,6 +101,8 @@ builder.Services.AddScoped<ISmsSender, AuthMessageSender>();
 
 builder.Services.AddScoped<IViewComponentRenderService, ViewComponentRenderService>();
 builder.Services.AddScoped<TopicLogic, TopicLogic>();
+builder.Services.AddScoped<BoardLogic, BoardLogic>();
+builder.Services.AddScoped<PostLogic, PostLogic>();
 builder.Services.AddScoped<TopicSubscriptionLogic, TopicSubscriptionLogic>();
 
 string? userFileStorageType = Environment.GetEnvironmentVariable("USER_STORAGE_TYPE");

@@ -11,10 +11,10 @@ namespace Beon.Controllers
 
   public class HomeController : Controller
   {
-    private readonly TopicLogic _topicLogic;
-    public HomeController(TopicLogic topicLogic)
+    private readonly BoardLogic _boardLogic;
+    public HomeController(BoardLogic boardLogic)
     {
-      _topicLogic = topicLogic;
+      _boardLogic = boardLogic;
     }
 
     [HttpGet]
@@ -22,7 +22,7 @@ namespace Beon.Controllers
     [Route("/{page:int}")]
     public async Task<IActionResult> Index(int page = 1)
     { 
-      var topics = await _topicLogic.GetTopicPreviewViewModelsAsync(t => true, page, User);
+      var topics = await _boardLogic.GetTopicPreviewViewModelsAsync(t => true, page, User);
 
       if (topics.Count() == 0 && page > 1) {
         return NotFound();
@@ -31,7 +31,7 @@ namespace Beon.Controllers
       ViewBag.HrBarViewModel = new HrBarViewModel
         (crumbs: new List<LinkViewModel>{new LinkViewModel("BeOn", "")}, pagingInfo: new PagingInfo("/", page, 8));
       
-      return View(new HomeViewModel(new BoardShowViewModel(topics)));
+      return View(new HomeViewModel(new BoardViewModel(topics)));
     }
   }
 }

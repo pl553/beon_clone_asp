@@ -10,9 +10,10 @@ namespace Beon.Services {
       _topicSubscriptionRepository = topicSubscriptionRepository;
     }
     
-    public async Task<List<TopicSubscription>> GetWithNewPosts(string userId) {
+    public async Task<List<TopicSubscription>> GetWithNewPostsAsync(string userId) {
       return await _topicSubscriptionRepository.Entities
         .Where(ts => ts.SubscriberId!.Equals(userId) && ts.NewPosts)
+        .Include(ts => ts.Topic)
         .ToListAsync();
     }
 

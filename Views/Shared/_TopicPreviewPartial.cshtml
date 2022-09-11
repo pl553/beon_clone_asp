@@ -27,7 +27,7 @@
   @Model.Title
 </a>
 
-<vc:post post-id="@Model.OpId" />
+<partial name="_PostShowPartial" model=@Model.Op></partial>
 <span style="float: left;" class="m9">
   @if (Model.CanEdit) {
     <partial name="_TopicOptionsPartial" model="@Model.TopicId"></partial>
