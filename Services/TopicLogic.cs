@@ -68,7 +68,7 @@ namespace Beon.Services {
         .Include(p => p.Poster)
         .ToListAsync();
       
-      return await Task.WhenAll(posts.Select(async p => await _postLogic.GetPostViewModelAsync(p)).ToList());
+      return await Task.WhenAll(posts.Select(async p => await _postLogic.GetPostViewModelAsync(p, true)).ToList());
     }
     public async Task<LinkViewModel> GetShortLinkAsync(Topic topic){
       string text = topic.Title.Substring(0, Math.Min(34, topic.Title.Length));

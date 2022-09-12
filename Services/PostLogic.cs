@@ -20,7 +20,7 @@ namespace Beon.Services {
       _userFileRepository = userFileRepository;
     }
     
-    public async Task<PostViewModel> GetPostViewModelAsync(Post post) {
+    public async Task<PostViewModel> GetPostViewModelAsync(Post post, bool showDate = false) {
       BeonUser? poster = post.Poster;
       if (post.Poster == null) {
         poster = await _userManager.Users
@@ -37,7 +37,7 @@ namespace Beon.Services {
       }
 
       PosterViewModel posterVm = new PosterViewModel(poster.UserName, poster.DisplayName, avatarUrl);
-      PostViewModel postVm = new PostViewModel(post.Body, post.TimeStamp, posterVm);
+      PostViewModel postVm = new PostViewModel(post.Body, post.TimeStamp, posterVm, showDate);
       return postVm;
     }
   }
