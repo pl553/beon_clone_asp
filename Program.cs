@@ -5,6 +5,7 @@ using Beon.Services;
 using Beon.Infrastructure;
 using Npgsql;
 using Beon.Hubs;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 //var connectionString = builder.Configuration.GetConnectionString("IdentityDbContextConnection") ?? throw new InvalidOperationException("Connection string 'IdentityDbContextConnection' not found.");
@@ -139,6 +140,12 @@ builder.Logging.AddConsole();
 
 var app = builder.Build();
 
+string? bAuthUserName = Environment.GetEnvironmentVariable("BAUTH_USERNAME");
+if (bAuthUserName != null)
+{
+  string bAuthPassword = Environment.GetEnvironmentVariable("BAUTH_PASSWORD") ?? "";
+  app.UseMiddleware<BasicAuthMiddleware>(Options.Create(new BasicAuthOptions(bAuthUserName, bAuthPassword)));
+}
 
 app.UseStaticFiles();
 

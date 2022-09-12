@@ -21,7 +21,9 @@
       },
       "env": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "USER_STORAGE_TYPE" : "DISK"
+        "USER_STORAGE_TYPE" : "DISK",
+        "BAUTH_USERNAME" : "g4ming",
+        "BAUTH_PASSWORD" : "rage"
       },
       "sourceFileMap": {
         "/Views": "${workspaceFolder}/Views"
