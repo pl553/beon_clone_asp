@@ -9,7 +9,8 @@ namespace Beon.Services {
   public class BoardLogic {
     private readonly UserManager<BeonUser> _userManager;
     private readonly PostLogic _postLogic;
-    private readonly IRepository<Post> _postRepository;
+    private readonly IRepository<Comment> _commentRepository;
+    private readonly IRepository<OriginalPost> _opRepository;
     private readonly IRepository<Topic> _topicRepository;
     private readonly IRepository<Board> _boardRepository;
     private readonly TopicLogic _topicLogic;
@@ -18,7 +19,8 @@ namespace Beon.Services {
     public BoardLogic(
       PostLogic postLogic,
       UserManager<BeonUser> userManager,
-      IRepository<Post> postRepository,
+      IRepository<Comment> commentRepository,
+      IRepository<OriginalPost> opRepository,
       IRepository<Topic> topicRepository,
       IRepository<Board> boardRepository,
       ILogger<TopicLogic> logger,
@@ -26,7 +28,8 @@ namespace Beon.Services {
       TopicLogic topicLogic)
     {
       _postLogic = postLogic;
-      _postRepository = postRepository;
+      _commentRepository = commentRepository;
+      _opRepository = opRepository;
       _boardRepository = boardRepository;
       _topicRepository = topicRepository;
       _linkGenerator = linkGenerator;
@@ -55,7 +58,7 @@ namespace Beon.Services {
 
       List<TopicPreviewViewModel> res = new List<TopicPreviewViewModel>();
       foreach(var t in topics) {
-        Post? op = await _postRepository.Entities
+        OriginalPost? op = await _opRepository.Entities
           .Where(p => p.TopicId.Equals(t.TopicId))
           .Include(p => p.Poster)
           .FirstOrDefaultAsync();
@@ -66,7 +69,7 @@ namespace Beon.Services {
         }
 
         bool canEdit = await _topicLogic.UserMayEditTopicAsync(t, user);
-        int postCount = await _postRepository.Entities
+        int commentCount = await _commentRepository.Entities
           .Where(p => p.TopicId.Equals(t.TopicId))
           .CountAsync();
         
@@ -75,8 +78,7 @@ namespace Beon.Services {
           await _topicLogic.GetTopicPathAsync(t),
           t.Title,
           await _postLogic.GetPostViewModelAsync(op),
-          postCount,
-          t.TimeStamp,
+          commentCount,
           canEdit));
       }
 

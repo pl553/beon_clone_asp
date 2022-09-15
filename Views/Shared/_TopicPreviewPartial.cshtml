@@ -1,44 +1,75 @@
+@using System.Globalization
+
 @model TopicPreviewViewModel
 
 @{
-  var commentCount = Model.PostCount-1;
+  var commentCount = Model.CommentCount;
   var commentCountStr = "";
-  if (commentCount != 0) {
+  if (commentCount != 0)
+  {
     var ending = "";
-    if (commentCount%10 == 1) {
+    if (commentCount % 10 == 1)
+    {
       ending = "й";
     }
-    else if (commentCount%10 >= 2 && commentCount%10 <= 4) {
+    else if (commentCount % 10 >= 2 && commentCount % 10 <= 4)
+    {
       ending = "я";
     }
-    else {
+    else
+    {
       ending = "ев";
     }
 
-    if ((commentCount/10)%10 == 1) {
+    if ((commentCount / 10) % 10 == 1)
+    {
       ending = "ев";
     }
-    
+
     commentCountStr = commentCount.ToString() + " комментари" + ending;
   }
 }
 
-<a class="topic-title" href="@Model.Path">
-  @Model.Title
-</a>
+@{
+  var time = TimeZoneInfo.ConvertTimeFromUtc(Model.Op.TimeStamp, Beon.Settings.TimeZone);
+  var timeStr = time.ToString("HH:mm:ss", CultureInfo.CreateSpecificCulture("ru-RU"));
+}
 
-<partial name="_PostShowPartial" model=@Model.Op></partial>
-<span style="float: left;" class="m9">
-  @if (Model.CanEdit) {
-    <partial name="_TopicOptionsPartial" model="@Model.TopicId"></partial>
-  }
-</span>
+<div class="postbg">
+  <a class="topic-title" href="@Model.Path">
+    @Model.Title
+  </a>
+  <partial name="_UserProfileLinkPartial"
+    model="@new UserProfileLinkViewModel(Model.Op.Poster.UserName, Model.Op.Poster.DisplayName)"></partial>
+  &nbsp;<span class="m7">@timeStr</span>
+  <div class="flex-container">
+    @if (Model.Op.Poster.AvatarFilePath != null)
+    {
+      <div class="avatar">
+        <img src="@Model.Op.Poster.AvatarFilePath" />
+      </div>
+    }
+    <div class="post-body">
+      @Html.Raw(Model.Op.BodyRawHtml)
+    </div>
+  </div>
 
-<span style="float: right; font-size: 9px">
-  @if (commentCount != 0) {
-    <img class="flag" src="/i/discuss.png" width="13" height="12">
-    <a href="@Model.Path">@commentCountStr</a>
-    <span>|</span> 
-  }
-  <a href="@Model.Path">Прокомментировать</a>
-</span>
+  <div class="flex-container">
+    @if (Model.CanEdit)
+    {
+      <div class="m9">
+        <partial name="_TopicOptionsPartial" model="@Model.TopicId"></partial>
+      </div>
+    }
+
+    <div style="flex: 1; text-align: right; font-size: 9px;">
+      @if (commentCount != 0)
+      {
+        <img class="flag" src="/i/discuss.png" width="13" height="12">
+        <a href="@Model.Path">@commentCountStr</a>
+        <span>|</span>
+      }
+      <a href="@Model.Path">Прокомментировать</a>
+    </div>
+  </div>
+</div>

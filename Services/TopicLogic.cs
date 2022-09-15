@@ -8,7 +8,8 @@ using System.Linq.Expressions;
 namespace Beon.Services {
   public class TopicLogic {
     private readonly UserManager<BeonUser> _userManager;
-    private readonly IRepository<Post> _postRepository;
+    private readonly IRepository<OriginalPost> _opRepository;
+    private readonly IRepository<Comment> _commentRepository;
     private readonly IRepository<Topic> _topicRepository;
     private readonly IRepository<Board> _boardRepository;
     private readonly LinkGenerator _linkGenerator;
@@ -17,14 +18,16 @@ namespace Beon.Services {
     public TopicLogic(
       PostLogic postLogic,
       UserManager<BeonUser> userManager,
-      IRepository<Post> postRepository,
+      IRepository<OriginalPost> opRepository,
+      IRepository<Comment> commentRepository,
       IRepository<Topic> topicRepository,
       IRepository<Board> boardRepository,
       ILogger<TopicLogic> logger,
       LinkGenerator linkGenerator)
     {
       _postLogic = postLogic;
-      _postRepository = postRepository;
+      _opRepository = opRepository;
+      _commentRepository = commentRepository;
       _boardRepository = boardRepository;
       _topicRepository = topicRepository;
       _linkGenerator = linkGenerator;
@@ -55,20 +58,27 @@ namespace Beon.Services {
       else throw new Exception("unsupported boardtype");
     }
 
-    public async Task<ICollection<int>> GetPostIdsOfTopicAsync(int topicId) {
-      return await _postRepository.Entities
-        .Where(p => p.TopicId.Equals(topicId))
-        .Select(p => p.PostId)
-        .ToListAsync();
-    }
 
-    public async Task<ICollection<PostViewModel>> GetPostsAsync(int topicId) {
-      var posts = await _postRepository.Entities
+    public async Task<PostViewModel> GetOpAsync(int topicId)
+    {
+      var post = await _opRepository.Entities
+        .Where(p => p.TopicId.Equals(topicId))
+        .FirstOrDefaultAsync();
+
+      if (post == null)
+      {
+        throw new Exception("topic has no op");
+      }
+
+      return await _postLogic.GetPostViewModelAsync(post);
+    }
+    public async Task<ICollection<CommentViewModel>> GetCommentsAsync(int topicId, BeonUser? user) {
+      var comments = await _commentRepository.Entities
         .Where(p => p.TopicId.Equals(topicId))
         .Include(p => p.Poster)
         .ToListAsync();
       
-      return await Task.WhenAll(posts.Select(async p => await _postLogic.GetPostViewModelAsync(p, true)).ToList());
+      return await Task.WhenAll(comments.Select(async p => await _postLogic.GetCommentViewModelAsync(p, user)).ToList());
     }
     public async Task<LinkViewModel> GetShortLinkAsync(Topic topic){
       string text = topic.Title.Substring(0, Math.Min(34, topic.Title.Length));

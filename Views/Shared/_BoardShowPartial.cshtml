@@ -8,9 +8,9 @@
 }
 
 @foreach (var t in Model.Topics) {
-  var time = TimeZoneInfo.ConvertTimeFromUtc(t.TimeStamp, Beon.Settings.TimeZone);
+  var time = TimeZoneInfo.ConvertTimeFromUtc(t.Op.TimeStamp, Beon.Settings.TimeZone);
   @if (i == 0 || lastDate.Date > time) {
-    <partial name="_BoardDatePartial" model="@t.TimeStamp"></partial>
+    <partial name="_BoardDatePartial" model="@t.Op.TimeStamp"></partial>
     lastDate = time;
   }
   <partial name="_TopicPreviewPartial" model="@t"></partial>

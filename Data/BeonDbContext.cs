@@ -36,11 +36,18 @@ namespace Beon.Models {
           .OnDelete(DeleteBehavior.Cascade);
 
         builder.Entity<Topic>()
-          .HasMany<Post>(t => t.Posts)
-          .WithOne(p => p.Topic)
+          .HasMany<Comment>(t => t.Comments)
+          .WithOne(c => c.Topic)
           .IsRequired()
           .OnDelete(DeleteBehavior.Cascade);
 
+        builder.Entity<Topic>()
+          .HasOne<OriginalPost>(t => t.OriginalPost)
+          .WithOne(op => op.Topic)
+          .HasForeignKey<OriginalPost>(op => op.TopicId)
+          .IsRequired()
+          .OnDelete(DeleteBehavior.Cascade);
+        
         builder.Entity<BeonUser>()
           .HasMany<TopicSubscription>()
           .WithOne(t => t.Subscriber)
@@ -52,6 +59,8 @@ namespace Beon.Models {
     public DbSet<Board> Boards => Set<Board>();
     public DbSet<Topic> Topics => Set<Topic>();
     public DbSet<Post> Posts => Set<Post>();
+    public DbSet<Comment> Comments => Set<Comment>();
+    public DbSet<OriginalPost> OriginalPosts => Set<OriginalPost>();
     public DbSet<Diary> Diaries => Set<Diary>();
     public DbSet<TopicSubscription> TopicSubscriptions => Set<TopicSubscription>();
   }

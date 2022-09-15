@@ -15,40 +15,53 @@ builder.Services.AddSignalR();
 
 bool tryMigrate = false;
 
-var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+var designTime = Environment.GetEnvironmentVariable("DESIGNTIME");
 
-//to create migrations for heroku (postgres):
-//DATABASE_URL=DesignTime dotnet ef migrations add Initial
-if (databaseUrl != null)
-{ //on heroku  
-  if (databaseUrl != "DesignTime")
+if (designTime != null)
+{
+  if (designTime == "SQLITE")
   {
-    tryMigrate = true;
-    var databaseUri = new Uri(databaseUrl);
-    var userInfo = databaseUri.UserInfo.Split(':');
-
-    var strb = new NpgsqlConnectionStringBuilder
-    {
-      Host = databaseUri.Host,
-      Port = databaseUri.Port,
-      Username = userInfo[0],
-      Password = userInfo[1],
-      Database = databaseUri.LocalPath.TrimStart('/'),
-      TrustServerCertificate = true
-    };
     builder.Services.AddDbContext<BeonDbContext>(opts =>
     {
-      opts.UseNpgsql(strb.ToString());
+      opts.UseSqlite();
     });
   }
-  else
+  else if (designTime == "POSTGRESQL")
   {
     builder.Services.AddDbContext<BeonDbContext>(opts =>
     {
       opts.UseNpgsql();
     });
-    return;
   }
+  else
+  {
+    throw new Exception("invalid DESIGNTIME envar value");
+  }
+  builder.Build();
+  return;
+}
+
+var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+if (databaseUrl != null)
+{ //on heroku  
+  tryMigrate = true;
+  var databaseUri = new Uri(databaseUrl);
+  var userInfo = databaseUri.UserInfo.Split(':');
+
+  var strb = new NpgsqlConnectionStringBuilder
+  {
+    Host = databaseUri.Host,
+    Port = databaseUri.Port,
+    Username = userInfo[0],
+    Password = userInfo[1],
+    Database = databaseUri.LocalPath.TrimStart('/'),
+    TrustServerCertificate = true
+  };
+  builder.Services.AddDbContext<BeonDbContext>(opts =>
+  {
+    opts.UseNpgsql(strb.ToString());
+  });
 }
 else
 { //on localhost
@@ -94,7 +107,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddScoped<IRepository<Topic>, EFRepository<Topic>>();
 builder.Services.AddScoped<IRepository<Board>, EFRepository<Board>>();
 builder.Services.AddScoped<IRepository<TopicSubscription>, EFRepository<TopicSubscription>>();
-builder.Services.AddScoped<IRepository<Post>, EFRepository<Post>>();
+builder.Services.AddScoped<IRepository<Comment>, EFRepository<Comment>>();
+builder.Services.AddScoped<IRepository<OriginalPost>, EFRepository<OriginalPost>>();
 builder.Services.AddScoped<IRepository<Diary>, EFRepository<Diary>>();
 
 builder.Services.AddScoped<IEmailSender, AuthMessageSender>();
@@ -128,10 +142,12 @@ if (userFileStorageType == "S3")
   builder.Services.AddScoped<IUserFileRepository>
     (provider => new S3UserFileRepository("i/user", endpoint, accessKeyId, secret, bucket));
 }
-else if (userFileStorageType == "DISK") {
+else if (userFileStorageType == "DISK")
+{
   builder.Services.AddScoped<IUserFileRepository>(provider => new DiskUserFileRepository("i/user"));
 }
-else {
+else
+{
   throw new Exception("invalid USER_STORAGE_TYPE envar value");
 }
 

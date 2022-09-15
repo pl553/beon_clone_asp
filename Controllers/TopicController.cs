@@ -15,19 +15,16 @@ namespace Beon.Controllers
     private readonly IRepository<Topic> _topicRepository;
     private readonly TopicLogic _topicLogic;
     private IRepository<Board> boardRepository;
-    private IRepository<Post> postRepository;
     private readonly ILogger _logger;
     public TopicController(
       IRepository<Topic> topicRepository,
       TopicLogic topicLogic,
       IRepository<Board> boardRepo,
-      IRepository<Post> postRepo,
       UserManager<BeonUser> userManager,
       ILogger<TopicController> logger)
     {
       _topicRepository = topicRepository;
       boardRepository = boardRepo;
-      postRepository = postRepo;
       _topicLogic = topicLogic;
       _userManager = userManager;
       _logger = logger;

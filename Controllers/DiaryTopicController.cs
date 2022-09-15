@@ -14,24 +14,24 @@ namespace Beon.Controllers
     private readonly UserManager<BeonUser> _userManager;
     private IRepository<Topic> _topicRepository;
     private TopicLogic _topicLogic;
-    private IRepository<Board> boardRepository;
-    private IRepository<Post> postRepository;
+    private IRepository<Board> _boardRepository;
+    private IRepository<OriginalPost> _opRepository;
     private LinkGenerator _linkGenerator;
     private readonly ILogger _logger;
     private readonly TopicSubscriptionLogic _topicSubscriptionLogic;
     public DiaryTopicController(
       IRepository<Topic> topicRepository,
       TopicLogic topicLogic,
-      IRepository<Board> boardRepo,
-      IRepository<Post> postRepo,
+      IRepository<Board> boardRepository,
+      IRepository<OriginalPost> opRepository,
       UserManager<BeonUser> userManager,
       LinkGenerator linkGenerator,
       ILogger<DiaryTopicController> logger,
       TopicSubscriptionLogic topicSubscriptionLogic)
     {
       _topicRepository = topicRepository;
-      boardRepository = boardRepo;
-      postRepository = postRepo;
+      _boardRepository = boardRepository;
+      _opRepository = opRepository;
       _userManager = userManager;
       _logger = logger;
       _linkGenerator = linkGenerator;
@@ -49,7 +49,7 @@ namespace Beon.Controllers
         return NotFound();
       }
       
-      Board? board = await boardRepository.Entities
+      Board? board = await _boardRepository.Entities
         .Where(b => b.OwnerName.Equals(userName) && b.Type.Equals(BoardType.Diary))
         .FirstOrDefaultAsync();
 
@@ -65,12 +65,25 @@ namespace Beon.Controllers
 
       if (ModelState.IsValid) {
         int topicOrd = board.topicCounter++;
-        await boardRepository.UpdateAsync(board);
+        await _boardRepository.UpdateAsync(board);
         DateTime timeStamp = DateTime.UtcNow;
-        Topic topic = new Topic { Title = model.Title, BoardId = board.BoardId, TopicOrd = topicOrd, TimeStamp = timeStamp };
-        _topicRepository.Create(topic);
-        Post op = new Post { Body = model.Op.Body, Topic = topic, Poster = u, TimeStamp = timeStamp };
-        await postRepository.CreateAsync(op);
+        Topic topic = new Topic
+        {
+          Title = model.Title,
+          BoardId = board.BoardId,
+          TopicOrd = topicOrd,
+          TimeStamp = timeStamp,
+          Poster = u
+        };
+        await _topicRepository.CreateAsync(topic);
+        OriginalPost op = new OriginalPost
+        {
+          Body = model.Op.Body,
+          Poster = u,
+          Topic = topic,
+          TimeStamp = timeStamp
+        };
+        await _opRepository.CreateAsync(op);
         await _topicSubscriptionLogic.SubscribeAsync(topic.TopicId, u.Id);
         return RedirectToAction("Show", "DiaryTopic", new { userName = userName, topicOrd = topicOrd});
       }
@@ -90,7 +103,7 @@ namespace Beon.Controllers
         return NotFound();
       }
 
-      int boardId = await boardRepository.Entities
+      int boardId = await _boardRepository.Entities
         .Where(b => b.OwnerName.Equals(userName) && b.Type.Equals(BoardType.Diary))
         .Select(b => b.BoardId)
         .FirstOrDefaultAsync();
@@ -120,7 +133,8 @@ namespace Beon.Controllers
         canEdit = await _topicLogic.UserMayEditTopicAsync(t, user);
       }
 
-      ICollection<PostViewModel> posts = await _topicLogic.GetPostsAsync(t.TopicId);
+      PostViewModel op = await _topicLogic.GetOpAsync(t.TopicId);
+      ICollection<CommentViewModel> comments = await _topicLogic.GetCommentsAsync(t.TopicId, user);
 
       ViewBag.IsDiaryPage = true;
       ViewBag.DiaryTitle = displayName;
@@ -133,7 +147,7 @@ namespace Beon.Controllers
         },
         timeStamp: t.TimeStamp);
       
-      return View(new DiaryTopicViewModel(userName, new TopicViewModel(postCreatePath, t.TopicId, t.Title, posts, canEdit)));
+      return View(new DiaryTopicViewModel(userName, new TopicViewModel(postCreatePath, t.TopicId, t.Title, op, comments, canEdit)));
     }
   }
 }

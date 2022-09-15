@@ -11,10 +11,12 @@ namespace Beon.Models {
     public int BoardId { get; set; }
     [BindNever]
     public Board? Board { get; set; }
-    [Required(ErrorMessage = "Please enter a title")]
-    [MaxLength(30)]
     public string Title { get; set; } = String.Empty;
     public DateTime TimeStamp { get; set; }
-    public ICollection<Post> Posts { get; set; } = new List<Post>();
+    public string? PosterId { get; set; }
+    public BeonUser? Poster { get; set; }
+    public int OriginalPostId { get; set; }
+    public OriginalPost? OriginalPost { get; set; }
+    public ICollection<Comment>? Comments { get; set; }
   }
 }

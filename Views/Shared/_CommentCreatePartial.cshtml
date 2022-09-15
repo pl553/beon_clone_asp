@@ -1,9 +1,9 @@
-@model PostCreateViewModel
+@model CommentCreateViewModel
 
 @using Microsoft.AspNetCore.Identity
 @using Beon.Infrastructure
 
-<form id="post-form" asp-controller="Post" asp-action="Create" method="post" asp-antiforgery="true">
+<form id="post-form" asp-controller="Comment" asp-action="Create" method="post" asp-antiforgery="true">
   Create a post:<br>
   <input type="hidden" name="topicId" value="@Model.TopicId" />
   <partial name="_PostInputsPartial" model="@new PostFormModel()"></partial>

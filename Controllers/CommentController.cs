@@ -11,9 +11,9 @@ using Beon.Infrastructure;
 
 namespace Beon.Controllers
 {
-  public class PostController : Controller
+  public class CommentController : Controller
   {
-    private IRepository<Post> _postRepository;
+    private IRepository<Comment> _commentRepository;
     private IRepository<Topic> _topicRepository;
     private readonly UserManager<BeonUser> _userManager;
     private readonly IViewComponentRenderService _vcRender;
@@ -21,18 +21,18 @@ namespace Beon.Controllers
     private IHubContext<TopicHub> _hubContext;    
     private readonly ILogger _logger;
     private readonly PostLogic _postLogic;
-    public PostController(
+    public CommentController(
       PostLogic postLogic,
-      IRepository<Post> repo,
+      IRepository<Comment> repo,
       IRepository<Topic> topicRepository,
       UserManager<BeonUser> userManager,
       IHubContext<TopicHub> hubContext,
-      ILogger<PostController> logger,
+      ILogger<CommentController> logger,
       TopicSubscriptionLogic topicSubscriptionLogic,
       IViewComponentRenderService vcRender)
     {
       _postLogic = postLogic;
-      _postRepository = repo;
+      _commentRepository = repo;
       _topicRepository = topicRepository;
       _userManager = userManager;
       _hubContext = hubContext;
@@ -66,16 +66,52 @@ namespace Beon.Controllers
       await _topicSubscriptionLogic.SubscribeAsync(topicId, u.Id);
       await _topicSubscriptionLogic.SetNewCommentsAsync(topicId);
 
-      Post p = new Post { TopicId = topicId, Body = model.Body, TimeStamp = DateTime.UtcNow, Poster = u };
-      await _postRepository.CreateAsync(p);
-      PostViewModel vm = await _postLogic.GetPostViewModelAsync(p);
-      vm.ShowDate = true;
+      Comment p = new Comment { TopicId = topicId, Body = model.Body, TimeStamp = DateTime.UtcNow, Poster = u };
+      await _commentRepository.CreateAsync(p);
 
-      string postRawHtml = await _vcRender.RenderAsync(ControllerContext, ViewData, TempData, "Post", new { post = vm });
-
-      await _hubContext.Clients.Group(topicId.ToString()).SendAsync("ReceivePost", postRawHtml);
+      await _hubContext.Clients.Group(topicId.ToString()).SendAsync("ReceiveComment", p.PostId);
 
       return new JsonResult("OK");
+    }
+
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(int postId, string returnUrl) {
+      BeonUser? u = await _userManager.GetUserAsync(User);
+      Comment? p = await _commentRepository.Entities
+        .Where(p => p.PostId.Equals(postId))
+        .Include(p => p.Topic)
+        .FirstOrDefaultAsync();
+
+      if (u != null && p != null && await _postLogic.UserMayDeleteCommentAsync(p, u)) {
+        await _commentRepository.DeleteAsync(p);
+        return this.RedirectToLocal(returnUrl);
+      }
+
+      return NotFound();
+    }
+
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> GetRawHtml(int postId)
+    {
+      BeonUser? u = await _userManager.GetUserAsync(User);
+      Comment? p = await _commentRepository.Entities
+        .Where(p => p.PostId.Equals(postId))
+        .Include(p => p.Topic)
+        .FirstOrDefaultAsync();
+
+      if (p == null)
+      {
+        return NotFound();
+      }
+
+      CommentViewModel vm = await _postLogic.GetCommentViewModelAsync(p, u);
+
+      string postRawHtml = await _vcRender.RenderAsync(ControllerContext, ViewData, TempData, "Comment", new { comment = vm });
+
+      return Content(postRawHtml, "text/html");
     }
   }
 }

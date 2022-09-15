@@ -1,0 +1,35 @@
+@using System.Globalization
+
+@model CommentViewModel
+
+@{  
+  var time = TimeZoneInfo.ConvertTimeFromUtc(Model.Post.TimeStamp, Beon.Settings.TimeZone); 
+  var timeStr = time.ToString("d MMMM yyyy г. HH:mm:ss", CultureInfo.CreateSpecificCulture("ru-RU"));
+}
+
+<div class="commentbg">
+<partial name="_UserProfileLinkPartial" model="@new UserProfileLinkViewModel(Model.Post.Poster.UserName, Model.Post.Poster.DisplayName)"></partial>
+&nbsp;<span class="m7">@timeStr</span>
+  <div class="flex-container">
+    @if (Model.Post.Poster.AvatarFilePath != null)
+    {
+      <div class="avatar">
+        <img src="@Model.Post.Poster.AvatarFilePath" />
+      </div>
+    }
+    <div class="post-body">
+      @Html.Raw(Model.Post.BodyRawHtml)
+    </div>
+  </div>
+  <div class="flex-container">
+    @if (Model.CanDelete)
+    {
+      <div class="m9">
+        
+      </div>
+    }
+    <div style="flex: 1; text-align: right; font-size: 9px;">
+      <a href="#add">Прокомментировать</a>
+    </div>
+  </div>
+</div>

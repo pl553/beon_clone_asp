@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Beon.Components {
-  public class PostViewComponent : ViewComponent
+  public class CommentViewComponent : ViewComponent
   {
-    public IViewComponentResult Invoke(PostViewModel post) {
-      return View(post);
+    public IViewComponentResult Invoke(CommentViewModel comment) {
+      return View(comment);
     }
   }
 }

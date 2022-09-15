@@ -29,6 +29,7 @@ namespace beon_clone_asp.Migrations
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
                     DisplayName = table.Column<string>(type: "TEXT", nullable: false),
+                    AvatarFileName = table.Column<string>(type: "TEXT", nullable: true),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -57,7 +58,8 @@ namespace beon_clone_asp.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
                     Type = table.Column<int>(type: "INTEGER", nullable: false),
-                    OwnerName = table.Column<string>(type: "TEXT", nullable: false)
+                    OwnerName = table.Column<string>(type: "TEXT", nullable: false),
+                    topicCounter = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -222,12 +224,21 @@ namespace beon_clone_asp.Migrations
                 {
                     TopicId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    TopicOrd = table.Column<int>(type: "INTEGER", nullable: false),
                     BoardId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Title = table.Column<string>(type: "TEXT", maxLength: 30, nullable: false)
+                    Title = table.Column<string>(type: "TEXT", nullable: false),
+                    TimeStamp = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    PosterId = table.Column<string>(type: "TEXT", nullable: true),
+                    OriginalPostId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Topics", x => x.TopicId);
+                    table.ForeignKey(
+                        name: "FK_Topics_AspNetUsers_PosterId",
+                        column: x => x.PosterId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Topics_Boards_BoardId",
                         column: x => x.BoardId,
@@ -242,10 +253,12 @@ namespace beon_clone_asp.Migrations
                 {
                     PostId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    TopicId = table.Column<int>(type: "INTEGER", nullable: true),
                     Body = table.Column<string>(type: "TEXT", nullable: false),
                     TimeStamp = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    PosterId = table.Column<string>(type: "TEXT", nullable: true)
+                    PosterId = table.Column<string>(type: "TEXT", nullable: false),
+                    Discriminator = table.Column<string>(type: "TEXT", nullable: false),
+                    Comment_TopicId = table.Column<int>(type: "INTEGER", nullable: true),
+                    TopicId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -254,12 +267,47 @@ namespace beon_clone_asp.Migrations
                         name: "FK_Posts_AspNetUsers_PosterId",
                         column: x => x.PosterId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Posts_Topics_Comment_TopicId",
+                        column: x => x.Comment_TopicId,
+                        principalTable: "Topics",
+                        principalColumn: "TopicId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Posts_Topics_TopicId",
                         column: x => x.TopicId,
                         principalTable: "Topics",
-                        principalColumn: "TopicId");
+                        principalColumn: "TopicId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TopicSubscriptions",
+                columns: table => new
+                {
+                    TopicSubscriptionId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    SubscriberId = table.Column<string>(type: "TEXT", nullable: false),
+                    TopicId = table.Column<int>(type: "INTEGER", nullable: false),
+                    NewPosts = table.Column<bool>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TopicSubscriptions", x => x.TopicSubscriptionId);
+                    table.ForeignKey(
+                        name: "FK_TopicSubscriptions_AspNetUsers_SubscriberId",
+                        column: x => x.SubscriberId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TopicSubscriptions_Topics_TopicId",
+                        column: x => x.TopicId,
+                        principalTable: "Topics",
+                        principalColumn: "TopicId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -317,6 +365,11 @@ namespace beon_clone_asp.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Posts_Comment_TopicId",
+                table: "Posts",
+                column: "Comment_TopicId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Posts_PosterId",
                 table: "Posts",
                 column: "PosterId");
@@ -324,7 +377,8 @@ namespace beon_clone_asp.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_TopicId",
                 table: "Posts",
-                column: "TopicId");
+                column: "TopicId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_PublicForum_BoardId",
@@ -336,6 +390,21 @@ namespace beon_clone_asp.Migrations
                 name: "IX_Topics_BoardId",
                 table: "Topics",
                 column: "BoardId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Topics_PosterId",
+                table: "Topics",
+                column: "PosterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TopicSubscriptions_SubscriberId",
+                table: "TopicSubscriptions",
+                column: "SubscriberId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TopicSubscriptions_TopicId",
+                table: "TopicSubscriptions",
+                column: "TopicId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -365,13 +434,16 @@ namespace beon_clone_asp.Migrations
                 name: "PublicForum");
 
             migrationBuilder.DropTable(
+                name: "TopicSubscriptions");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Topics");
 
             migrationBuilder.DropTable(
-                name: "Topics");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Boards");

@@ -1,17 +1,19 @@
 "use strict;"
 
+// expects topicId to be defined
+
 var connection = new signalR.HubConnectionBuilder().withUrl("/SignalR").build();
 
 $("#post-submit-button").disabled = true;
 
-connection.on("ReceivePost", function(postRawHtml) {
-  const parser = new DOMParser();
-  const postContainer = $("#post-container");
-  postContainer.append(postRawHtml);
-  postContainer.append('<br>');
-  PlayOkSound();
-
-  connection.invoke("ReceivedPost", topicId);
+connection.on("ReceiveComment", function(postId) {
+  $.get("/Comment/GetRawHtml?postId=" + postId.toString(), function (data) {
+    const parser = new DOMParser();
+    const postContainer = $("#comment-container");
+    postContainer.append(data);
+    PlayOkSound();
+    connection.invoke("ReceivedComment", topicId);
+  });
 });
 
 connection.start().then(function () {

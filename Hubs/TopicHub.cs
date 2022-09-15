@@ -7,18 +7,15 @@ using Microsoft.AspNetCore.Mvc;
 namespace Beon.Hubs {
   public class TopicHub : Hub {
     private readonly UserManager<BeonUser> _userManager;
-    private IRepository<Post> _postRepository;
     private TopicLogic _topicLogic;
     private readonly TopicSubscriptionLogic _topicSubscriptionLogic;
     private readonly ILogger<TopicHub> _logger;
     public TopicHub(
         UserManager<BeonUser> userManager,
-        IRepository<Post> postRepository,
         TopicLogic topicLogic,
         ILogger<TopicHub> logger,
         TopicSubscriptionLogic topicSubscriptionLogic) {
       _userManager = userManager;
-      _postRepository = postRepository;
       _topicLogic = topicLogic;
       _logger = logger;
       _topicSubscriptionLogic = topicSubscriptionLogic;
@@ -31,7 +28,7 @@ namespace Beon.Hubs {
       await Groups.AddToGroupAsync(Context.ConnectionId, topicId.ToString());
     }
 
-    public async Task ReceivedPost(int topicId) {
+    public async Task ReceivedComment(int topicId) {
         if (!await _topicLogic.TopicWithIdExistsAsync(topicId)) {
           return;
         }
