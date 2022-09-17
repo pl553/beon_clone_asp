@@ -73,12 +73,21 @@ namespace Beon.Services {
       return await _postLogic.GetPostViewModelAsync(post);
     }
     public async Task<ICollection<CommentViewModel>> GetCommentsAsync(int topicId, BeonUser? user) {
+      Topic? t = await _topicRepository.Entities
+        .Where(t => t.TopicId.Equals(topicId))
+        .FirstOrDefaultAsync();
+
+      if (t == null)
+      {
+        throw new Exception("no such topic exists");
+      }
+
       var comments = await _commentRepository.Entities
         .Where(p => p.TopicId.Equals(topicId))
         .Include(p => p.Poster)
         .ToListAsync();
       
-      return await Task.WhenAll(comments.Select(async p => await _postLogic.GetCommentViewModelAsync(p, user)).ToList());
+      return await Task.WhenAll(comments.Select(async p => await _postLogic.GetCommentViewModelAsync(p, user, await GetTopicPathAsync(t))).ToList());
     }
     public async Task<LinkViewModel> GetShortLinkAsync(Topic topic){
       string text = topic.Title.Substring(0, Math.Min(34, topic.Title.Length));

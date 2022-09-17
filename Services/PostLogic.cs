@@ -37,13 +37,14 @@ namespace Beon.Services {
 
       PosterViewModel posterVm = new PosterViewModel(poster.UserName, poster.DisplayName, avatarUrl);
       PostViewModel postVm = new PostViewModel(
+        post.PostId,
         Beon.Infrastructure.BBCode.Parse(post.Body),
         post.TimeStamp,
         posterVm);
       return postVm;
     }
 
-    public async Task<CommentViewModel> GetCommentViewModelAsync(Comment post, BeonUser? user)
+    public async Task<CommentViewModel> GetCommentViewModelAsync(Comment post, BeonUser? user, string topicLink)
     {
       var pvm = await GetPostViewModelAsync(post);
 
@@ -52,8 +53,9 @@ namespace Beon.Services {
       {
         canDelete = await UserMayDeleteCommentAsync(post, user);
       }
-      return new CommentViewModel(pvm, canDelete);
+      return new CommentViewModel(pvm, topicLink, canDelete);
     }
+
     public async Task<bool> UserMayDeleteCommentAsync(Comment post, BeonUser user)
     {
       if (post.PosterId.Equals(user.Id))

@@ -21,8 +21,10 @@ namespace Beon.Controllers
     private IHubContext<TopicHub> _hubContext;    
     private readonly ILogger _logger;
     private readonly PostLogic _postLogic;
+    private readonly TopicLogic _topicLogic;
     public CommentController(
       PostLogic postLogic,
+      TopicLogic topicLogic,
       IRepository<Comment> repo,
       IRepository<Topic> topicRepository,
       UserManager<BeonUser> userManager,
@@ -32,6 +34,7 @@ namespace Beon.Controllers
       IViewComponentRenderService vcRender)
     {
       _postLogic = postLogic;
+      _topicLogic = topicLogic;
       _commentRepository = repo;
       _topicRepository = topicRepository;
       _userManager = userManager;
@@ -48,12 +51,11 @@ namespace Beon.Controllers
     [Authorize]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(int topicId, PostFormModel model) {
-      topicId = await _topicRepository.Entities
+      Topic? t = await _topicRepository.Entities
         .Where(t => t.TopicId.Equals(topicId))
-        .Select(t => t.TopicId)
         .FirstOrDefaultAsync();
       
-      if (topicId == 0) {
+      if (t == null) {
         return NotFound();
       }
       
@@ -102,12 +104,12 @@ namespace Beon.Controllers
         .Include(p => p.Topic)
         .FirstOrDefaultAsync();
 
-      if (p == null)
+      if (p == null || p.Topic == null)
       {
         return NotFound();
       }
 
-      CommentViewModel vm = await _postLogic.GetCommentViewModelAsync(p, u);
+      CommentViewModel vm = await _postLogic.GetCommentViewModelAsync(p, u, await _topicLogic.GetTopicPathAsync(p.Topic));
 
       string postRawHtml = await _vcRender.RenderAsync(ControllerContext, ViewData, TempData, "Comment", new { comment = vm });
 

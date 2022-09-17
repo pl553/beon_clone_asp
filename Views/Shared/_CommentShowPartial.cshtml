@@ -2,14 +2,15 @@
 
 @model CommentViewModel
 
-@{  
-  var time = TimeZoneInfo.ConvertTimeFromUtc(Model.Post.TimeStamp, Beon.Settings.TimeZone); 
+@{
+  var time = TimeZoneInfo.ConvertTimeFromUtc(Model.Post.TimeStamp, Beon.Settings.TimeZone);
   var timeStr = time.ToString("d MMMM yyyy г. HH:mm:ss", CultureInfo.CreateSpecificCulture("ru-RU"));
 }
 
 <div class="commentbg">
-<partial name="_UserProfileLinkPartial" model="@new UserProfileLinkViewModel(Model.Post.Poster.UserName, Model.Post.Poster.DisplayName)"></partial>
-&nbsp;<span class="m7">@timeStr</span>
+  <partial name="_UserProfileLinkPartial"
+    model="@new UserProfileLinkViewModel(Model.Post.Poster.UserName, Model.Post.Poster.DisplayName)"></partial>
+  &nbsp;<span class="m7">@timeStr</span>
   <div class="flex-container">
     @if (Model.Post.Poster.AvatarFilePath != null)
     {
@@ -25,7 +26,17 @@
     @if (Model.CanDelete)
     {
       <div class="m9">
-        
+        <span>
+          <a href="" onclick="optionsLinkClicked(event, this)">Опции</a>
+          <span class="post-options" style="display: none;">
+            <img class="flag" src="/i/delete.gif" width="13" height="12" />
+            <a href="" onclick="deleteLinkClicked(event, this)"> Удалить</a>
+            <form class="delete-form" asp-controller="Comment" asp-action="Delete">
+              <input type="hidden" name="postId" value="@Model.Post.PostId" />
+              <input type="hidden" name="returnUrl" value="@Model.TopicLink" />
+            </form>
+          </span>
+        </span>
       </div>
     }
     <div style="flex: 1; text-align: right; font-size: 9px;">
