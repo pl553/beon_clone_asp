@@ -3,34 +3,12 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace Beon.Models {
-  public enum BoardType
-  {
-    Diary,
-    Community,
-    PublicForum
-  }
-
-  [Index(nameof(OwnerName))]
   public class Board {
-    [BindNever]
     public int BoardId { get; set; }
-
-    [Required(ErrorMessage = "Please enter a name")]
-    [MaxLength(256)]
-    public string Name { get; set; } = String.Empty;
-
-    [BindNever]
+    //set by EF
+    //see https://learn.microsoft.com/en-us/ef/core/modeling/inheritance
+    public string Discriminator { get; set; } = null!;
     public ICollection<Topic> Topics { get; set; } = new List<Topic>();
-
-    [BindNever]
-    public BoardType Type { get; set; } = BoardType.Diary;
-
-    //username of diary owner if the type is diary
-    //communityname if the type is community
-    //forum name if the type is f0rum 
-    [BindNever]
-    public string OwnerName { get; set; } = String.Empty;
-
-    public int topicCounter { get; set; } = 1;
+    public int TopicCounter { get; set; } = 0;
   }
 }

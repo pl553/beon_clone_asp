@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace beon_clone_asp.Migrations
 {
     [DbContext(typeof(BeonDbContext))]
-    [Migration("20220915232555_Initial")]
+    [Migration("20220922095049_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -96,50 +96,18 @@ namespace beon_clone_asp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("OwnerName")
+                    b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("topicCounter")
+                    b.Property<int>("TopicCounter")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("BoardId");
 
-                    b.HasIndex("OwnerName");
-
                     b.ToTable("Boards");
-                });
 
-            modelBuilder.Entity("Beon.Models.Diary", b =>
-                {
-                    b.Property<int>("DiaryId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("BoardId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("OwnerId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("DiaryId");
-
-                    b.HasIndex("BoardId")
-                        .IsUnique();
-
-                    b.HasIndex("OwnerId")
-                        .IsUnique();
-
-                    b.ToTable("Diaries");
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Board");
                 });
 
             modelBuilder.Entity("Beon.Models.Post", b =>
@@ -396,6 +364,20 @@ namespace beon_clone_asp.Migrations
                     b.HasDiscriminator().HasValue("Comment");
                 });
 
+            modelBuilder.Entity("Beon.Models.Diary", b =>
+                {
+                    b.HasBaseType("Beon.Models.Board");
+
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasIndex("OwnerId")
+                        .IsUnique();
+
+                    b.HasDiscriminator().HasValue("Diary");
+                });
+
             modelBuilder.Entity("Beon.Models.OriginalPost", b =>
                 {
                     b.HasBaseType("Beon.Models.Post");
@@ -407,25 +389,6 @@ namespace beon_clone_asp.Migrations
                         .IsUnique();
 
                     b.HasDiscriminator().HasValue("OriginalPost");
-                });
-
-            modelBuilder.Entity("Beon.Models.Diary", b =>
-                {
-                    b.HasOne("Beon.Models.Board", "Board")
-                        .WithOne()
-                        .HasForeignKey("Beon.Models.Diary", "BoardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Beon.Models.BeonUser", "Owner")
-                        .WithOne("Diary")
-                        .HasForeignKey("Beon.Models.Diary", "OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Board");
-
-                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("Beon.Models.Post", b =>
@@ -546,6 +509,17 @@ namespace beon_clone_asp.Migrations
                         .IsRequired();
 
                     b.Navigation("Topic");
+                });
+
+            modelBuilder.Entity("Beon.Models.Diary", b =>
+                {
+                    b.HasOne("Beon.Models.BeonUser", "Owner")
+                        .WithOne("Diary")
+                        .HasForeignKey("Beon.Models.Diary", "OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("Beon.Models.OriginalPost", b =>

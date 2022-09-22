@@ -20,11 +20,6 @@ namespace Beon.Models {
           .IsRequired();
 
         builder.Entity<Board>()
-          .HasOne<Diary>()
-          .WithOne(d => d.Board)
-          .IsRequired();
-
-        builder.Entity<Board>()
           .HasOne<PublicForum>()
           .WithOne(f => f.Board)
           .IsRequired();

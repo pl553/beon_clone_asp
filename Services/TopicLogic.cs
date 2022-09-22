@@ -12,6 +12,7 @@ namespace Beon.Services {
     private readonly IRepository<Comment> _commentRepository;
     private readonly IRepository<Topic> _topicRepository;
     private readonly IRepository<Board> _boardRepository;
+    private readonly IRepository<Diary> _diaryRepository;
     private readonly LinkGenerator _linkGenerator;
     private readonly ILogger<TopicLogic> _logger;
     private readonly PostLogic _postLogic;
@@ -22,6 +23,7 @@ namespace Beon.Services {
       IRepository<Comment> commentRepository,
       IRepository<Topic> topicRepository,
       IRepository<Board> boardRepository,
+      IRepository<Diary> diaryRepository,
       ILogger<TopicLogic> logger,
       LinkGenerator linkGenerator)
     {
@@ -29,6 +31,7 @@ namespace Beon.Services {
       _opRepository = opRepository;
       _commentRepository = commentRepository;
       _boardRepository = boardRepository;
+      _diaryRepository = diaryRepository;
       _topicRepository = topicRepository;
       _linkGenerator = linkGenerator;
       _userManager = userManager;
@@ -39,8 +42,23 @@ namespace Beon.Services {
     public async Task<string> GetTopicPathAsync(Topic topic) {
       Board board = await LoadBoardAsync(topic);
       string? res = null;
-      if (board.Type == BoardType.Diary) {
-        res = _linkGenerator.GetPathByAction("Show", "DiaryTopic", new { userName = board.OwnerName, topicOrd = topic.TopicOrd });
+      if (board.Discriminator == nameof(Diary)) {
+        Diary? diary = await _diaryRepository.Entities
+          .Where(d => d.BoardId.Equals(board.BoardId))
+          .Include(d => d.Owner)
+          .FirstOrDefaultAsync();
+        
+        if (diary == null)
+        {
+          throw new Exception("db inconsistency: board with Diary discriminator is not a diary");
+        }
+
+        if (diary.Owner == null)
+        {
+          throw new Exception("invalid diary: has no owner");
+        }
+
+        res = _linkGenerator.GetPathByAction("Show", "DiaryTopic", new { userName = diary.Owner.UserName, topicOrd = topic.TopicOrd });
       }
       else throw new Exception("unsupported boardtype");
       if (res == null) throw new Exception("could'nt generate topic path");
@@ -52,8 +70,23 @@ namespace Beon.Services {
         return false;
       }
       Board board = await LoadBoardAsync(topic);
-      if (board.Type == BoardType.Diary) {
-        return user.UserName.Equals(board.OwnerName);
+      if (board.Discriminator == nameof(Diary)) {
+        Diary? diary = await _diaryRepository.Entities
+          .Where(d => d.BoardId.Equals(board.BoardId))
+          .Include(d => d.Owner)
+          .FirstOrDefaultAsync();
+        
+        if (diary == null)
+        {
+          throw new Exception("db inconsistency: board with Diary discriminator is not a diary");
+        }
+
+        if (diary.Owner == null)
+        {
+          throw new Exception("invalid diary: has no owner");
+        }
+
+        return user.Id == diary.Owner.Id;
       }
       else throw new Exception("unsupported boardtype");
     }

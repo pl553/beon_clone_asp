@@ -51,22 +51,6 @@ namespace beon_clone_asp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Boards",
-                columns: table => new
-                {
-                    BoardId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
-                    Type = table.Column<int>(type: "INTEGER", nullable: false),
-                    OwnerName = table.Column<string>(type: "TEXT", nullable: false),
-                    topicCounter = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Boards", x => x.BoardId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -173,28 +157,23 @@ namespace beon_clone_asp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Diaries",
+                name: "Boards",
                 columns: table => new
                 {
-                    DiaryId = table.Column<int>(type: "INTEGER", nullable: false)
+                    BoardId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    BoardId = table.Column<int>(type: "INTEGER", nullable: false),
-                    OwnerId = table.Column<string>(type: "TEXT", nullable: false)
+                    Discriminator = table.Column<string>(type: "TEXT", nullable: false),
+                    TopicCounter = table.Column<int>(type: "INTEGER", nullable: false),
+                    OwnerId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Diaries", x => x.DiaryId);
+                    table.PrimaryKey("PK_Boards", x => x.BoardId);
                     table.ForeignKey(
-                        name: "FK_Diaries_AspNetUsers_OwnerId",
+                        name: "FK_Boards_AspNetUsers_OwnerId",
                         column: x => x.OwnerId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Diaries_Boards_BoardId",
-                        column: x => x.BoardId,
-                        principalTable: "Boards",
-                        principalColumn: "BoardId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -348,19 +327,8 @@ namespace beon_clone_asp.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Boards_OwnerName",
+                name: "IX_Boards_OwnerId",
                 table: "Boards",
-                column: "OwnerName");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Diaries_BoardId",
-                table: "Diaries",
-                column: "BoardId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Diaries_OwnerId",
-                table: "Diaries",
                 column: "OwnerId",
                 unique: true);
 
@@ -425,9 +393,6 @@ namespace beon_clone_asp.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Diaries");
-
-            migrationBuilder.DropTable(
                 name: "Posts");
 
             migrationBuilder.DropTable(
@@ -443,10 +408,10 @@ namespace beon_clone_asp.Migrations
                 name: "Topics");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Boards");
 
             migrationBuilder.DropTable(
-                name: "Boards");
+                name: "AspNetUsers");
         }
     }
 }

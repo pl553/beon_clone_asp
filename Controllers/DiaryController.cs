@@ -36,37 +36,34 @@ namespace Beon.Controllers
     [Route("/diary/{userName:required}/{page:int}")]
     public async Task<IActionResult> Show (string userName, int page = 1)
     {
-      string? displayName = await _userManager.Users
+      BeonUser? user = await _userManager.Users
         .Where(u => u.UserName.Equals(userName))
-        .Select(u => u.DisplayName)
+        .Include(u => u.Diary)
         .FirstOrDefaultAsync();
       
-      if (displayName == null) {
-        return NotFound();
-      }
-      
-      int boardId = await _boardRepository.Entities
-        .Where(b => b.OwnerName.Equals(userName) && b.Type.Equals(BoardType.Diary))
-        .Select(b => b.BoardId)
-        .FirstOrDefaultAsync();
-
-      if (boardId == 0) {
+      if (user == null)
+      {
         return NotFound();
       }
 
-      var topics = await _boardLogic.GetTopicPreviewViewModelsAsync(t => t.BoardId.Equals(boardId), page, User);
+      if (user.Diary == null)
+      {
+        throw new Exception("invalid user: has no diary");
+      }
+
+      var topics = await _boardLogic.GetTopicPreviewViewModelsAsync(t => t.BoardId.Equals(user.Diary.BoardId), page, User);
       if (topics.Count == 0 && page > 1) {
         return NotFound();
       }
 
-      int numPages = await _boardLogic.GetNumPagesAsync(t => t.BoardId.Equals(boardId));
+      int numPages = await _boardLogic.GetNumPagesAsync(t => t.BoardId.Equals(user.Diary.BoardId));
 
       ViewBag.IsDiaryPage = true;
-      ViewBag.DiaryTitle = displayName;
-      ViewBag.DiarySubtitle = displayName;
+      ViewBag.DiaryTitle = user.DisplayName;
+      ViewBag.DiarySubtitle = user.DisplayName;
 
       ViewBag.HrBarViewModel = new HrBarViewModel(
-        crumbs: new List<LinkViewModel> {new LinkViewModel(displayName, "")},
+        crumbs: new List<LinkViewModel> {new LinkViewModel(user.DisplayName, "")},
         pagingInfo: new PagingInfo($"/diary/{userName}", page, numPages));
       
       if (_signInManager.IsSignedIn(User) &&

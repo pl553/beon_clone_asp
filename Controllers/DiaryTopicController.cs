@@ -14,7 +14,7 @@ namespace Beon.Controllers
     private readonly UserManager<BeonUser> _userManager;
     private IRepository<Topic> _topicRepository;
     private TopicLogic _topicLogic;
-    private IRepository<Board> _boardRepository;
+    private IRepository<Diary> _diaryRepository;
     private IRepository<OriginalPost> _opRepository;
     private LinkGenerator _linkGenerator;
     private readonly ILogger _logger;
@@ -22,7 +22,7 @@ namespace Beon.Controllers
     public DiaryTopicController(
       IRepository<Topic> topicRepository,
       TopicLogic topicLogic,
-      IRepository<Board> boardRepository,
+      IRepository<Diary> diaryRepository,
       IRepository<OriginalPost> opRepository,
       UserManager<BeonUser> userManager,
       LinkGenerator linkGenerator,
@@ -30,7 +30,7 @@ namespace Beon.Controllers
       TopicSubscriptionLogic topicSubscriptionLogic)
     {
       _topicRepository = topicRepository;
-      _boardRepository = boardRepository;
+      _diaryRepository = diaryRepository;
       _opRepository = opRepository;
       _userManager = userManager;
       _logger = logger;
@@ -43,77 +43,80 @@ namespace Beon.Controllers
     [Authorize]
     [Route("/diary/{userName:required}/CreateTopic")]
     public async Task<IActionResult> Create(string userName, TopicFormModel model) {
-      string loggedInUserName = await _userManager.GetUserNameAsync(await _userManager.GetUserAsync(User));
-
-      if (loggedInUserName != userName) {
+      BeonUser? user = await _userManager.GetUserAsync(User);
+      
+      if (user == null)
+      {
         return NotFound();
       }
-      
-      Board? board = await _boardRepository.Entities
-        .Where(b => b.OwnerName.Equals(userName) && b.Type.Equals(BoardType.Diary))
+
+      BeonUser? diaryOwner = await _userManager.Users
+        .Where(u => u.UserName.Equals(userName))
+        .Include(u => u.Diary)
         .FirstOrDefaultAsync();
-
-      if (board == null) {
-        return NotFound();
-      }
       
-      BeonUser? u = await _userManager.GetUserAsync(User);
-
-      if (u == null) {
+      if (diaryOwner == null)
+      {
         return NotFound();
       }
 
-      if (ModelState.IsValid) {
-        int topicOrd = board.topicCounter++;
-        await _boardRepository.UpdateAsync(board);
+      if (diaryOwner.Diary == null)
+      {
+        throw new Exception("invalid user: has no diary");
+      }
+
+      Diary d = diaryOwner.Diary;
+
+      if (ModelState.IsValid)
+      {
+        int topicOrd = d.TopicCounter++;
+        await _diaryRepository.UpdateAsync(d);
         DateTime timeStamp = DateTime.UtcNow;
         Topic topic = new Topic
         {
           Title = model.Title,
-          BoardId = board.BoardId,
+          BoardId = d.BoardId,
           TopicOrd = topicOrd,
           TimeStamp = timeStamp,
-          Poster = u
+          Poster = user
         };
         await _topicRepository.CreateAsync(topic);
         OriginalPost op = new OriginalPost
         {
           Body = model.Op.Body,
-          Poster = u,
+          Poster = user,
           Topic = topic,
           TimeStamp = timeStamp
         };
         await _opRepository.CreateAsync(op);
-        await _topicSubscriptionLogic.SubscribeAsync(topic.TopicId, u.Id);
-        return RedirectToAction("Show", "DiaryTopic", new { userName = userName, topicOrd = topicOrd});
+        await _topicSubscriptionLogic.SubscribeAsync(topic.TopicId, user.Id);
+        return RedirectToAction("Show", "DiaryTopic", new { userName = userName, topicOrd = topicOrd });
       }
-      else {
+      else
+      {
         return NotFound();
       }
     }
 
     [Route("/diary/{userName:required}/0-{topicOrd:int}")]
     public async Task<IActionResult> Show(string userName, int topicOrd) {
-      string? displayName = await _userManager.Users
+      BeonUser? diaryOwner = await _userManager.Users
         .Where(u => u.UserName.Equals(userName))
-        .Select(u => u.DisplayName)
+        .Include(u => u.Diary)
         .FirstOrDefaultAsync();
       
-      if (displayName == null) {
+      if (diaryOwner == null)
+      {
         return NotFound();
       }
 
-      int boardId = await _boardRepository.Entities
-        .Where(b => b.OwnerName.Equals(userName) && b.Type.Equals(BoardType.Diary))
-        .Select(b => b.BoardId)
-        .FirstOrDefaultAsync();
-      
-      if (boardId == 0) {
-        return NotFound();
-      }
+      if (diaryOwner.Diary == null)
+      {
+        throw new Exception("invalid user: has no diary");
+      };
 
       Topic? t = await _topicRepository.Entities
-        .Where(t => t.BoardId.Equals(boardId) && t.TopicOrd.Equals(topicOrd))
+        .Where(t => t.BoardId.Equals(diaryOwner.Diary.BoardId) && t.TopicOrd.Equals(topicOrd))
         .FirstOrDefaultAsync();
 
       if (t == null) {
@@ -137,12 +140,12 @@ namespace Beon.Controllers
       ICollection<CommentViewModel> comments = await _topicLogic.GetCommentsAsync(t.TopicId, user);
 
       ViewBag.IsDiaryPage = true;
-      ViewBag.DiaryTitle = displayName;
-      ViewBag.DiarySubtitle = displayName;
+      ViewBag.DiaryTitle = diaryOwner.DisplayName;
+      ViewBag.DiarySubtitle = diaryOwner.DisplayName;
       ViewBag.HrBarViewModel = new HrBarViewModel(
         crumbs: new List<LinkViewModel>
         {
-          new LinkViewModel(displayName, _linkGenerator.GetPathByAction("Show", "Diary", new { userName = userName }) ?? "error"),
+          new LinkViewModel(diaryOwner.DisplayName, _linkGenerator.GetPathByAction("Show", "Diary", new { userName = userName }) ?? "error"),
           await _topicLogic.GetShortLinkAsync(t)
         },
         timeStamp: t.TimeStamp);
