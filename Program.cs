@@ -120,6 +120,9 @@ builder.Services.AddScoped<BoardLogic, BoardLogic>();
 builder.Services.AddScoped<PostLogic, PostLogic>();
 builder.Services.AddScoped<TopicSubscriptionLogic, TopicSubscriptionLogic>();
 
+builder.Services.AddFactory<TopicLogic, TopicLogic>();
+builder.Services.AddFactory<BoardLogic, BoardLogic>();
+
 string? userFileStorageType = Environment.GetEnvironmentVariable("USER_STORAGE_TYPE");
 
 if (userFileStorageType == null)

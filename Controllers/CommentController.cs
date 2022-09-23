@@ -109,7 +109,7 @@ namespace Beon.Controllers
         return NotFound();
       }
 
-      CommentViewModel vm = await _postLogic.GetCommentViewModelAsync(p, u, await _topicLogic.GetTopicPathAsync(p.Topic));
+      CommentViewModel vm = await _postLogic.GetCommentViewModelAsync(p, u);
 
       string postRawHtml = await _vcRender.RenderAsync(ControllerContext, ViewData, TempData, "Comment", new { comment = vm });
 

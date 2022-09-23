@@ -10,14 +10,17 @@ namespace Beon.Services {
     private readonly UserManager<BeonUser> _userManager;
     private readonly IRepository<Topic> _topicRepository;
     private readonly IUserFileRepository _userFileRepository;
+    private readonly Func<TopicLogic> _getTopicLogic;
     public PostLogic(
       UserManager<BeonUser> userManager,
       IRepository<Topic> topicRepository,
-      IUserFileRepository userFileRepository)
+      IUserFileRepository userFileRepository,
+      Func<TopicLogic> getTopicLogic)
     {
       _topicRepository = topicRepository;
       _userManager = userManager;
       _userFileRepository = userFileRepository;
+      _getTopicLogic = getTopicLogic;
     }
     
     public async Task<PostViewModel> GetPostViewModelAsync(Post post) {
@@ -44,7 +47,7 @@ namespace Beon.Services {
       return postVm;
     }
 
-    public async Task<CommentViewModel> GetCommentViewModelAsync(Comment post, BeonUser? user, string topicLink)
+    public async Task<CommentViewModel> GetCommentViewModelAsync(Comment post, BeonUser? user)
     {
       var pvm = await GetPostViewModelAsync(post);
 
@@ -53,7 +56,12 @@ namespace Beon.Services {
       {
         canDelete = await UserMayDeleteCommentAsync(post, user);
       }
-      return new CommentViewModel(pvm, topicLink, canDelete);
+      if (post.Topic == null)
+      {
+        throw new Exception("invalid comment");
+      }
+
+      return new CommentViewModel(pvm, await _getTopicLogic().GetTopicPathAsync(post.Topic), canDelete);
     }
 
     public async Task<bool> UserMayDeleteCommentAsync(Comment post, BeonUser user)
