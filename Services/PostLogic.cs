@@ -81,7 +81,7 @@ namespace Beon.Services {
       {
         throw new Exception("invalid post: not attached to a topic");
       }
-      return (t.PosterId == null ? false : t.PosterId.Equals(user.Id));
+      return _getTopicLogic().UserModeratesTopic(t, user);
     }
   }
 }

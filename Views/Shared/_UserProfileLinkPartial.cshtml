@@ -1,5 +1,10 @@
 @model UserProfileLinkViewModel
 
 @if (Model.Valid) {
-  <a class="user" asp-controller="Account" asp-action="ShowInfo" asp-route-userName="@Model.UserName">@Model.DisplayName</a>
+  <a class="user"
+    asp-controller="Account"
+    asp-action="ShowProfile"
+    asp-route-userName="@Model.UserName">
+  @Model.DisplayName
+  </a>
 }

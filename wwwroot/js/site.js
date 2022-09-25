@@ -24,6 +24,13 @@ optionsLinkClicked = function(event, link) {
   $(link).css('display', 'none');
 }
 
+formLinkClicked = function (event, link) {
+  event.preventDefault();
+  parent = link.parentNode;
+  form = $(parent).find('form');
+  form.submit();
+}
+
 addTag = function(tag, hbutton) {
   // hbutton -> hbuttonbar -> form
   parent = hbutton.parentNode.parentNode;

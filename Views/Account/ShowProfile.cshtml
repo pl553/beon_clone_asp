@@ -1,0 +1,86 @@
+@using Microsoft.AspNetCore.Identity
+@using Beon.Services
+@model UserProfileViewModel
+
+<div class="flex-container">
+  <div style="width: 49%; flex-shrink: 0;">
+    <div class="info-container">
+      <div class="info-header">Информация о пользователе:</div>
+      <div class="info-text">
+        Дневник пользователя: <a asp-controller="Diary" asp-action="Show"
+          asp-route-userName="@Model.UserName">@Model.DisplayName</a>
+        <br>
+        @if (Model.ShowFriendAddingUI)
+        {
+          @if (!Model.ProfileUserIsFriend)
+          {
+            <div>
+              <a href="" onclick="formLinkClicked(event, this);">
+                <img class="flag" src="/i/add.gif"></img>
+                Добавить в друзья
+              </a>
+              <form asp-controller="Account" asp-action="AddToFriends">
+                <input type="hidden" name="userName" value="@Model.UserName" />
+              </form>
+            </div>
+          }
+          else
+          {
+            <div>
+              <a href="" onclick="formLinkClicked(event, this);">
+                <img class="flag" src="/i/delete.gif"></img>
+                Удалить из друзей
+              </a>
+              <form asp-controller="Account" asp-action="RemoveFromFriends">
+                <input type="hidden" name="userName" value="@Model.UserName" />
+              </form>
+            </div>
+          }
+        }
+        <div class="flex-container">
+          <div style="width: 38%;">
+            Имя
+          </div>
+          <div style="flex: 1;">
+            <partial name="_UserProfileLinkPartial"
+              model="@new UserProfileLinkViewModel(Model.UserName, Model.DisplayName)">
+            </partial>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="info-container">
+      <div class="info-header">Друзья пользователя</div>
+      <div class="info-text">
+        @foreach (var u in Model.Friends)
+        {
+          <partial name="_UserProfileLinkPartial" model="@u"></partial>
+        }
+      </div>
+    </div>
+    <div class="info-container">
+      <div class="info-header">Пользователь в друзьях у</div>
+      <div class="info-text">
+        @foreach (var u in Model.FriendOf)
+        {
+          <partial name="_UserProfileLinkPartial" model="@u"></partial>
+        }
+      </div>
+    </div>
+    <div class="info-container">
+      <div class="info-header">Взаимные друзья пользователя</div>
+      <div class="info-text">
+        @foreach (var u in Model.Mutuals)
+        {
+          <partial name="_UserProfileLinkPartial" model="@u"></partial>
+        }
+      </div>
+    </div>
+  </div>
+  <div style="flex: 1">
+    <div class="info-container">
+      <div class="info-header">Я читаю:</div>
+      <div class="info-text">test</div>
+    </div>
+  </div>
+</div>

@@ -58,5 +58,6 @@ namespace Beon.Models {
     public DbSet<OriginalPost> OriginalPosts => Set<OriginalPost>();
     public DbSet<Diary> Diaries => Set<Diary>();
     public DbSet<TopicSubscription> TopicSubscriptions => Set<TopicSubscription>();
+    public DbSet<FriendLink> FriendLinks => Set<FriendLink>();
   }
 }

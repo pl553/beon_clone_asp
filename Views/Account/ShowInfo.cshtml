@@ -1,5 +1,0 @@
-@model UserProfileViewModel
-
-Name <partial name="_UserProfileLinkPartial" model="@new UserProfileLinkViewModel(Model.UserName, Model.DisplayName)"></partial>
-<br>
-Diary <a asp-controller="Diary" asp-action="Show" asp-route-userName="@Model.UserName">diary</a>

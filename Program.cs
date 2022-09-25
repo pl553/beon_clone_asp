@@ -15,6 +15,7 @@ builder.Services.AddSignalR();
 
 bool tryMigrate = false;
 
+//set DESIGNTIME if you only need to create migrations
 var designTime = Environment.GetEnvironmentVariable("DESIGNTIME");
 
 if (designTime != null)
@@ -72,11 +73,6 @@ else
   });
 }
 
-/*builder.Services.AddDbContext<IdentityDbContext>(opts => {
-  opts.UseSqlite(
-  builder.Configuration["ConnectionStrings:IdentityDbContextConnection"]);
-});*/
-
 builder.Services.AddDefaultIdentity<BeonUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<BeonDbContext>();
@@ -110,6 +106,7 @@ builder.Services.AddScoped<IRepository<TopicSubscription>, EFRepository<TopicSub
 builder.Services.AddScoped<IRepository<Comment>, EFRepository<Comment>>();
 builder.Services.AddScoped<IRepository<OriginalPost>, EFRepository<OriginalPost>>();
 builder.Services.AddScoped<IRepository<Diary>, EFRepository<Diary>>();
+builder.Services.AddScoped<IRepository<FriendLink>, EFRepository<FriendLink>>();
 
 builder.Services.AddScoped<IEmailSender, AuthMessageSender>();
 builder.Services.AddScoped<ISmsSender, AuthMessageSender>();
@@ -119,16 +116,12 @@ builder.Services.AddScoped<TopicLogic, TopicLogic>();
 builder.Services.AddScoped<BoardLogic, BoardLogic>();
 builder.Services.AddScoped<PostLogic, PostLogic>();
 builder.Services.AddScoped<TopicSubscriptionLogic, TopicSubscriptionLogic>();
+builder.Services.AddScoped<FriendLogic, FriendLogic>();
 
 builder.Services.AddFactory<TopicLogic, TopicLogic>();
 builder.Services.AddFactory<BoardLogic, BoardLogic>();
 
-string? userFileStorageType = Environment.GetEnvironmentVariable("USER_STORAGE_TYPE");
-
-if (userFileStorageType == null)
-{
-  throw new Exception("please set le USER_STORAGE_TYPE envar ");
-}
+string userFileStorageType = Environment.GetEnvironmentVariable("USER_STORAGE_TYPE") ?? "DISK";
 
 if (userFileStorageType == "S3")
 {
@@ -174,20 +167,26 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}");
 
-/*app.MapControllerRoute("ShowBoard", "Board/{boardId:int}", new { Controller = "Board", action = "Show"});
-app.MapControllerRoute("cr8topic", "Topic/Create", new { Controller = "Topic", action = "Create" });
-*/
-
 app.MapDefaultControllerRoute();
 app.UseAuthentication();
 app.UseAuthorization();
-//app.MapRazorPages();
 
 if (!app.Environment.IsDevelopment())
 {
   app.UseExceptionHandler("/Error");
 }
 
-CreateAdmin.Create(app, tryMigrate);
+if (tryMigrate)
+{
+  BeonDbContext context = (app as IApplicationBuilder).ApplicationServices
+  .CreateScope().ServiceProvider.GetRequiredService<BeonDbContext>();
+
+  if (context.Database.GetPendingMigrations().Any())
+  {
+    context.Database.Migrate();
+  }
+}
+
+CreateAdmin.Create(app);
 
 app.Run();

@@ -32,13 +32,17 @@ body {
   font-size: 12px;
 }
 
-h2, h3, p, div, span {
-  font-family: Tahoma,Verdana,Arial,Geneva,Helvetica,sans-serif;
+h2,
+h3,
+p,
+div,
+span {
+  font-family: Tahoma, Verdana, Arial, Geneva, Helvetica, sans-serif;
 }
 
 .text-danger {
   color: #ff0000;
-} 
+}
 
 .field-validation-error {
   color: #ff0000;
@@ -69,7 +73,8 @@ h2, h3, p, div, span {
   display: inline;
 }
 
-.user, .user_processed {
+.user,
+.user_processed {
   background: url('/i/smiles/user.png') no-repeat scroll 3px 0px;
   padding-left: 18px;
   /* 1.1 * 0.75 */
@@ -101,7 +106,7 @@ textarea.ar {
   overflow: hidden;
   min-height: 280px;
   resize: none;
-} 
+}
 
 .postbg {
   overflow-wrap: break-word;
@@ -140,6 +145,25 @@ textarea.ar {
   font-weight: bold;
   padding: 0.4em 0.6em 0.4em 0.5em;
   background-color: #f57a28;
+}
+
+.info-container {
+  font-size: 10pt;
+  border: 1px solid #999999;
+  margin: 5px;
+}
+.info-header {
+  display: block;
+  border-bottom: 1px solid #999999;
+  padding: 2px;
+  background-color: #dddddd;
+  font-weight: bold;
+  font-size: 10pt;
+}
+
+.info-text {
+  padding: 5px;
+  font-size: 10pt;
 }
 
 .flex-container {
@@ -216,8 +240,8 @@ textarea.ar {
 }
 
 .hbutton:hover {
-  background-color:#dff1ff;
-  border:1px solid #316ac5;
+  background-color: #dff1ff;
+  border: 1px solid #316ac5;
 }
 
 .hbutton img {
@@ -245,16 +269,20 @@ textarea.ar {
   display: flex;
   flex-direction: column;
   width: 190px;
-  justify-content: center; /* align vertical */
-  align-items: center; /* align horizontal */
+  justify-content: center;
+  /* align vertical */
+  align-items: center;
+  /* align horizontal */
 }
 
 #header-diary {
   display: flex;
   flex-direction: column;
   width: 295px;
-  justify-content: center; /* align vertical */
-  align-items: center; /* align horizontal */
+  justify-content: center;
+  /* align vertical */
+  align-items: center;
+  /* align horizontal */
 }
 
 #header-links {
@@ -291,6 +319,7 @@ textarea.ar {
   font-size: 10.2px;
   color: #666666;
 }
+
 .header-links-container span {
   height: 14px;
 }
@@ -311,7 +340,7 @@ textarea.ar {
   border-spacing: 5px;
   border: 1px solid #dddddd;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   margin: 0 auto;
 }
 

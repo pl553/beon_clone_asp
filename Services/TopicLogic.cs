@@ -91,7 +91,10 @@ namespace Beon.Services {
       else throw new Exception("unsupported boardtype");
     }
 
-
+    public bool UserModeratesTopic(Topic topic, BeonUser user)
+    {
+      return topic.PosterId == user.Id;
+    }
     public async Task<PostViewModel> GetOpAsync(int topicId)
     {
       var post = await _opRepository.Entities
