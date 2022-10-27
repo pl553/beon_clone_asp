@@ -1,0 +1,53 @@
+@model PostViewModel
+
+@using System.Globalization
+
+@{
+  var time = TimeZoneInfo.ConvertTimeFromUtc(Model.TimeStamp, Beon.Settings.TimeZone);
+  var timeFormat = Model is TopicPreviewViewModel ? "HH:mm:ss" : "d MMMM yyyy г. HH:mm:ss";
+  var timeStr = time.ToString(timeFormat, CultureInfo.CreateSpecificCulture("ru-RU"));
+}
+
+<div class="postbg p75">
+  <partial name="_TopicPreviewTitlePartial" model="@Model"></partial>
+  <partial name="_UserProfileLinkPartial"
+    model="@new UserProfileLinkViewModel(Model.Poster)"></partial>
+  &nbsp;<span class="m7">@timeStr</span>
+  <div class="flex-container">
+    @if (Model.Poster?.AvatarFilePath != null)
+    {
+      <div class="avatar">
+        <img src="@Model.Poster.AvatarFilePath" />
+      </div>
+    }
+    <div class="post-body">
+      @if (Model is TopicPreviewViewModel p && !p.CanRead)
+      {
+        <span>@p.CannotReadReason</span>
+      }
+      else
+      {
+        @Html.Raw(Model.BodyRawHtml)
+      }
+    </div>
+  </div>
+  <div class="flex-container">
+    @if (Model.CanDelete)
+    {
+      <div class="m9">
+        <span>
+          <a href="" onclick="optionsLinkClicked(event, this)">Опции</a>
+          <span class="post-options" style="display: none;">
+            <img class="flag" src="/i/delete.gif" width="13" height="12" />
+            <a href="" onclick="deleteLinkClicked(event, this)"> Удалить</a>
+            <form class="delete-form" asp-controller="Post" asp-action="Delete">
+              <input type="hidden" name="postId" value="@Model.PostId" />
+              <input type="hidden" name="returnUrl" value="@ViewContext.HttpContext.Request.PathAndQuery()" />
+            </form>
+          </span>
+        </span>
+      </div>
+    }
+    <partial name="_PostCommentBarPartial" model="@Model"></partial>
+  </div>
+</div>

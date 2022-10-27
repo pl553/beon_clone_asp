@@ -1,12 +1,25 @@
 namespace Beon.Models.ViewModels {
-  public class PosterViewModel {
-    public string UserName { get; set; }
-    public string DisplayName { get; set; }
-    public string? AvatarFilePath { get; set; }
-    public PosterViewModel(string userName, string displayName, string? avatarFilePath) {
-      UserName = userName;
-      DisplayName = displayName;
-      AvatarFilePath = avatarFilePath;
+  public record PosterViewModel(
+    string UserName,
+    string DisplayName,
+    string? AvatarFilePath
+  )
+  {
+    public const PosterViewModel? Anonymous = null;
+
+    public static async Task<PosterViewModel?> CreateFromAsync(BeonUser? user)
+    {
+      if (user == BeonUser.Anonymous)
+      {
+        return Anonymous;
+      }
+      else
+      {
+        return new PosterViewModel(
+          user.UserName,
+          user.DisplayName,
+          await user.GetAvatarUrlAsync());
+      }
     }
   }
 }

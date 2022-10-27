@@ -14,32 +14,30 @@ namespace Beon.Components {
   public class NewCommentsNotificationViewComponent : ViewComponent
   {
     private readonly UserManager<BeonUser> _userManager;
-    private readonly TopicSubscriptionLogic _topicSubscriptionLogic;
-    private readonly TopicLogic _topicLogic;
+    private readonly TopicSubscriptionService _topicSubscriptionService;
     public NewCommentsNotificationViewComponent(
-        UserManager<BeonUser> userManager,
-        TopicLogic topicLogic,
-        TopicSubscriptionLogic topicSubscriptionLogic) {
+      UserManager<BeonUser> userManager,
+      TopicSubscriptionService topicSubscriptionService)
+    {
       _userManager = userManager;
-      _topicSubscriptionLogic = topicSubscriptionLogic;
-      _topicLogic = topicLogic;
+      _topicSubscriptionService = topicSubscriptionService;
     }
 
-    public async Task<IViewComponentResult> InvokeAsync() {
+    public async Task<IViewComponentResult> InvokeAsync()
+    {
       BeonUser? u = await _userManager.GetUserAsync(UserClaimsPrincipal);
       if (u == null) {
         return View(new List<LinkViewModel>());
       }
 
-      var tss = await _topicSubscriptionLogic.GetWithNewPostsAsync(u.Id);
+      var tss = await _topicSubscriptionService.GetWithNewPostsAsync(u.Id);
 
-      ICollection<LinkViewModel> links = new List<LinkViewModel>();
-      foreach(var ts in tss) {
-        if (ts.Topic != null) {
-          links.Add(new LinkViewModel(ts.Topic.Title, await _topicLogic.GetTopicPathAsync(ts.Topic)));
-        }
-      }
-
+      var links = await Task.WhenAll(
+        tss.Select(
+          async ts => new LinkViewModel(
+            (await ts.GetTopicAsync()).Title,
+            await (await ts.GetTopicAsync()).GetPathAsync())));
+      
       return View(links);
     }
   }

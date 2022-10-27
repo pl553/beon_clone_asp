@@ -1,0 +1,15 @@
+@model PostViewModel
+
+@if (Model is TopicPreviewViewModel preview)
+{
+  @if (!preview.CanRead)
+  {
+    <span class="topic-title">...</span>
+  }
+  else
+  {
+    <a class="topic-title" href="@preview.Path">
+      @preview.Title
+    </a>
+  }
+}

@@ -1,7 +1,10 @@
-public static class IEnumerableExtensions
+namespace Beon.Infrastructure
 {
-  public static IEnumerable<T> NotNull<T>(this IEnumerable<T?> enumerable) where T : class
+  public static class IEnumerableExtensions
   {
-    return enumerable.Where(e => e != null).Select(e => e!);
+    public static IEnumerable<T> NotNull<T>(this IEnumerable<T?> enumerable) where T : class
+    {
+      return enumerable.Where(e => e != null).Select(e => e!);
+    }
   }
 }

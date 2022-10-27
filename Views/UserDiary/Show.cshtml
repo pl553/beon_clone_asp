@@ -1,0 +1,20 @@
+@using Microsoft.AspNetCore.Identity
+@using Beon.Infrastructure
+@using Beon.Models
+
+@model UserDiaryViewModel
+
+@inject SignInManager<BeonUser> SignInManager
+@inject UserManager<BeonUser> UserManager
+
+<div class="flex-container">
+  <partial name="_UserDiarySideBarPartial" model="@Model.UserName"></partial>
+  <div class="content-container">
+    <partial name="_BoardShowPartial" model="@Model.Entries"></partial>
+    @if (Model.CanCreateEntries)
+    {
+      <partial name="_UserDiaryEntryCreatePartial"
+        model="@new UserDiaryEntryFormModel { DiaryOwnerUserName = Model.UserName }"></partial>
+    }
+  </div>
+</div>

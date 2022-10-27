@@ -6,7 +6,7 @@
 @inject UserManager<BeonUser> UserManager
 
 <div id="header">
-  <div id="@(ViewBag.IsDiaryPage != true ? "header-logo" : "header-diary")">
+  <div class="p75" id="@(ViewBag.IsDiaryPage != true ? "header-logo" : "header-diary")">
     @if (ViewBag.IsDiaryPage != true) {
       <a id="logo" asp-controller="Home" asp-action="Index">
         <img src="/i/logo.png">
@@ -18,7 +18,7 @@
       <span class="blog-subtitle">@ViewBag.DiarySubtitle</span>
     }
     <br>
-    <span class="m4">Hello,
+    <span class="m3">Hello,
       @if (SignInManager.IsSignedIn(User))
       {
         <span>
@@ -51,15 +51,15 @@
         </span>
         <span>
           <span class="m3">•</span>
-          <a asp-controller="Diary" asp-action="Show" asp-route-userName="@await UserManager.GetUserNameAsync(await UserManager.GetUserAsync(User))">Мой дневник</a>
+          <a asp-controller="UserDiary" asp-action="Show" asp-route-userName="@await UserManager.GetUserNameAsync(await UserManager.GetUserAsync(User))">Мой дневник</a>
         </span>
         <span>
           <span class="m3">•</span>
-          <a asp-controller="Diary" asp-action="Show" asp-route-userName="@await UserManager.GetUserNameAsync(await UserManager.GetUserAsync(User))">Написать в дневник</a>
+          <a asp-controller="UserDiary" asp-action="Show" asp-route-userName="@await UserManager.GetUserNameAsync(await UserManager.GetUserAsync(User))">Написать в дневник</a>
         </span>
         <span>
           <span class="m3">•</span>
-          <a asp-controller="Diary" asp-action="Show" asp-route-userName="@await UserManager.GetUserNameAsync(await UserManager.GetUserAsync(User))">Написать в дневник</a>
+          <a asp-controller="UserDiary" asp-action="Show" asp-route-userName="@await UserManager.GetUserNameAsync(await UserManager.GetUserAsync(User))">Написать в дневник</a>
         </span>
       }
       else

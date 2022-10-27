@@ -1,0 +1,9 @@
+@model UserDiaryEntryPageViewModel
+
+
+<div class="flex-container">
+  <partial name="_UserDiarySideBarPartial" model="@Model.UserName"></partial>
+  <div class="content-container">
+    <partial name="_TopicShowPartial" model="@Model.Entry"></partial>
+  </div>
+</div>

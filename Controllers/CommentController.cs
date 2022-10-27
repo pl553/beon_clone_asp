@@ -16,43 +16,38 @@ namespace Beon.Controllers
     private IRepository<Comment> _commentRepository;
     private IRepository<Topic> _topicRepository;
     private readonly UserManager<BeonUser> _userManager;
-    private readonly IViewComponentRenderService _vcRender;
-    private readonly TopicSubscriptionLogic _topicSubscriptionLogic;
+    private readonly TopicSubscriptionService _topicSubscriptionService;
     private IHubContext<TopicHub> _hubContext;    
     private readonly ILogger _logger;
-    private readonly PostLogic _postLogic;
-    private readonly TopicLogic _topicLogic;
+
     public CommentController(
-      PostLogic postLogic,
-      TopicLogic topicLogic,
       IRepository<Comment> repo,
       IRepository<Topic> topicRepository,
       UserManager<BeonUser> userManager,
       IHubContext<TopicHub> hubContext,
       ILogger<CommentController> logger,
-      TopicSubscriptionLogic topicSubscriptionLogic,
-      IViewComponentRenderService vcRender)
+      TopicSubscriptionService topicSubscriptionService)
     {
-      _postLogic = postLogic;
-      _topicLogic = topicLogic;
       _commentRepository = repo;
       _topicRepository = topicRepository;
       _userManager = userManager;
       _hubContext = hubContext;
       _logger = logger;
-      _vcRender = vcRender;
-      _topicSubscriptionLogic = topicSubscriptionLogic;
-    }
-    public IActionResult Index() {
-      return View();
+      _topicSubscriptionService = topicSubscriptionService;
     }
 
     [HttpPost]
     [Authorize]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(int topicId, PostFormModel model) {
-      Topic? t = await _topicRepository.Entities
-        .Where(t => t.TopicId.Equals(topicId))
+    public async Task<IActionResult> Create(CommentFormModel model)
+    {
+      if (!ModelState.IsValid)
+      {
+        return NotFound();
+      }
+
+      var t = await _topicRepository.Entities
+        .Where(t => t.PostId == model.TopicPostId)
         .FirstOrDefaultAsync();
       
       if (t == null) {
@@ -61,59 +56,28 @@ namespace Beon.Controllers
       
       BeonUser? u = await _userManager.GetUserAsync(User); 
          
-      if (u == null) {
-        return NotFound();
-      }
-
-      await _topicSubscriptionLogic.SubscribeAsync(topicId, u.Id);
-      await _topicSubscriptionLogic.SetNewCommentsAsync(topicId);
-
-      Comment p = new Comment { TopicId = topicId, Body = model.Body, TimeStamp = DateTime.UtcNow, Poster = u };
-      await _commentRepository.CreateAsync(p);
-
-      await _hubContext.Clients.Group(topicId.ToString()).SendAsync("ReceiveComment", p.PostId);
-
-      return new JsonResult("OK");
-    }
-
-    [HttpPost]
-    [Authorize]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Delete(int postId, string returnUrl) {
-      BeonUser? u = await _userManager.GetUserAsync(User);
-      Comment? p = await _commentRepository.Entities
-        .Where(p => p.PostId.Equals(postId))
-        .Include(p => p.Topic)
-        .FirstOrDefaultAsync();
-
-      if (u != null && p != null && await _postLogic.UserMayDeleteCommentAsync(p, u)) {
-        await _commentRepository.DeleteAsync(p);
-        return this.RedirectToLocal(returnUrl);
-      }
-
-      return NotFound();
-    }
-
-    [HttpGet]
-    [Authorize]
-    public async Task<IActionResult> GetRawHtml(int postId)
-    {
-      BeonUser? u = await _userManager.GetUserAsync(User);
-      Comment? p = await _commentRepository.Entities
-        .Where(p => p.PostId.Equals(postId))
-        .Include(p => p.Topic)
-        .FirstOrDefaultAsync();
-
-      if (p == null || p.Topic == null)
+      if (u == null || !await t.UserCanCommentAsync(u))
       {
         return NotFound();
       }
 
-      CommentViewModel vm = await _postLogic.GetCommentViewModelAsync(p, u);
+      await _topicSubscriptionService.SubscribeAsync(model.TopicPostId, u.Id);
+      await _topicSubscriptionService.SetNewCommentsAsync(model.TopicPostId);
 
-      string postRawHtml = await _vcRender.RenderAsync(ControllerContext, ViewData, TempData, "Comment", new { comment = vm });
+      Comment p = new Comment
+      {
+        TopicPostId = model.TopicPostId,
+        Body = model.Body,
+        TimeStamp = DateTime.UtcNow,
+        Poster = u
+      };
 
-      return Content(postRawHtml, "text/html");
+      await _commentRepository.CreateAsync(p);
+
+      await _hubContext.Clients.Group(model.TopicPostId.ToString())
+        .SendAsync("ReceiveComment", p.PostId);
+
+      return this.RedirectToLocal(await t.GetPathAsync());
     }
   }
 }

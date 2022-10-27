@@ -10,26 +10,23 @@ body {
 }
 
 .m7 {
-  /* 0.75*0.75 */
-  font-size: 56.25%;
-  color: #666666;
-  white-space: nowrap;
-}
-
-.m2 {
-  /* 0.75*0.75 */
   font-size: 75%;
   color: #666666;
   white-space: nowrap;
 }
 
-/* 0.75*0.75 */
+.m2 {
+  font-size: 75%;
+  color: #666666;
+  white-space: nowrap;
+}
+
 .m4 {
-  font-size: 56.25%;
+  font-size: 75%;
 }
 
 .m3 {
-  font-size: 12px;
+  font-size: 75%;
 }
 
 h2,
@@ -38,6 +35,10 @@ p,
 div,
 span {
   font-family: Tahoma, Verdana, Arial, Geneva, Helvetica, sans-serif;
+}
+
+.p75 {
+  font-size: 75%;
 }
 
 .text-danger {
@@ -78,7 +79,7 @@ span {
   background: url('/i/smiles/user.png') no-repeat scroll 3px 0px;
   padding-left: 18px;
   /* 1.1 * 0.75 */
-  font-size: 13.2px;
+  font-size: 110%;
 }
 
 .topic-title {
@@ -87,13 +88,11 @@ span {
 }
 
 .blog-title {
-  /* 1.5 * 0.75 */
-  font-size: 112.5%;
+  font-size: 150%;
   color: #666666;
 }
 
 .blog-subtitle {
-  font-size: 75%;
   color: #666666;
 }
 
@@ -102,9 +101,9 @@ A {
 }
 
 textarea.ar {
-  width: 100%;
+  width: calc(100% - 9px);
   overflow: hidden;
-  min-height: 280px;
+  min-height: 162px;
   resize: none;
 }
 

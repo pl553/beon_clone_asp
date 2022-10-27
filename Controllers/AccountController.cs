@@ -18,31 +18,25 @@ namespace Beon.Controllers
   public class AccountController : Controller
   {
     private readonly UserManager<BeonUser> _userManager;
-    private readonly FriendLogic _friendLogic;
     private readonly SignInManager<BeonUser> _signInManager;
     private readonly IEmailSender _emailSender;
     private readonly ISmsSender _smsSender;
-    private readonly IRepository<Diary> _diaryRepository;
-    private readonly IRepository<Board> _boardRepository;
+    private readonly IRepository<UserDiary> _userDiaryRepository;
     private readonly ILogger _logger;
 
     public AccountController(
         UserManager<BeonUser> userManager,
-        FriendLogic friendLogic,
         SignInManager<BeonUser> signInManager,
         IEmailSender emailSender,
         ISmsSender smsSender,
-        IRepository<Diary> diaryRepository,
-        IRepository<Board> boardRepository,
+        IRepository<UserDiary> userDiaryRepository,
         ILoggerFactory loggerFactory)
     {
       _userManager = userManager;
-      _friendLogic = friendLogic;
       _signInManager = signInManager;
       _emailSender = emailSender;
       _smsSender = smsSender;
-      _diaryRepository = diaryRepository;
-      _boardRepository = boardRepository;
+      _userDiaryRepository = userDiaryRepository;
       _logger = loggerFactory.CreateLogger<AccountController>();
     }
 
@@ -112,8 +106,8 @@ namespace Beon.Controllers
         var result = await _userManager.CreateAsync(user, model.Password);
         if (result.Succeeded)
         {
-          var diary = new Diary { Owner = user };
-          await _diaryRepository.CreateAsync(diary);
+          var userDiary = new UserDiary { Owner = user };
+          await _userDiaryRepository.CreateAsync(userDiary);
           await _signInManager.SignInAsync(user, isPersistent: false);
           _logger.LogInformation(3, "User created a new account with password.");
           return this.RedirectToLocal(returnUrl);
@@ -157,27 +151,27 @@ namespace Beon.Controllers
                         new LinkViewModel(profileUser.DisplayName, "")
             });
 
-        var friends = (await _friendLogic.GetFriendsAsync(profileUser))
-          .Select(f => new UserProfileLinkViewModel(f.UserName, f.DisplayName));
+        var friends = (await profileUser.GetFriendsAsync())
+          .Select(u => new UserProfileLinkViewModel(u.UserName, u.DisplayName));
 
-        var friendOf = (await _friendLogic.GetUsersThatFriendedUserAsync(profileUser))
-          .Select(f => new UserProfileLinkViewModel(f.UserName, f.DisplayName));
+        var friendOf = (await profileUser.GetUsersThatHaveMeInTheirFriendListAsync())
+          .Select(u => new UserProfileLinkViewModel(u.UserName, u.DisplayName));
 
-        var mutuals = (await _friendLogic.GetMutualsAsync(profileUser))
-          .Select(f => new UserProfileLinkViewModel(f.UserName, f.DisplayName));
+        var mutuals = (await profileUser.GetMutualsAsync())
+          .Select(u => new UserProfileLinkViewModel(u.UserName, u.DisplayName));
 
         BeonUser? user = await GetCurrentUserAsync();
         bool profileUserIsFriend = user == null
           ? false
-          : await _friendLogic.IsUserFriendOfAsync(user, profileUser);
-        
+          : await profileUser.IsFriendsWithAsync(user);
+
         return View(new UserProfileViewModel(
             profileUser.UserName,
             profileUser.DisplayName,
             friends,
             friendOf,
             mutuals,
-            user != null && user.Id != profileUser.Id,
+            ShowFriendAddingUI: user != null && user.Id != profileUser.Id,
             profileUserIsFriend));
       }
     }
@@ -192,7 +186,7 @@ namespace Beon.Controllers
       {
         return NotFound();
       }
-      await _friendLogic.CreateAsync(await GetCurrentUserAsync(), u);
+      await u.SendFriendRequest(await GetCurrentUserAsync());
       return RedirectToAction(nameof(ShowProfile), new { userName = userName });
     }
 
@@ -206,7 +200,7 @@ namespace Beon.Controllers
       {
         return NotFound();
       }
-      await _friendLogic.DeleteAsync(await GetCurrentUserAsync(), u);
+      await u.RevokeFriendRequest(await GetCurrentUserAsync());
       return RedirectToAction(nameof(ShowProfile), new { userName = userName });
     }
 

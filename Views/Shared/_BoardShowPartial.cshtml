@@ -1,4 +1,4 @@
-@model BoardViewModel
+@model IEnumerable<TopicPreviewViewModel>
 
 @using System.Globalization
 
@@ -7,17 +7,13 @@
   int i = 0;
 }
 
-@foreach (var t in Model.Topics) {
-  var time = TimeZoneInfo.ConvertTimeFromUtc(t.Op.TimeStamp, Beon.Settings.TimeZone);
+@foreach (var t in Model) {
+  var time = TimeZoneInfo.ConvertTimeFromUtc(t.TimeStamp, Beon.Settings.TimeZone);
   @if (i == 0 || lastDate.Date > time) {
-    <partial name="_BoardDatePartial" model="@t.Op.TimeStamp"></partial>
+    <partial name="_BoardDatePartial" model="@t.TimeStamp"></partial>
     lastDate = time;
   }
-  <partial name="_TopicPreviewPartial" model="@t"></partial>
+  <partial name="_PostShowPartial" model="@t"></partial>
   <br>
   ++i;
-}
-
-@if (Model.CanCreateTopics) {
-  <partial name="_TopicCreatePartial" model="@new TopicCreateViewModel(Model.CreateTopicPath)"></partial>
 }

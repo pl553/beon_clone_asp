@@ -1,4 +1,4 @@
-using Beon.Models;
+/*using Beon.Models;
 using Beon.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -49,8 +49,12 @@ namespace Beon.Services
     public async Task<bool> AreUsersMutualsAsync(BeonUser a, BeonUser b)
       => await IsUserFriendOfAsync(a, b) && await IsUserFriendOfAsync(b, a);
 
-    public async Task<bool> IsUserFriendOfAsync(string fromId, string toId)
+    public async Task<bool> IsUserFriendOfAsync(string fromId, string? toId)
     {
+      if (toId == BeonUser.AnonymousId)
+      {
+        return false;
+      }
       int cnt = await _friendLinkRepository.Entities
         .Where(f => f.FromId == fromId && f.ToId == toId)
         .CountAsync();
@@ -60,8 +64,9 @@ namespace Beon.Services
     /// <summary>
     /// Determines if user "to" is in the friend list of "from" (if "from" has sent a friend req to "to")
     /// </summary>
-    public async Task<bool> IsUserFriendOfAsync(BeonUser from, BeonUser to)
-      => await IsUserFriendOfAsync(from.Id, to.Id);
+    public async Task<bool> IsUserFriendOfAsync(BeonUser from, BeonUser? to)
+      => to == BeonUser.Anonymous ? false
+        : await IsUserFriendOfAsync(from.Id, to.Id);
 
     /// <summary>
     /// Get users that "user" has sent a friend req to
@@ -93,3 +98,4 @@ namespace Beon.Services
     }
   }
 }
+*/

@@ -101,25 +101,23 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddScoped<IRepository<Topic>, EFRepository<Topic>>();
-builder.Services.AddScoped<IRepository<Board>, EFRepository<Board>>();
+builder.Services.AddScoped<IRepository<Post>, EFRepository<Post>>();
+builder.Services.AddScoped<IRepository<Diary>, EFRepository<Diary>>();
+builder.Services.AddScoped<IRepository<UserDiary>, EFRepository<UserDiary>>();
+builder.Services.AddScoped<IRepository<UserDiaryEntry>, EFRepository<UserDiaryEntry>>();
 builder.Services.AddScoped<IRepository<TopicSubscription>, EFRepository<TopicSubscription>>();
 builder.Services.AddScoped<IRepository<Comment>, EFRepository<Comment>>();
-builder.Services.AddScoped<IRepository<OriginalPost>, EFRepository<OriginalPost>>();
 builder.Services.AddScoped<IRepository<Diary>, EFRepository<Diary>>();
 builder.Services.AddScoped<IRepository<FriendLink>, EFRepository<FriendLink>>();
+builder.Services.AddScoped<IRepository<DiaryEntryCategory>, EFRepository<DiaryEntryCategory>>();
 
 builder.Services.AddScoped<IEmailSender, AuthMessageSender>();
 builder.Services.AddScoped<ISmsSender, AuthMessageSender>();
 
 builder.Services.AddScoped<IViewComponentRenderService, ViewComponentRenderService>();
-builder.Services.AddScoped<TopicLogic, TopicLogic>();
-builder.Services.AddScoped<BoardLogic, BoardLogic>();
-builder.Services.AddScoped<PostLogic, PostLogic>();
-builder.Services.AddScoped<TopicSubscriptionLogic, TopicSubscriptionLogic>();
-builder.Services.AddScoped<FriendLogic, FriendLogic>();
-
-builder.Services.AddFactory<TopicLogic, TopicLogic>();
-builder.Services.AddFactory<BoardLogic, BoardLogic>();
+builder.Services.AddScoped<TopicSubscriptionService, TopicSubscriptionService>();
+builder.Services.AddScoped<UserDiaryEntryService, UserDiaryEntryService>();
+builder.Services.AddScoped<TopicService, TopicService>();
 
 string userFileStorageType = Environment.GetEnvironmentVariable("USER_STORAGE_TYPE") ?? "DISK";
 

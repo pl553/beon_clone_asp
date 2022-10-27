@@ -18,9 +18,9 @@ namespace Beon.Components {
         .Select(u => u.DisplayName)
         .FirstOrDefaultAsync();
 
-      //dosent display anythin
-      if (displayName == null) {
-        return View(new UserProfileLinkViewModel());
+      if (displayName == null)
+      {
+        return View(new UserProfileLinkViewModel(poster: null));
       }
 
       return View(new UserProfileLinkViewModel(userName, displayName));

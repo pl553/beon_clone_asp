@@ -3,9 +3,19 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Beon.Models {
   public class BeonDbContext : IdentityDbContext<BeonUser> {
-    public BeonDbContext(DbContextOptions<BeonDbContext> options)
-    : base(options) { }
+    public IServiceProvider Provider { get; init; }
 
+    public BeonDbContext(
+      DbContextOptions<BeonDbContext> options,
+      IServiceProvider provider)
+    : base(options)
+    {
+      Provider = provider;
+    }
+
+    public T GetRequiredService<T>() where T : notnull
+      => Provider.GetRequiredService<T>();
+    
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -16,12 +26,7 @@ namespace Beon.Models {
         builder.Entity<BeonUser>()
           .HasOne(u => u.Diary)
           .WithOne(d => d.Owner)
-          .HasForeignKey<Diary>(d => d.OwnerId)
-          .IsRequired();
-
-        builder.Entity<Board>()
-          .HasOne<PublicForum>()
-          .WithOne(f => f.Board)
+          .HasForeignKey<UserDiary>(d => d.OwnerId)
           .IsRequired();
 
         builder.Entity<Topic>()
@@ -35,13 +40,6 @@ namespace Beon.Models {
           .WithOne(c => c.Topic)
           .IsRequired()
           .OnDelete(DeleteBehavior.Cascade);
-
-        builder.Entity<Topic>()
-          .HasOne<OriginalPost>(t => t.OriginalPost)
-          .WithOne(op => op.Topic)
-          .HasForeignKey<OriginalPost>(op => op.TopicId)
-          .IsRequired()
-          .OnDelete(DeleteBehavior.Cascade);
         
         builder.Entity<BeonUser>()
           .HasMany<TopicSubscription>()
@@ -50,13 +48,13 @@ namespace Beon.Models {
           .OnDelete(DeleteBehavior.Cascade);
 
     }
-
-    public DbSet<Board> Boards => Set<Board>();
     public DbSet<Topic> Topics => Set<Topic>();
     public DbSet<Post> Posts => Set<Post>();
     public DbSet<Comment> Comments => Set<Comment>();
-    public DbSet<OriginalPost> OriginalPosts => Set<OriginalPost>();
     public DbSet<Diary> Diaries => Set<Diary>();
+    public DbSet<UserDiary> UserDiaries => Set<UserDiary>();
+    public DbSet<UserDiaryEntry> UserDiaryEntries => Set<UserDiaryEntry>();
+    public DbSet<DiaryEntryCategory> DiaryEntryCategories => Set<DiaryEntryCategory>();
     public DbSet<TopicSubscription> TopicSubscriptions => Set<TopicSubscription>();
     public DbSet<FriendLink> FriendLinks => Set<FriendLink>();
   }

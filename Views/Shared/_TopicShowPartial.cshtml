@@ -8,55 +8,25 @@
 
 <h2 class="topic-title">@Model.Title</h2>
 
-@{  
-  var time = TimeZoneInfo.ConvertTimeFromUtc(Model.Op.TimeStamp, Beon.Settings.TimeZone); 
-  var timeStr = time.ToString("d MMMM yyyy г. HH:mm:ss", CultureInfo.CreateSpecificCulture("ru-RU"));
-}
-
-<div class="postbg">
-<partial name="_UserProfileLinkPartial" model="@new UserProfileLinkViewModel(Model.Op.Poster.UserName, Model.Op.Poster.DisplayName)"></partial>
-&nbsp;<span class="m7">@timeStr</span>
-  <div class="flex-container">
-    @if (Model.Op.Poster.AvatarFilePath != null)
-    {
-      <div class="avatar">
-        <img src="@Model.Op.Poster.AvatarFilePath" />
-      </div>
-    }
-    <div class="post-body">
-      @Html.Raw(Model.Op.BodyRawHtml)
-    </div>
-  </div>
-  <div class="flex-container">
-    @if (Model.CanEdit)
-    {
-      <div class="m9">
-        <partial name="_TopicOptionsPartial" model="@Model.TopicId"></partial>
-      </div>
-    }
-    <div style="flex: 1; text-align: right; font-size: 9px;">
-      <a href="#add">Прокомментировать</a>
-    </div>
-  </div>
-</div>
+<partial name="_PostShowPartial" model="@Model"></partial>
 
 <div id="comment-container">
   @foreach (var p in Model.Comments) 
   {
-    <partial name="_CommentShowPartial" model="@p"></partial>
+    <partial name="_PostShowPartial" model="@p"></partial>
   }
 </div>
 
 <a name="add"></a>
-@if (SignInManager.IsSignedIn(User)) { 
-  <partial name="_CommentCreatePartial" model="@new CommentCreateViewModel(Model.TopicId)"></partial>
+@if (Model.CanComment) { 
+  <partial name="_CommentCreatePartial" model="@new CommentFormModel { TopicPostId = Model.TopicPostId }"></partial>
 }
 else {
-  <p>Log in to create comments</p>
+  <p>@Model.CannotCommentReason</p>
 }
 
 <script>
-  topicId = @Model.TopicId
+  topicPostId = @Model.TopicPostId;
 </script>
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/topic.js"></script>

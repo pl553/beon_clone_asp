@@ -15,7 +15,7 @@ namespace beon_clone_asp.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.7");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.10");
 
             modelBuilder.Entity("Beon.Models.BeonUser", b =>
                 {
@@ -88,9 +88,9 @@ namespace beon_clone_asp.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Beon.Models.Board", b =>
+            modelBuilder.Entity("Beon.Models.Diary", b =>
                 {
-                    b.Property<int>("BoardId")
+                    b.Property<int>("DiaryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -98,14 +98,44 @@ namespace beon_clone_asp.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TopicCounter")
+                    b.Property<string>("Subtitle")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("DiaryId");
+
+                    b.ToTable("Diaries");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Diary");
+                });
+
+            modelBuilder.Entity("Beon.Models.DiaryEntryCategory", b =>
+                {
+                    b.Property<int>("DiaryEntryCategoryId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("BoardId");
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                    b.ToTable("Boards");
+                    b.Property<int>("DiaryEntryPostId")
+                        .HasColumnType("INTEGER");
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Board");
+                    b.Property<int>("DiaryId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("DiaryEntryCategoryId");
+
+                    b.HasIndex("DiaryEntryPostId");
+
+                    b.HasIndex("DiaryId");
+
+                    b.ToTable("DiaryEntryCategories");
                 });
 
             modelBuilder.Entity("Beon.Models.FriendLink", b =>
@@ -146,7 +176,6 @@ namespace beon_clone_asp.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PosterId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("TimeStamp")
@@ -159,60 +188,6 @@ namespace beon_clone_asp.Migrations
                     b.ToTable("Posts");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Post");
-                });
-
-            modelBuilder.Entity("Beon.Models.PublicForum", b =>
-                {
-                    b.Property<int>("PublicForumId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("BoardId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("PublicForumId");
-
-                    b.HasIndex("BoardId")
-                        .IsUnique();
-
-                    b.ToTable("PublicForum");
-                });
-
-            modelBuilder.Entity("Beon.Models.Topic", b =>
-                {
-                    b.Property<int>("TopicId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("BoardId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("OriginalPostId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("PosterId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("TopicOrd")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("TopicId");
-
-                    b.HasIndex("BoardId");
-
-                    b.HasIndex("PosterId");
-
-                    b.ToTable("Topics");
                 });
 
             modelBuilder.Entity("Beon.Models.TopicSubscription", b =>
@@ -228,14 +203,14 @@ namespace beon_clone_asp.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TopicId")
+                    b.Property<int>("TopicPostId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("TopicSubscriptionId");
 
                     b.HasIndex("SubscriberId");
 
-                    b.HasIndex("TopicId");
+                    b.HasIndex("TopicPostId");
 
                     b.ToTable("TopicSubscriptions");
                 });
@@ -315,9 +290,11 @@ namespace beon_clone_asp.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderKey")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderDisplayName")
@@ -355,9 +332,11 @@ namespace beon_clone_asp.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LoginProvider")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Value")
@@ -372,18 +351,31 @@ namespace beon_clone_asp.Migrations
                 {
                     b.HasBaseType("Beon.Models.Post");
 
-                    b.Property<int>("TopicId")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("Comment_TopicId");
+                    b.Property<int>("TopicPostId")
+                        .HasColumnType("INTEGER");
 
-                    b.HasIndex("TopicId");
+                    b.HasIndex("TopicPostId");
 
                     b.HasDiscriminator().HasValue("Comment");
                 });
 
-            modelBuilder.Entity("Beon.Models.Diary", b =>
+            modelBuilder.Entity("Beon.Models.Topic", b =>
                 {
-                    b.HasBaseType("Beon.Models.Board");
+                    b.HasBaseType("Beon.Models.Post");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TopicOrd")
+                        .HasColumnType("INTEGER");
+
+                    b.HasDiscriminator().HasValue("Topic");
+                });
+
+            modelBuilder.Entity("Beon.Models.UserDiary", b =>
+                {
+                    b.HasBaseType("Beon.Models.Diary");
 
                     b.Property<string>("OwnerId")
                         .IsRequired()
@@ -392,20 +384,63 @@ namespace beon_clone_asp.Migrations
                     b.HasIndex("OwnerId")
                         .IsUnique();
 
-                    b.HasDiscriminator().HasValue("Diary");
+                    b.HasDiscriminator().HasValue("UserDiary");
                 });
 
-            modelBuilder.Entity("Beon.Models.OriginalPost", b =>
+            modelBuilder.Entity("Beon.Models.DiaryEntry", b =>
                 {
-                    b.HasBaseType("Beon.Models.Post");
+                    b.HasBaseType("Beon.Models.Topic");
 
-                    b.Property<int>("TopicId")
+                    b.HasDiscriminator().HasValue("DiaryEntry");
+                });
+
+            modelBuilder.Entity("Beon.Models.UserDiaryEntry", b =>
+                {
+                    b.HasBaseType("Beon.Models.DiaryEntry");
+
+                    b.Property<int>("CommentAccess")
                         .HasColumnType("INTEGER");
 
-                    b.HasIndex("TopicId")
-                        .IsUnique();
+                    b.Property<string>("Desires")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                    b.HasDiscriminator().HasValue("OriginalPost");
+                    b.Property<string>("Mood")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Music")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ReadAccess")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UserDiaryId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasIndex("UserDiaryId");
+
+                    b.HasDiscriminator().HasValue("UserDiaryEntry");
+                });
+
+            modelBuilder.Entity("Beon.Models.DiaryEntryCategory", b =>
+                {
+                    b.HasOne("Beon.Models.DiaryEntry", "DiaryEntry")
+                        .WithMany()
+                        .HasForeignKey("DiaryEntryPostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Beon.Models.Diary", "Diary")
+                        .WithMany()
+                        .HasForeignKey("DiaryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Diary");
+
+                    b.Navigation("DiaryEntry");
                 });
 
             modelBuilder.Entity("Beon.Models.FriendLink", b =>
@@ -431,37 +466,7 @@ namespace beon_clone_asp.Migrations
                 {
                     b.HasOne("Beon.Models.BeonUser", "Poster")
                         .WithMany()
-                        .HasForeignKey("PosterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Poster");
-                });
-
-            modelBuilder.Entity("Beon.Models.PublicForum", b =>
-                {
-                    b.HasOne("Beon.Models.Board", "Board")
-                        .WithOne()
-                        .HasForeignKey("Beon.Models.PublicForum", "BoardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Board");
-                });
-
-            modelBuilder.Entity("Beon.Models.Topic", b =>
-                {
-                    b.HasOne("Beon.Models.Board", "Board")
-                        .WithMany("Topics")
-                        .HasForeignKey("BoardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Beon.Models.BeonUser", "Poster")
-                        .WithMany()
                         .HasForeignKey("PosterId");
-
-                    b.Navigation("Board");
 
                     b.Navigation("Poster");
                 });
@@ -476,7 +481,7 @@ namespace beon_clone_asp.Migrations
 
                     b.HasOne("Beon.Models.Topic", "Topic")
                         .WithMany()
-                        .HasForeignKey("TopicId")
+                        .HasForeignKey("TopicPostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -540,33 +545,33 @@ namespace beon_clone_asp.Migrations
                 {
                     b.HasOne("Beon.Models.Topic", "Topic")
                         .WithMany("Comments")
-                        .HasForeignKey("TopicId")
+                        .HasForeignKey("TopicPostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Topic");
                 });
 
-            modelBuilder.Entity("Beon.Models.Diary", b =>
+            modelBuilder.Entity("Beon.Models.UserDiary", b =>
                 {
                     b.HasOne("Beon.Models.BeonUser", "Owner")
                         .WithOne("Diary")
-                        .HasForeignKey("Beon.Models.Diary", "OwnerId")
+                        .HasForeignKey("Beon.Models.UserDiary", "OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("Beon.Models.OriginalPost", b =>
+            modelBuilder.Entity("Beon.Models.UserDiaryEntry", b =>
                 {
-                    b.HasOne("Beon.Models.Topic", "Topic")
-                        .WithOne("OriginalPost")
-                        .HasForeignKey("Beon.Models.OriginalPost", "TopicId")
+                    b.HasOne("Beon.Models.UserDiary", "UserDiary")
+                        .WithMany("Entries")
+                        .HasForeignKey("UserDiaryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Topic");
+                    b.Navigation("UserDiary");
                 });
 
             modelBuilder.Entity("Beon.Models.BeonUser", b =>
@@ -574,16 +579,14 @@ namespace beon_clone_asp.Migrations
                     b.Navigation("Diary");
                 });
 
-            modelBuilder.Entity("Beon.Models.Board", b =>
-                {
-                    b.Navigation("Topics");
-                });
-
             modelBuilder.Entity("Beon.Models.Topic", b =>
                 {
                     b.Navigation("Comments");
+                });
 
-                    b.Navigation("OriginalPost");
+            modelBuilder.Entity("Beon.Models.UserDiary", b =>
+                {
+                    b.Navigation("Entries");
                 });
 #pragma warning restore 612, 618
         }

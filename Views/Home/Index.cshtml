@@ -1,4 +1,4 @@
-﻿@model HomeViewModel
+﻿@model HomePageViewModel
 
 @{
     ViewData["Title"] = "Home Page";
@@ -7,6 +7,6 @@
 <div class="flex-container">
     <partial name="_LeftBannerPartial"></partial>
     <div class="content-container">
-        <partial name="_BoardShowPartial" model="@Model.Board"></partial>
+        <partial name="_BoardShowPartial" model="@Model.Topics"></partial>
     </div>
 </div>

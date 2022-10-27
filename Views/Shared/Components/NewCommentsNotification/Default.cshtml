@@ -2,7 +2,7 @@
 
 @if (Model.Count() > 0) {
   <div class="mheadorange">Новые комментарии у:</div>
-  <div class="menubg">
+  <div class="menubg p75">
     @foreach (var link in Model) {
       <a class="m3" href=@link.Url>@link.Text</a>
       <br>
