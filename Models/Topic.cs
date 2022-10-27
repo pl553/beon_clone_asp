@@ -42,8 +42,6 @@ namespace Beon.Models {
 
     public abstract Task<bool> UserCanCommentAsync(BeonUser? user);
 
-    public abstract Task<bool> UserCanReadAsync(BeonUser? user);
-
     public override async Task<bool> UserCanDeleteAsync(BeonUser? user)
       => UserCanEdit(user) || await UserModeratesAsync(user);
 

@@ -56,7 +56,7 @@ namespace Beon.Controllers
         .Where(p => p.PostId == postId)
         .FirstOrDefaultAsync();
 
-      if (p == null || !(p is Comment))
+      if (p == null || !(p is Comment or ChatPost) || !await p.UserCanReadAsync(u))
       {
         return NotFound();
       }

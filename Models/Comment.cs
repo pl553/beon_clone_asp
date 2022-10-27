@@ -18,6 +18,9 @@ namespace Beon.Models
       => user != BeonUser.Anonymous
         && (user.Id == PosterId || await (await GetTopicAsync()).UserModeratesAsync(user));
 
+    public async override Task<bool> UserCanReadAsync(BeonUser? user)
+      => await (await GetTopicAsync()).UserCanReadAsync(user);
+
     public async Task<Topic> GetTopicAsync()
     {
       await _context.Entry(this).Reference(c => c.Topic).LoadAsync();
