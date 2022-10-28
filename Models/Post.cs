@@ -12,12 +12,6 @@ namespace Beon.Models
     public int PostId { get; set; }
     public string Body { get; set; } = String.Empty;
     public DateTime TimeStamp { get; set; }
-    /// <summary>
-    /// id of the poster
-    /// </summary>
-    /// <remarks>
-    /// is null if the poster is anonymous
-    /// </remarks>
     public string? PosterId { get; set; }
 
     public BeonUser? Poster { get; set; }
@@ -30,12 +24,13 @@ namespace Beon.Models
     private readonly IUserFileRepository _userFileRepository;
     protected readonly BeonDbContext _context;
 
-    protected Post() { }
-
-    protected Post(BeonDbContext context)
+    protected Post(BeonDbContext context, string body, DateTime timeStamp, string? posterId)
     {
       _userFileRepository = context.GetRequiredService<IUserFileRepository>();
       _context = context;
+      Body = body;
+      TimeStamp = timeStamp;
+      PosterId = posterId;
     }
 
     public abstract Task<PostViewModel> CreatePostViewModelAsync(BeonUser? user, string? deleteReturnUrl = null);

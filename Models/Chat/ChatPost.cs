@@ -5,7 +5,17 @@ namespace Beon.Models
   public class ChatPost : Post
   {
     public int ChatId { get; set; }
-    public virtual Chat Chat { get; set; } = null!;
+    public Chat? Chat { get; set; }
+
+    public ChatPost(
+      BeonDbContext context,
+      string body,
+      DateTime timeStamp,
+      string? posterId,
+      int chatId) : base(context, body, timeStamp, posterId)
+    {
+      ChatId = chatId;
+    }
 
     public async override Task<bool> UserCanReadAsync(BeonUser? user)
     {

@@ -17,10 +17,12 @@ namespace Beon.Controllers
     private IRepository<Topic> _topicRepository;
     private readonly UserManager<BeonUser> _userManager;
     private readonly TopicSubscriptionService _topicSubscriptionService;
+    private readonly BeonDbContext _context;
     private IHubContext<TopicHub> _hubContext;    
     private readonly ILogger _logger;
 
     public CommentController(
+      BeonDbContext context,
       IRepository<Comment> repo,
       IRepository<Topic> topicRepository,
       UserManager<BeonUser> userManager,
@@ -33,6 +35,7 @@ namespace Beon.Controllers
       _userManager = userManager;
       _hubContext = hubContext;
       _logger = logger;
+      _context = context;
       _topicSubscriptionService = topicSubscriptionService;
     }
 
@@ -64,13 +67,12 @@ namespace Beon.Controllers
       await _topicSubscriptionService.SubscribeAsync(model.TopicPostId, u.Id);
       await _topicSubscriptionService.SetNewCommentsAsync(model.TopicPostId);
 
-      Comment p = new Comment
-      {
-        TopicPostId = model.TopicPostId,
-        Body = model.Body,
-        TimeStamp = DateTime.UtcNow,
-        Poster = u
-      };
+      Comment p = new Comment(
+        context: _context,
+        body: model.Body,
+        timeStamp: DateTime.UtcNow,
+        posterId: u.Id,
+        topicPostId: model.TopicPostId);
 
       await _commentRepository.CreateAsync(p);
 

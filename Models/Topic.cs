@@ -15,10 +15,18 @@ namespace Beon.Models {
     private readonly IRepository<Comment> _commentRepository;
     protected readonly LinkGenerator _linkGenerator;
 
-    protected Topic(BeonDbContext context) : base(context)
+    protected Topic(
+      BeonDbContext context,
+      string body,
+      DateTime timeStamp,
+      string? posterId,
+      string title,
+      int topicOrd) : base(context, body, timeStamp, posterId)
     {
       _commentRepository = context.Provider.GetRequiredService<IRepository<Comment>>();
       _linkGenerator = context.Provider.GetRequiredService<LinkGenerator>();
+      Title = title;
+      TopicOrd = topicOrd;
     }
 
     public abstract Task<TopicPreviewViewModel> CreateTopicPreviewViewModelAsync(

@@ -23,7 +23,27 @@ namespace Beon.Models
     public string Mood { get; set; } = "";
     public string Music { get; set; } = "";
 
-    public UserDiaryEntry(BeonDbContext context) : base(context) { }
+    public UserDiaryEntry(
+      BeonDbContext context,
+      string body,
+      DateTime timeStamp,
+      string? posterId,
+      string title,
+      int topicOrd,
+      int userDiaryId,
+      Access readAccess,
+      Access commentAccess,
+      string desires,
+      string mood,
+      string music) : base(context, body, timeStamp, posterId, title, topicOrd)
+    {
+      UserDiaryId = userDiaryId;
+      ReadAccess = readAccess;
+      CommentAccess = commentAccess;
+      Desires = desires;
+      Mood = mood;
+      Music = music;
+    }
 
     public override string CannotCommentReason
     {

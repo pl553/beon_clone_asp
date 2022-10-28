@@ -6,7 +6,13 @@ namespace Beon.Models
   {
     private IRepository<DiaryEntryCategory> _diaryEntryCategoryRepository;
 
-    protected DiaryEntry(BeonDbContext context) : base(context)
+    protected DiaryEntry(
+      BeonDbContext context,
+      string body,
+      DateTime timeStamp,
+      string? posterId,
+      string title,
+      int topicOrd) : base(context, body, timeStamp, posterId, title, topicOrd)
     {
       _diaryEntryCategoryRepository = context.GetRequiredService<IRepository<DiaryEntryCategory>>();
     }

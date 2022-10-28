@@ -34,17 +34,19 @@ namespace Beon.Services
         throw new Exception();
       }
 
-      var entry = new UserDiaryEntry(_context)
-      {
-        Title = model.Title,
-        Body = model.Body,
-        TimeStamp = DateTime.UtcNow,
-        PosterId = user.Id,
-        ReadAccess = UserDiaryEntry.Access.Everyone,
-        CommentAccess = UserDiaryEntry.Access.Users,
-        UserDiaryId = (await diaryOwner.GetDiaryAsync()).DiaryId,
-        TopicOrd = await (await diaryOwner.GetDiaryAsync()).GetNextTopicOrdAsync()
-      };
+      var entry = new UserDiaryEntry(
+        context: _context,
+        body: model.Body,
+        timeStamp: DateTime.UtcNow,
+        posterId: user.Id,
+        title: model.Title,
+        topicOrd: await (await diaryOwner.GetDiaryAsync()).GetNextTopicOrdAsync(),
+        userDiaryId: (await diaryOwner.GetDiaryAsync()).DiaryId,
+        readAccess: UserDiaryEntry.Access.Everyone,
+        commentAccess: UserDiaryEntry.Access.Users,
+        desires: "",
+        mood: "",
+        music: "");
 
       await _userDiaryEntryRepository.CreateAsync(entry);
 
