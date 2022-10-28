@@ -1,5 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Beon.Models.ViewModels;
 
 namespace Beon.Models
 {
@@ -9,6 +8,11 @@ namespace Beon.Models
     public virtual Chat Chat { get; set; } = null!;
 
     public async override Task<bool> UserCanReadAsync(BeonUser? user)
+    {
+      throw new NotImplementedException();
+    }
+
+    public async override Task<PostViewModel> CreatePostViewModelAsync(BeonUser? user, string? deleteReturnUrl = null)
     {
       throw new NotImplementedException();
     }

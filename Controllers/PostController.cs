@@ -49,9 +49,9 @@ namespace Beon.Controllers
 
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> GetRawHtml(int postId)
+    public async Task<IActionResult> GetRawHtml(int postId, string? deleteReturnUrl = null)
     {
-      BeonUser? u = await _userManager.GetUserAsync(User);
+      var u = await _userManager.GetUserAsync(User);
       var p = await _postRepository.Entities
         .Where(p => p.PostId == postId)
         .FirstOrDefaultAsync();
@@ -61,7 +61,7 @@ namespace Beon.Controllers
         return NotFound();
       }
 
-      var vm = await PostViewModel.CreateFromAsync(p, u);
+      var vm = await p.CreatePostViewModelAsync(u, deleteReturnUrl);
 
       string postRawHtml = await _vcRender.RenderAsync(
         ControllerContext,

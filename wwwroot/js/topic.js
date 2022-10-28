@@ -7,7 +7,8 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/SignalR").build();
 $("#post-submit-button").disabled = true;
 
 connection.on("ReceiveComment", function(commentPostId) {
-  $.get("/Post/GetRawHtml?postId=" + commentPostId.toString(), function (data) {
+  $.get("/Post/GetRawHtml?postId=" + commentPostId.toString() + "&deleteReturnUrl=" + window.location.pathname,
+  function (data) {
     const parser = new DOMParser();
     const postContainer = $("#comment-container");
     postContainer.append(data);

@@ -14,6 +14,9 @@ namespace Beon.Models
 
     private Comment(BeonDbContext context) : base(context) { }
 
+    public override async Task<PostViewModel> CreatePostViewModelAsync(BeonUser? user, string? deleteReturnUrl = null)
+      => await CommentViewModel.CreateFromAsync(this, user, deleteReturnUrl);
+    
     public override async Task<bool> UserCanDeleteAsync(BeonUser? user)
       => user != BeonUser.Anonymous
         && (user.Id == PosterId || await (await GetTopicAsync()).UserModeratesAsync(user));

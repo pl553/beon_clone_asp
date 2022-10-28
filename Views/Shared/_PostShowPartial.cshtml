@@ -42,7 +42,7 @@
             <a href="" onclick="deleteLinkClicked(event, this)"> Удалить</a>
             <form class="delete-form" asp-controller="Post" asp-action="Delete">
               <input type="hidden" name="postId" value="@Model.PostId" />
-              <input type="hidden" name="returnUrl" value="@ViewContext.HttpContext.Request.PathAndQuery()" />
+              <input type="hidden" name="returnUrl" value="@(Model.DeleteReturnUrl ?? ViewContext.HttpContext.Request.PathAndQuery())" />
             </form>
           </span>
         </span>

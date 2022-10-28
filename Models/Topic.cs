@@ -24,6 +24,8 @@ namespace Beon.Models {
     public abstract Task<TopicPreviewViewModel> CreateTopicPreviewViewModelAsync(
       BeonUser? user);
 
+    public override async Task<PostViewModel> CreatePostViewModelAsync(BeonUser? user, string? deleteReturnUrl = null)
+      => await CreateTopicPreviewViewModelAsync(user);
     public async Task<int> GetCommentCountAsync()
       => await _context.Entry(this).Collection(t => t.Comments).Query().CountAsync();
 

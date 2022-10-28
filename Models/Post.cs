@@ -38,6 +38,8 @@ namespace Beon.Models
       _context = context;
     }
 
+    public abstract Task<PostViewModel> CreatePostViewModelAsync(BeonUser? user, string? deleteReturnUrl = null);
+
     public abstract Task<bool> UserCanReadAsync(BeonUser? user);
     
     public bool UserCanEdit(BeonUser? user)

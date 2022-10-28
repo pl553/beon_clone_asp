@@ -51,7 +51,7 @@ namespace Beon.Controllers
 
       if (entry == null)
       {
-        return NotFound();
+        return RedirectToAction("Show", "UserDiary", new { userName = userName });
       }
 
       var user = await _userManager.GetUserAsync(User);
