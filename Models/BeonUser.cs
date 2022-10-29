@@ -34,8 +34,8 @@ namespace Beon.Models {
 
     public async Task<bool> IsFriendsWithAsync(BeonUser? user)
       => user != BeonUser.Anonymous
-        && await _friendLinkRepository.Entities
-          .Where(fl => fl.FromId == Id && fl.ToId == user.Id).CountAsync() > 0;
+        && (user.Id == Id || await _friendLinkRepository.Entities
+          .Where(fl => fl.FromId == Id && fl.ToId == user.Id).CountAsync() > 0);
 
     public async Task SendFriendRequest(BeonUser to)
     {

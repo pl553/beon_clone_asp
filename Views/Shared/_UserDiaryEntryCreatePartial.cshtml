@@ -3,5 +3,13 @@
 <form asp-controller="UserDiaryEntry" asp-action="Create">
   <input type="hidden" name="DiaryOwnerUserName" value="@Model.DiaryOwnerUserName" />
   <partial name="_TopicInputsPartial" model="@Model"></partial>
+  <p>
+    Читать могут:
+    <select asp-for="ReadAccess" asp-items="Model.AccessValues"></select>
+  </p>
+  <p>
+    Комментировать могут:
+    <select asp-for="CommentAccess" asp-items="Model.AccessValues"></select>
+  </p>
   <button type="submit">Create</button>
 </form>

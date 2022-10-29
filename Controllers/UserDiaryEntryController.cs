@@ -103,6 +103,12 @@ namespace Beon.Controllers
         return NotFound();
       }
 
+      if (model.ReadAccess == UserDiaryEntry.Access.Invalid
+        || model.CommentAccess == UserDiaryEntry.Access.Invalid)
+      {
+        return NotFound();
+      }
+      
       var entry = new UserDiaryEntry(
         context: _context,
         body: model.Body,
@@ -111,8 +117,8 @@ namespace Beon.Controllers
         model.Title,
         topicOrd: await (await user.GetDiaryAsync()).GetNextTopicOrdAsync(),
         userDiaryId: (await user.GetDiaryAsync()).DiaryId,
-        readAccess: UserDiaryEntry.Access.Everyone,
-        commentAccess: UserDiaryEntry.Access.Users,
+        readAccess: model.ReadAccess,
+        commentAccess: model.CommentAccess,
         desires: "",
         mood: "",
         music: "");

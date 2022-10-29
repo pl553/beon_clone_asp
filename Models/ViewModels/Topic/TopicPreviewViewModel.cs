@@ -19,12 +19,12 @@ namespace Beon.Models.ViewModels
     
     public string? CannotReadReason { get; set; } = null;
     
-    public TopicPreviewViewModel(string cannotReadReason, PosterViewModel? poster) :
+    public TopicPreviewViewModel(string cannotReadReason, DateTime timeStamp, PosterViewModel? poster) :
      this(
       new PostViewModel(
         PostId: -1, 
         BodyRawHtml: "",
-        TimeStamp: default,
+        TimeStamp: timeStamp,
         CanEdit: false,
         CanDelete: false,
         poster),
@@ -42,6 +42,7 @@ namespace Beon.Models.ViewModels
       {
         return new TopicPreviewViewModel(
           topic.CannotReadReason,
+          topic.TimeStamp,
           await PosterViewModel.CreateFromAsync(await topic.GetPosterAsync()));
       }
       else
