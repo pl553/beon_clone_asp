@@ -12,25 +12,23 @@ namespace Beon.Controllers
   public class UserDiaryEntryController : Controller
   {
     private readonly UserManager<BeonUser> _userManager;
-    private readonly IRepository<Topic> _topicRepository;
-    private readonly IRepository<UserDiary> _userDiaryRepository;
     private readonly IRepository<UserDiaryEntry> _userDiaryEntryRepository;
     private readonly TopicSubscriptionService _topicSubscriptionService;
-    private readonly UserDiaryEntryService _userDiaryEntryService;
     private readonly LinkGenerator _linkGenerator;
+    private readonly BeonDbContext _context;
 
     public UserDiaryEntryController(
+      BeonDbContext context,
       IRepository<UserDiaryEntry> userDiaryEntryRepository,
       UserManager<BeonUser> userManager,
       LinkGenerator linkGenerator,
-      TopicSubscriptionService topicSubscriptionService,
-      UserDiaryEntryService userDiaryEntryService)
+      TopicSubscriptionService topicSubscriptionService)
     {
+      _context = context;
       _userDiaryEntryRepository = userDiaryEntryRepository;
       _userManager = userManager;
       _linkGenerator = linkGenerator;
       _topicSubscriptionService = topicSubscriptionService;
-      _userDiaryEntryService = userDiaryEntryService;
     }
 
     [Route("/diary/{userName:required}/0-{topicOrd:int}")]
@@ -96,16 +94,31 @@ namespace Beon.Controllers
       }
 
       var user = await _userManager.GetUserAsync(User);
-      
-      try
+      var diaryOwner = await _userManager.Users
+        .Where(u => u.UserName == model.DiaryOwnerUserName)
+        .FirstOrDefaultAsync();
+
+      if (user == null || user.Id != diaryOwner?.Id)
       {
-        var entry = await _userDiaryEntryService.CreateFromAsync(model, user);
-        return this.RedirectToLocal(await entry.GetPathAsync());
+        return NotFound();
       }
-      catch
-      {
-        throw;
-      }
+
+      var entry = new UserDiaryEntry(
+        context: _context,
+        body: model.Body,
+        timeStamp: DateTime.UtcNow,
+        posterId: user.Id,
+        model.Title,
+        topicOrd: await (await user.GetDiaryAsync()).GetNextTopicOrdAsync(),
+        userDiaryId: (await user.GetDiaryAsync()).DiaryId,
+        readAccess: UserDiaryEntry.Access.Everyone,
+        commentAccess: UserDiaryEntry.Access.Users,
+        desires: "",
+        mood: "",
+        music: "");
+
+      await _userDiaryEntryRepository.CreateAsync(entry);
+      return this.RedirectToLocal(await entry.GetPathAsync());
     }
   }
 }

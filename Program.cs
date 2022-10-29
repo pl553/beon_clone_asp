@@ -116,8 +116,6 @@ builder.Services.AddScoped<ISmsSender, AuthMessageSender>();
 
 builder.Services.AddScoped<IViewComponentRenderService, ViewComponentRenderService>();
 builder.Services.AddScoped<TopicSubscriptionService, TopicSubscriptionService>();
-builder.Services.AddScoped<UserDiaryEntryService, UserDiaryEntryService>();
-builder.Services.AddScoped<TopicService, TopicService>();
 
 string userFileStorageType = Environment.GetEnvironmentVariable("USER_STORAGE_TYPE") ?? "DISK";
 
