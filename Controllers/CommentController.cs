@@ -40,7 +40,6 @@ namespace Beon.Controllers
     }
 
     [HttpPost]
-    [Authorize]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(CommentFormModel model)
     {
@@ -59,19 +58,23 @@ namespace Beon.Controllers
       
       BeonUser? u = await _userManager.GetUserAsync(User); 
          
-      if (u == null || !await t.UserCanCommentAsync(u))
+      if (!await t.UserCanCommentAsync(u))
       {
         return NotFound();
       }
 
-      await _topicSubscriptionService.SubscribeAsync(model.TopicPostId, u.Id);
+      if (u != null)
+      {
+        await _topicSubscriptionService.SubscribeAsync(model.TopicPostId, u.Id);
+      }
+
       await _topicSubscriptionService.SetNewCommentsAsync(model.TopicPostId);
 
       Comment p = new Comment(
         context: _context,
         body: model.Body,
         timeStamp: DateTime.UtcNow,
-        posterId: u.Id,
+        posterId: u?.Id,
         topicPostId: model.TopicPostId);
 
       await _commentRepository.CreateAsync(p);

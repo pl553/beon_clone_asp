@@ -48,7 +48,6 @@ namespace Beon.Controllers
     }
 
     [HttpGet]
-    [Authorize]
     public async Task<IActionResult> GetRawHtml(int postId, string? deleteReturnUrl = null)
     {
       var u = await _userManager.GetUserAsync(User);
