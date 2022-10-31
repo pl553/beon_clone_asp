@@ -32,11 +32,14 @@ namespace Beon.Components {
 
       var tss = await _topicSubscriptionService.GetWithNewPostsAsync(u.Id);
 
-      var links = await Task.WhenAll(
-        tss.Select(
-          async ts => new LinkViewModel(
-            (await ts.GetTopicAsync()).Title,
-            await (await ts.GetTopicAsync()).GetPathAsync())));
+      var links = new List<LinkViewModel>();
+
+      foreach (var ts in tss)
+      {
+        links.Add(new LinkViewModel(
+          (await ts.GetTopicAsync()).Title,
+          await (await ts.GetTopicAsync()).GetPathAsync()));
+      }
       
       return View(links);
     }

@@ -16,9 +16,22 @@ namespace Beon.Models.ViewModels
         await PostViewModel.CreateFromAsync(topic, user),
         topic.PostId,
         topic.Title,
-        await Task.WhenAll(
-          (await topic.GetCommentsAsync()).Select(c => CommentViewModel.CreateFromAsync(c, user))),
+        await CreateCommentViewModelsFromAsync(topic, user),
         await topic.UserCanCommentAsync(user),
         topic.CannotCommentReason);
+
+    private static async Task<IEnumerable<CommentViewModel>> CreateCommentViewModelsFromAsync(
+      Topic topic, BeonUser? user)
+    {
+      var comments = await topic.GetCommentsAsync();
+      var vms = new List<CommentViewModel>();
+
+      foreach (var c in comments)
+      {
+        vms.Add(await CommentViewModel.CreateFromAsync(c, user));
+      }
+
+      return vms;
+    } 
   };
 }

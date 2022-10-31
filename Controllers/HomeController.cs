@@ -49,8 +49,14 @@ namespace Beon.Controllers
 
       BeonUser? user = await _userManager.GetUserAsync(User);
 
-      return View(new HomePageViewModel(
-        await Task.WhenAll(topics.Select(async t => await t.CreateTopicPreviewViewModelAsync(user)))));
+      var previews = new List<TopicPreviewViewModel>();
+
+      foreach (var t in topics)
+      {
+        previews.Add(await t.CreateTopicPreviewViewModelAsync(user));
+      }
+
+      return View(new HomePageViewModel(previews));
     }
   }
 }

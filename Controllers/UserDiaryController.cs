@@ -70,10 +70,16 @@ namespace Beon.Controllers
         crumbs: new List<LinkViewModel> {new LinkViewModel(diaryOwner.DisplayName, "")},
         pagingInfo: new PagingInfo($"/diary/{userName}", page, numPages));
 
+      var previews = new List<UserDiaryEntryPreviewViewModel>();
+      foreach (var e in entries)
+      {
+        previews.Add(await UserDiaryEntryPreviewViewModel.CreateFromAsync(e, user));
+      }
+
       return View(new UserDiaryViewModel(
         userName,
         user == null ? false : diaryOwner.Id == user.Id,
-        await Task.WhenAll(entries.Select(async e => await UserDiaryEntryPreviewViewModel.CreateFromAsync(e, user)))));
+        previews));
     }
   }
 }
