@@ -34,7 +34,7 @@ namespace Beon.Models
             .MaxAsync() + 1;
     }
 
-    public async Task<string> GetPathAsync(int page)
+    public async Task<string> GetPathAsync(int page = 1)
     => _linkGenerator.GetPathByAction(
       "Show",
       "UserDiary",

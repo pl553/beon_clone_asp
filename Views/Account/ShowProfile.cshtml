@@ -7,7 +7,7 @@
     <div class="info-container">
       <div class="info-header">Информация о пользователе:</div>
       <div class="info-text">
-        Дневник пользователя: <a asp-controller="Diary" asp-action="Show"
+        Дневник пользователя: <a asp-controller="UserDiary" asp-action="Show"
           asp-route-userName="@Model.UserName">@Model.DisplayName</a>
         <br>
         @if (Model.ShowFriendAddingUI)

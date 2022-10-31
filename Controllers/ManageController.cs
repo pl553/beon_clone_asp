@@ -67,7 +67,7 @@ namespace Beons.Controllers
                 AuthenticatorKey = await _userManager.GetAuthenticatorKeyAsync(user)
             };
 
-            ViewBag.HrBarViewModel = new HrBarViewModel(crumbs: GetCrumbsBase(user.UserName));
+            ViewBag.HrBarViewModel = new HrBarViewModel(crumbs: await GetCrumbsBaseAsync(user));
             return View(model);
         }
 
@@ -136,7 +136,7 @@ namespace Beons.Controllers
         [Authorize]
         [Route("/Manage/Avatars")]
         public async Task<IActionResult> ManageAvatars() {
-            var crumbs = GetCrumbsBase((await GetCurrentUserAsync()).UserName);
+            var crumbs = await GetCrumbsBaseAsync(await GetCurrentUserAsync());
             crumbs.Add(new LinkViewModel("Загрузка аватар", ""));
             ViewBag.HrBarViewModel = new HrBarViewModel(crumbs: crumbs);
             return View();
@@ -204,11 +204,11 @@ namespace Beons.Controllers
             return _userManager.GetUserAsync(HttpContext.User);
         }
 
-        private ICollection<LinkViewModel> GetCrumbsBase(string userName) {
+        private async Task<ICollection<LinkViewModel>> GetCrumbsBaseAsync(BeonUser user) {
             return new List<LinkViewModel>
             {
                 new LinkViewModel("BeOn", "/"),
-                new LinkViewModel("Мой дневник", _linkGenerator.GetPathByAction("Show", "Diary", new { userName = userName}) ?? "error"),
+                new LinkViewModel("Мой дневник", await (await user.GetDiaryAsync()).GetPathAsync()),
                 new LinkViewModel("Настройки", _linkGenerator.GetPathByAction("Index", "Manage") ?? "error")
             };
         }
