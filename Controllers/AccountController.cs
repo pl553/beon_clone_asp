@@ -163,7 +163,7 @@ namespace Beon.Controllers
         BeonUser? user = await GetCurrentUserAsync();
         bool profileUserIsFriend = user == null
           ? false
-          : await profileUser.IsFriendsWithAsync(user);
+          : await user.IsFriendsWithAsync(profileUser);
 
         return View(new UserProfileViewModel(
             profileUser.UserName,
@@ -186,7 +186,7 @@ namespace Beon.Controllers
       {
         return NotFound();
       }
-      await u.SendFriendRequest(await GetCurrentUserAsync());
+      await (await GetCurrentUserAsync()).SendFriendRequest(u);
       return RedirectToAction(nameof(ShowProfile), new { userName = userName });
     }
 
@@ -200,7 +200,7 @@ namespace Beon.Controllers
       {
         return NotFound();
       }
-      await u.RevokeFriendRequest(await GetCurrentUserAsync());
+      await (await GetCurrentUserAsync()).RevokeFriendRequest(u);
       return RedirectToAction(nameof(ShowProfile), new { userName = userName });
     }
 
