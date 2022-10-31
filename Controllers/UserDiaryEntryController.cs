@@ -124,6 +124,8 @@ namespace Beon.Controllers
         music: "");
 
       await _userDiaryEntryRepository.CreateAsync(entry);
+      await _topicSubscriptionService.SubscribeAsync(entry.PostId, user.Id);
+      
       return this.RedirectToLocal(await entry.GetPathAsync());
     }
   }
