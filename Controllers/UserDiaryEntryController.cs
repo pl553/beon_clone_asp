@@ -67,11 +67,7 @@ namespace Beon.Controllers
         {
           new LinkViewModel(
             diaryOwner.DisplayName,
-            _linkGenerator.GetPathByAction(
-              "Show",
-              "Diary",
-              new { userName = userName })
-              ?? throw new Exception("couldnt generate path to diary")),
+            await (await diaryOwner.GetDiaryAsync()).GetPathAsync()),
           new LinkViewModel(
             entry.Title,
             await entry.GetPathAsync())
@@ -125,7 +121,7 @@ namespace Beon.Controllers
 
       await _userDiaryEntryRepository.CreateAsync(entry);
       await _topicSubscriptionService.SubscribeAsync(entry.PostId, user.Id);
-      
+
       return this.RedirectToLocal(await entry.GetPathAsync());
     }
   }
