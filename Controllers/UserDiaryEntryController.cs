@@ -54,6 +54,11 @@ namespace Beon.Controllers
 
       var user = await _userManager.GetUserAsync(User);
 
+      if (!await entry.UserCanReadAsync(user))
+      {
+        return NotFound();
+      }
+      
       if (user != null)
       {
         await _topicSubscriptionService.UnsetNewCommentsAsync(entry.PostId, user.Id);
