@@ -23,6 +23,7 @@ Social media website
 * Comments
   * Realtime commenting (SignalR)
   * anonymous commenting
+  * new comments notification
 * Post body
   * BBCode
     * image insertion
@@ -56,6 +57,7 @@ Social media website
   * diary tagging
 * Communities
   * Community diaries
+* Topic new comments subscribe/unsubscribe ui
 * public forums
 * Multiple avatars
 * Scale avatar down if its larger than allowed
