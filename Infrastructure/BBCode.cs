@@ -15,7 +15,11 @@ namespace Beon.Infrastructure {
       if (text.Length >= 4 && text.Substring(0, 4) == "http") {
         text = text.Remove(0, 4).Insert(0, "_http");
       }
-      text = text.Replace(" http", " _http").Replace("\nhttp", "\n_http").Replace("]http", "]_http");
+      text = text
+        .Replace(" http", " _http")
+        .Replace("\nhttp", "\n_http")
+        .Replace("]http", "]_http")
+        .Replace("\u0009http", "\u0009_http");
       //undo prefixing within image tags
       text = text.Replace("[IMG]_", "[IMG]").Replace("[IMGSMALL]_", "[IMGSMALL]").Replace("[IMGLARGE]_", "[IMGLARGE]");
 
