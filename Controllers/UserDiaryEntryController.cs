@@ -115,7 +115,7 @@ namespace Beon.Controllers
         body: model.Body,
         timeStamp: DateTime.UtcNow,
         posterId: user.Id,
-        model.Title,
+        model.Title == null || model.Title.Length == 0 ? Topic.GenerateTitleFromBody(model.Body) : model.Title,
         topicOrd: await (await user.GetDiaryAsync()).GetNextTopicOrdAsync(),
         userDiaryId: (await user.GetDiaryAsync()).DiaryId,
         readAccess: model.ReadAccess,

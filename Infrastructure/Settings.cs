@@ -30,5 +30,10 @@ namespace Beon
     {
       public const int ItemCount = 25;
     }
+
+    public static class Topic
+    {
+      public const int MaxTitleLength = 64;
+    }
   }
 }

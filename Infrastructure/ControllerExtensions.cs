@@ -10,11 +10,11 @@ namespace Beon.Infrastructure
     public static IActionResult RedirectToLocal(this Controller controller, string url) {
       if (controller.Url.IsLocalUrl(url))
       {
-          return controller.Redirect(url);
+        return controller.Redirect(url);
       }
       else
       {
-          return controller.RedirectToAction(nameof(HomeController.Index), "Home");
+        return controller.RedirectToAction(nameof(HomeController.Index), "Home");
       }
     }
   }

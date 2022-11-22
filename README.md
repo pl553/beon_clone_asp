@@ -42,7 +42,6 @@ Social media website
   * fix indent style in some older files
 * UI adjustments
 * Post editing
-* Topic title autofill
 * Create a diary for the admin account
 * Diaries
   * Diary entries

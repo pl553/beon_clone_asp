@@ -1,13 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Beon.Infrastructure;
 
 namespace Beon.Models
 {
   public class TopicFormModel : PostFormModel
   {
-    [Required(ErrorMessage = "Please enter a title")]
-    [MaxLength(64)]
+    [MaxLength(Settings.Topic.MaxTitleLength)]
     [DataType(DataType.Text)]
-    public string Title { get; set; } = "";
+    public string? Title { get; set; }
   }
 }
