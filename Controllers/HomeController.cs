@@ -40,12 +40,15 @@ namespace Beon.Controllers
 
       if (topics.Count() == 0 && page > 1)
       {
-        return NotFound();
+ //       return NotFound();
       }
+
+      var numPages = await _topicRepository.Entities
+        .CountNumberOfPagesAsync();
 
       ViewBag.HrBarViewModel = new HrBarViewModel(
         crumbs: new List<LinkViewModel>{new LinkViewModel("BeOn", "")},
-        pagingInfo: new PagingInfo("/", page, 8));
+        pagingInfo: new PagingInfo("/", page, numPages));
 
       BeonUser? user = await _userManager.GetUserAsync(User);
 
