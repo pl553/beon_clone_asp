@@ -1,14 +1,16 @@
 using System.Diagnostics.CodeAnalysis;
 
 namespace Beon.Models.ViewModels {
-  public record PostViewModel(
+  public record PostViewModel (
     int PostId,
     string BodyRawHtml,
     DateTime TimeStamp,
     bool CanEdit,
     bool CanDelete,
     PosterViewModel? Poster = null,
-    string? DeleteReturnUrl = null)
+    string? DeleteReturnUrl = null
+  )
+
   {
     public PosterViewModel? Poster { get; init; } = Poster;
     
@@ -16,13 +18,14 @@ namespace Beon.Models.ViewModels {
     public bool Anonymous { get => Poster == null; }
   
     public static async Task<PostViewModel> CreateFromAsync(Post post, BeonUser? user, string? deleteReturnUrl = null)
-    => new PostViewModel(
+    => new PostViewModel (
       post.PostId,
       Beon.Infrastructure.BBCode.Parse(post.Body),
       post.TimeStamp,
       post.UserCanEdit(user),
       await post.UserCanDeleteAsync(user),
       await PosterViewModel.CreateFromAsync(await post.GetPosterAsync()),
-      deleteReturnUrl);
+      deleteReturnUrl
+      );
   }
 }

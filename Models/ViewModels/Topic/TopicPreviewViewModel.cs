@@ -27,7 +27,8 @@ namespace Beon.Models.ViewModels
         TimeStamp: timeStamp,
         CanEdit: false,
         CanDelete: false,
-        poster),
+        poster
+      ),
       Path: "",
       Title: "",
       CommentCount: 0,

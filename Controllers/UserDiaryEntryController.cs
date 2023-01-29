@@ -84,6 +84,73 @@ namespace Beon.Controllers
         await UserDiaryEntryViewModel.CreateFromAsync(entry, user)));
     }
 
+    // GET method
+    [HttpGet]
+    [Route("/diary/{userName:required}/0-{topicOrd:int}/Edit")]
+    public async Task<IActionResult> Edit(string userName, int topicOrd) 
+    {
+      var diaryOwner = await _userManager.Users
+        .Where(u => u.UserName.Equals(userName))
+        .Include(u => u.Diary)
+        .FirstOrDefaultAsync();
+
+      var entry = await _userDiaryEntryRepository.Entities
+        .Where(e => e.PosterId == diaryOwner.Id && e.TopicOrd == topicOrd)
+        .FirstOrDefaultAsync();
+
+       if (entry == null || diaryOwner == null)
+      {
+        return RedirectToAction("Show", "UserDiary", new { userName = userName });
+      }
+
+      var user = await _userManager.GetUserAsync(User);
+
+      return View(new UserDiaryEntryPageViewModel(
+        diaryOwner.UserName,
+        await UserDiaryEntryViewModel.CreateFromAsync(entry, user)));
+
+    }
+
+    // POST method
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    [Route("/diary/{userName:required}/0-{topicOrd:int}/Edit")]
+    public async Task<IActionResult> Edit(UserDiaryEntryFormModel model, int topicOrd) 
+    {
+      if (!ModelState.IsValid)
+      {
+        return NotFound();
+      }
+      var user = await _userManager.GetUserAsync(User);
+      var diaryOwner = await _userManager.Users
+        .Where(u => u.UserName == model.DiaryOwnerUserName)
+        .FirstOrDefaultAsync();
+
+      if (user == null || user.Id != diaryOwner?.Id)
+      {
+        return NotFound();
+      }
+      
+      if (model.ReadAccess == UserDiaryEntry.Access.Invalid
+        || model.CommentAccess == UserDiaryEntry.Access.Invalid)
+      {
+        return NotFound();
+      }
+
+      var entry = await _userDiaryEntryRepository.Entities
+        .Where(e => e.PosterId == diaryOwner.Id && e.TopicOrd == topicOrd)
+        .FirstOrDefaultAsync();
+
+      entry.Body = model.Body;
+
+      await _userDiaryEntryRepository.UpdateAsync(entry);
+      await _topicSubscriptionService.SubscribeAsync(entry.PostId, user.Id);
+
+      return this.RedirectToLocal(await entry.GetPathAsync());
+    }
+
+
     [HttpPost]
     [Authorize]
     [ValidateAntiForgeryToken]
@@ -122,7 +189,8 @@ namespace Beon.Controllers
         commentAccess: model.CommentAccess,
         desires: "",
         mood: "",
-        music: "");
+        music: ""
+      );
 
       await _userDiaryEntryRepository.CreateAsync(entry);
       await _topicSubscriptionService.SubscribeAsync(entry.PostId, user.Id);
