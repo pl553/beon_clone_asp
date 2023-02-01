@@ -35,7 +35,8 @@ namespace Beon.Models
       Access commentAccess,
       string desires,
       string mood,
-      string music) : base(context, body, timeStamp, posterId, title, topicOrd)
+      string music
+    ) : base(context, body, timeStamp, posterId, title, topicOrd)
     {
       UserDiaryId = userDiaryId;
       ReadAccess = readAccess;
@@ -82,6 +83,16 @@ namespace Beon.Models
           topicOrd = TopicOrd,
         }) ?? throw new Exception("couldn't generate diary entry path");
     
+    public override async Task<string> GetEditPathAsync()
+      => _linkGenerator.GetPathByAction(
+        "Edit",
+        "UserDiaryEntry",
+        new
+        {
+          userName = (await (await GetUserDiaryAsync()).GetOwnerAsync()).UserName,
+          topicOrd = TopicOrd,
+        }) ?? throw new Exception("couldn't generate diary entry edit path");
+
     public override async Task<bool> UserCanCommentAsync(BeonUser? user)
       => await UserCanAccessAsync(CommentAccess, user);
 

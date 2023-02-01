@@ -52,5 +52,6 @@ namespace Beon.Models
     public async Task<BeonUser> GetNonAnonymousPosterAsync()
       => await GetPosterAsync() ?? throw new Exception("this post is anonymous");
 
+    public abstract Task<string> GetEditPathAsync();
   }
 }

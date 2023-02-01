@@ -35,5 +35,11 @@ namespace Beon.Models
       await _context.Entry(this).Reference(c => c.Topic).LoadAsync();
       return Topic ?? throw new Exception("Invalid comment: not attached to a topic");
     }
+
+    public override async Task<string> GetEditPathAsync()
+    {
+      return "";
+    }
+    
   }
 }

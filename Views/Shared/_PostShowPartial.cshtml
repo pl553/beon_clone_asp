@@ -39,7 +39,9 @@
           <a href="" onclick="optionsLinkClicked(event, this)">Опции</a>
           <span class="post-options" style="display: none;">
             <img class="flag" src="/i/edit.png" width="13" height="12" />
-            <a asp-controller="Post" asp-action="Edit">Редактировать</a>
+              <a class="options-form" href="@Model.EditPath">
+                 Редактировать
+              </a>
             <img class="flag" src="/i/delete.gif" width="13" height="12" />
             <a href="" onclick="deleteLinkClicked(event, this)"> Удалить</a>
             <form class="delete-form" asp-controller="Post" asp-action="Delete">

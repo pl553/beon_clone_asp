@@ -8,7 +8,8 @@ namespace Beon.Models.ViewModels {
     bool CanEdit,
     bool CanDelete,
     PosterViewModel? Poster = null,
-    string? DeleteReturnUrl = null
+    string? DeleteReturnUrl = null,
+    string? EditPath = null
   )
 
   {
@@ -25,7 +26,9 @@ namespace Beon.Models.ViewModels {
       post.UserCanEdit(user),
       await post.UserCanDeleteAsync(user),
       await PosterViewModel.CreateFromAsync(await post.GetPosterAsync()),
-      deleteReturnUrl
-      );
+      deleteReturnUrl, 
+      await post.GetEditPathAsync()
+    );
+    
   }
 }
