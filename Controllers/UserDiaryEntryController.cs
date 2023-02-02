@@ -98,12 +98,12 @@ namespace Beon.Controllers
         .Where(e => e.PosterId == diaryOwner.Id && e.TopicOrd == topicOrd)
         .FirstOrDefaultAsync();
 
-       if (entry == null || diaryOwner == null)
+      var user = await _userManager.GetUserAsync(User);
+
+       if (entry == null || user == null || user.Id != diaryOwner.Id)
       {
         return RedirectToAction("Index", "Home");
       }
-
-      var user = await _userManager.GetUserAsync(User);
 
       return View(new UserDiaryEntryEditPageViewModel (
         diaryOwner.UserName,
