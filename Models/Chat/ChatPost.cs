@@ -17,6 +17,11 @@ namespace Beon.Models
       ChatId = chatId;
     }
 
+    public override async Task<string> GetEditPathAsync()
+    {
+      return "";
+    }
+
     public async override Task<bool> UserCanReadAsync(BeonUser? user)
     {
       throw new NotImplementedException();

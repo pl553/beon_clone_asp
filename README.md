@@ -20,6 +20,7 @@ Social media website
   * diary entry creation
     * read/comment access restriction
       * Everyone, users, friends, no one
+    * Post editing
 * Comments
   * Realtime commenting (SignalR)
   * anonymous commenting
@@ -41,7 +42,6 @@ Social media website
   * Divide up Program.cs its gotten pretty big
   * fix indent style in some older files
 * UI adjustments
-* Post editing
 * Create a diary for the admin account
 * Diaries
   * Diary entries

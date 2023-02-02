@@ -25,7 +25,8 @@ namespace Beon.Models
       DateTime timeStamp,
       string? posterId,
       string title,
-      int topicOrd) : base(context, body, timeStamp, posterId)
+      int topicOrd
+    ) : base(context, body, timeStamp, posterId)
     {
       _commentRepository = context.Provider.GetRequiredService<IRepository<Comment>>();
       _linkGenerator = context.Provider.GetRequiredService<LinkGenerator>();

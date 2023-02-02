@@ -1,0 +1,15 @@
+@model UserDiaryEntryFormModel
+
+<form asp-controller="UserDiaryEntry" asp-action="Edit">
+  <input type="hidden" name="DiaryOwnerUserName" value="@Model.DiaryOwnerUserName" />
+  <partial name="_TopicInputsPartial" model="@Model"></partial>
+  <p>
+    Читать могут:
+    <select asp-for="ReadAccess" asp-items="Model.AccessValues"></select>
+  </p>
+  <p>
+    Комментировать могут:
+    <select asp-for="CommentAccess" asp-items="Model.AccessValues"></select>
+  </p>
+  <button type="submit">Сохранить</button>
+</form>
