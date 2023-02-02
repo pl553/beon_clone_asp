@@ -100,7 +100,7 @@ namespace Beon.Controllers
 
        if (entry == null || diaryOwner == null)
       {
-        return RedirectToAction("Show", "Home", new { userName = userName });
+        return RedirectToAction("Index", "Home");
       }
 
       var user = await _userManager.GetUserAsync(User);
@@ -129,21 +129,29 @@ namespace Beon.Controllers
 
       if (user == null || user.Id != diaryOwner?.Id)
       {
-        return NotFound();
+        return RedirectToAction("Index", "Home");
       }
       
       if (model.ReadAccess == UserDiaryEntry.Access.Invalid
         || model.CommentAccess == UserDiaryEntry.Access.Invalid)
       {
-        return NotFound();
+        return RedirectToAction("Index", "Home");
       }
 
       var entry = await _userDiaryEntryRepository.Entities
         .Where(e => e.PosterId == diaryOwner.Id && e.TopicOrd == topicOrd)
         .FirstOrDefaultAsync();
 
+      if (entry == null)
+      {
+        return RedirectToAction("Index", "Home");
+      }
+      
+
       entry.Body = model.Body;
-      entry.Title = model.Title;
+      entry.Title = model.Title ?? Topic.GenerateTitleFromBody(model.Body);
+      entry.CommentAccess = model.CommentAccess;
+      entry.ReadAccess = model.ReadAccess;
 
       await _userDiaryEntryRepository.UpdateAsync(entry);
       await _topicSubscriptionService.SubscribeAsync(entry.PostId, user.Id);
