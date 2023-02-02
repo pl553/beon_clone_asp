@@ -47,16 +47,6 @@ namespace Beon.Controllers
       }
     }
 
-    [HttpPost, ActionName("Edit")]
-    [Authorize]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int postId, string returnUrl)
-    {
-
-        return NotFound();
-      
-    }
-
     [HttpGet]
     public async Task<IActionResult> GetRawHtml(int postId, string? deleteReturnUrl = null)
     {

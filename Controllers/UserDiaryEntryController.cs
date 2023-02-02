@@ -100,14 +100,14 @@ namespace Beon.Controllers
 
        if (entry == null || diaryOwner == null)
       {
-        return RedirectToAction("Show", "UserDiary", new { userName = userName });
+        return RedirectToAction("Show", "Home", new { userName = userName });
       }
 
       var user = await _userManager.GetUserAsync(User);
 
-      return View(new UserDiaryEntryPageViewModel(
+      return View(new UserDiaryEntryEditPageViewModel (
         diaryOwner.UserName,
-        await UserDiaryEntryViewModel.CreateFromAsync(entry, user)));
+        new UserDiaryEntryFormModel { Body = entry.Body, Title = entry.Title } ));
 
     }
 
@@ -143,6 +143,7 @@ namespace Beon.Controllers
         .FirstOrDefaultAsync();
 
       entry.Body = model.Body;
+      entry.Title = model.Title;
 
       await _userDiaryEntryRepository.UpdateAsync(entry);
       await _topicSubscriptionService.SubscribeAsync(entry.PostId, user.Id);

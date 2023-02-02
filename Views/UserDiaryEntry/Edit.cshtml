@@ -1,9 +1,10 @@
-@model UserDiaryEntryPageViewModel
+@model UserDiaryEntryEditPageViewModel
 
 
 <div class="flex-container">
   <partial name="_UserDiarySideBarPartial" model="@Model.UserName"></partial>
   <div class="content-container">
-    <partial name="_UserDiaryEntryEditPartial" model="@new UserDiaryEntryFormModel { DiaryOwnerUserName = Model.UserName }"></partial>
+    <partial name="_UserDiaryEntryEditPartial" 
+      model="@new UserDiaryEntryFormModel { DiaryOwnerUserName = Model.UserName, Body = Model.Entry.Body, Title = Model.Entry.Title }"></partial>
   </div>
 </div>
