@@ -22,7 +22,6 @@ namespace Beon.Models
       return "";
     }
 
-
     public async override Task<bool> UserCanReadAsync(BeonUser? user)
     {
       throw new NotImplementedException();
