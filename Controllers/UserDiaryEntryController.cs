@@ -107,7 +107,12 @@ namespace Beon.Controllers
 
       return View(new UserDiaryEntryEditPageViewModel (
         diaryOwner.UserName,
-        new UserDiaryEntryFormModel { Body = entry.Body, Title = entry.Title } ));
+        new UserDiaryEntryFormModel { 
+          Body = entry.Body, 
+          Title = entry.Title, 
+          ReadAccess = entry.ReadAccess,
+          CommentAccess = entry.CommentAccess 
+        } ));
 
     }
 
