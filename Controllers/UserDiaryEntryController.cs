@@ -127,6 +127,7 @@ namespace Beon.Controllers
       {
         return NotFound();
       }
+
       var user = await _userManager.GetUserAsync(User);
       var diaryOwner = await _userManager.Users
         .Where(u => u.UserName == model.DiaryOwnerUserName)

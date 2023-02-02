@@ -4,7 +4,12 @@
 <div class="flex-container">
   <partial name="_UserDiarySideBarPartial" model="@Model.UserName"></partial>
   <div class="content-container">
-    <partial name="_UserDiaryEntryEditPartial" model="@Model.Entry">
+    <partial name="_UserDiaryEntryEditPartial" 
+      model="@new UserDiaryEntryFormModel { DiaryOwnerUserName = Model.UserName, 
+        Body = Model.Entry.Body, 
+        Title = Model.Entry.Title, 
+        ReadAccess = Model.Entry.ReadAccess,
+        CommentAccess = Model.Entry.CommentAccess }">
     </partial>
   </div>
 </div>
