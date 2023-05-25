@@ -158,6 +158,7 @@ if (bAuthUserName != null)
   app.UseMiddleware<BasicAuthMiddleware>(Options.Create(new BasicAuthOptions(bAuthUserName, bAuthPassword)));
 }
 
+app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.MapHub<TopicHub>("/SignalR");
