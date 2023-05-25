@@ -14,5 +14,7 @@ WORKDIR /App
 COPY --from=build-env /App/out .
 COPY --from=build-env /App/Database.db .
 
+ENV ASPNETCORE_URLS=http://*:$PORT
+
 ENTRYPOINT ["dotnet", "beon_clone_asp.dll"]
 
