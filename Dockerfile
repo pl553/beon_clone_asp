@@ -13,6 +13,6 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /App
 COPY --from=build-env /App/out .
 COPY --from=build-env /App/Database.db .
-EXPOSE 443
+
 ENTRYPOINT ["dotnet", "beon_clone_asp.dll"]
 
